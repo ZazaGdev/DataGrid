@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Column Management</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .btn-small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .column-manager {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+      .column-manager h3 {
+        margin: 0 0 1rem 0;
+        font-size: 0.875rem;
+      }
+      .column-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .column-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .column-item.hidden {
+        opacity: 0.5;
+      }
+      .column-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+      }
+      .column-name {
+        font-weight: 600;
+        color: #111827;
+        min-width: 150px;
+      }
+      .column-type {
+        background: #e5e7eb;
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        color: #374151;
+      }
+      .column-actions {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .custom-formats {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #eff6ff;
+        border-radius: 0.375rem;
+        border: 1px solid #bfdbfe;
+      }
+      .custom-formats h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #1e40af;
+      }
+      .custom-formats p {
+        margin: 0.25rem 0;
+        font-size: 0.75rem;
+        color: #1e40af;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Column Management Example</h1>
+      <p class="description">
+        This example demonstrates column operations: show/hide columns, custom
+        formatters, column configuration, and dynamic column updates.
+      </p>
+
+      <div class="toolbar">
+        <button class="btn btn-primary" id="showAll">Show All Columns</button>
+        <button class="btn" id="hideAll">Hide All Columns</button>
+        <button class="btn" id="getVisibleCols">Get Visible Columns</button>
+        <button class="btn" id="applyCurrencyFormat">
+          Apply Currency Format
+        </button>
+        <button class="btn" id="applyPercentFormat">
+          Apply Percent Format
+        </button>
+        <button class="btn" id="resetFormats">Reset Formats</button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="column-manager">
+        <h3>🎛️ Column Visibility Controls</h3>
+        <div class="column-list" id="columnList"></div>
+      </div>
+
+      <div class="info-box">
+        <h3>💡 How to Use</h3>
+        <p>
+          • <strong>Show/Hide:</strong> Click the eye icon next to each column
+          to toggle visibility.
+        </p>
+        <p>
+          • <strong>Show/Hide All:</strong> Use toolbar buttons to show or hide
+          all columns at once.
+        </p>
+        <p>
+          • <strong>Custom Formatters:</strong> Apply different formatting
+          styles to numeric columns.
+        </p>
+        <p>
+          • <strong>Dynamic Updates:</strong> Column configuration can be
+          changed on-the-fly.
+        </p>
+        <p>
+          • <strong>Column Types:</strong> View the data type of each column
+          (text, number, date, etc.).
+        </p>
+      </div>
+
+      <div class="custom-formats">
+        <h4>🎨 Available Custom Formatters</h4>
+        <p>
+          • <strong>Currency:</strong> Formats numbers as currency with $ symbol
+          and thousands separator
+        </p>
+        <p>
+          • <strong>Percent:</strong> Converts decimal values to percentage
+          (e.g., 0.15 → 15%)
+        </p>
+        <p>• <strong>Date:</strong> Formats date strings in localized format</p>
+        <p>
+          • <strong>Custom:</strong> Any function that takes (value, row,
+          column) and returns a string
+        </p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { Table } from "../src/index.js"
+
+      // Sample sales data
+      const salesData = [
+        {
+          id: 1,
+          product: "Laptop",
+          category: "Electronics",
+          price: 1299.99,
+          quantity: 5,
+          discount: 0.1,
+          total: 5849.95,
+          date: "2024-01-15",
+        },
+        {
+          id: 2,
+          product: "Mouse",
+          category: "Accessories",
+          price: 29.99,
+          quantity: 50,
+          discount: 0.05,
+          total: 1424.53,
+          date: "2024-01-16",
+        },
+        {
+          id: 3,
+          product: "Keyboard",
+          category: "Accessories",
+          price: 79.99,
+          quantity: 30,
+          discount: 0.15,
+          total: 2039.75,
+          date: "2024-01-17",
+        },
+        {
+          id: 4,
+          product: "Monitor",
+          category: "Electronics",
+          price: 449.99,
+          quantity: 8,
+          discount: 0.12,
+          total: 3167.93,
+          date: "2024-01-18",
+        },
+        {
+          id: 5,
+          product: "Webcam",
+          category: "Electronics",
+          price: 89.99,
+          quantity: 25,
+          discount: 0.08,
+          total: 2069.77,
+          date: "2024-01-19",
+        },
+        {
+          id: 6,
+          product: "Desk Lamp",
+          category: "Office",
+          price: 39.99,
+          quantity: 40,
+          discount: 0.2,
+          total: 1279.68,
+          date: "2024-01-20",
+        },
+      ]
+
+      // Column definitions with various types and formatters
+      const columns = [
+        {
+          title: "ID",
+          data: "id",
+          width: "60px",
+          type: "number",
+          editable: false,
+        },
+        {
+          title: "Product",
+          data: "product",
+          width: "180px",
+          type: "text",
+        },
+        {
+          title: "Category",
+          data: "category",
+          width: "140px",
+          type: "text",
+        },
+        {
+          title: "Price",
+          data: "price",
+          width: "120px",
+          type: "number",
+          format: (value) => (value ? `$${value.toFixed(2)}` : ""),
+        },
+        {
+          title: "Quantity",
+          data: "quantity",
+          width: "100px",
+          type: "number",
+        },
+        {
+          title: "Discount",
+          data: "discount",
+          width: "110px",
+          type: "number",
+          format: (value) => (value ? `${(value * 100).toFixed(0)}%` : "0%"),
+        },
+        {
+          title: "Total",
+          data: "total",
+          width: "120px",
+          type: "number",
+          format: (value) => (value ? `$${value.toFixed(2)}` : ""),
+        },
+        {
+          title: "Date",
+          data: "date",
+          width: "120px",
+          type: "date",
+          format: (value) => {
+            if (!value) return ""
+            const date = new Date(value)
+            return date.toLocaleDateString()
+          },
+        },
+      ]
+
+      // Create table
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: salesData,
+        mode: "view",
+      })
+
+      window.table = table
+
+      // Build column visibility controls
+      function buildColumnList() {
+        const columnList = document.getElementById("columnList")
+        columnList.innerHTML = ""
+
+        const cols = table.getColumns()
+
+        cols.forEach((col, index) => {
+          const item = document.createElement("div")
+          item.className = `column-item ${
+            col.visible === false ? "hidden" : ""
+          }`
+
+          const info = document.createElement("div")
+          info.className = "column-info"
+
+          const name = document.createElement("div")
+          name.className = "column-name"
+          name.textContent = col.title
+
+          const type = document.createElement("div")
+          type.className = "column-type"
+          type.textContent = col.type || "text"
+
+          info.appendChild(name)
+          info.appendChild(type)
+
+          const actions = document.createElement("div")
+          actions.className = "column-actions"
+
+          const toggleBtn = document.createElement("button")
+          toggleBtn.className = "btn btn-small"
+          toggleBtn.textContent = col.visible === false ? "👁️ Show" : "🙈 Hide"
+          toggleBtn.onclick = () => {
+            table.setColumnVisibility(col.data, col.visible === false)
+            buildColumnList()
+          }
+
+          actions.appendChild(toggleBtn)
+
+          item.appendChild(info)
+          item.appendChild(actions)
+          columnList.appendChild(item)
+        })
+      }
+
+      // Toolbar button handlers
+      document.getElementById("showAll").addEventListener("click", () => {
+        const cols = table.getColumns()
+        cols.forEach((col) => {
+          table.setColumnVisibility(col.data, true)
+        })
+        buildColumnList()
+        console.log("All columns shown")
+      })
+
+      document.getElementById("hideAll").addEventListener("click", () => {
+        const cols = table.getColumns()
+        // Keep at least ID column visible
+        cols.forEach((col) => {
+          if (col.data !== "id") {
+            table.setColumnVisibility(col.data, false)
+          }
+        })
+        buildColumnList()
+        console.log("All columns hidden (except ID)")
+      })
+
+      document
+        .getElementById("getVisibleCols")
+        .addEventListener("click", () => {
+          const cols = table.getColumns()
+          const visible = cols.filter((c) => c.visible !== false)
+          console.log(
+            "Visible columns:",
+            visible.map((c) => c.title)
+          )
+          alert(`Visible columns: ${visible.map((c) => c.title).join(", ")}`)
+        })
+
+      document
+        .getElementById("applyCurrencyFormat")
+        .addEventListener("click", () => {
+          // Update price and total columns with enhanced currency format
+          const cols = table.getColumns()
+          const updatedCols = cols.map((col) => {
+            if (col.data === "price" || col.data === "total") {
+              return {
+                ...col,
+                format: (value) => {
+                  if (!value) return "$0.00"
+                  return new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    minimumFractionDigits: 2,
+                  }).format(value)
+                },
+              }
+            }
+            return col
+          })
+
+          table.setColumns(updatedCols)
+          buildColumnList()
+          console.log("Applied currency format")
+        })
+
+      document
+        .getElementById("applyPercentFormat")
+        .addEventListener("click", () => {
+          // Update discount column with enhanced percent format
+          const cols = table.getColumns()
+          const updatedCols = cols.map((col) => {
+            if (col.data === "discount") {
+              return {
+                ...col,
+                format: (value) => {
+                  if (!value) return "0.00%"
+                  return new Intl.NumberFormat("en-US", {
+                    style: "percent",
+                    minimumFractionDigits: 2,
+                  }).format(value)
+                },
+              }
+            }
+            return col
+          })
+
+          table.setColumns(updatedCols)
+          buildColumnList()
+          console.log("Applied percent format")
+        })
+
+      document.getElementById("resetFormats").addEventListener("click", () => {
+        // Reset to default columns
+        table.setColumns(columns)
+        buildColumnList()
+        console.log("Formats reset to default")
+      })
+
+      // Initial build
+      buildColumnList()
+
+      // Subscribe to column-related events
+      table.on(Table.Events.STATE_CHANGE, (data) => {
+        if (data.property === "columns") {
+          console.log("Columns updated:", data)
+          buildColumnList()
+        }
+      })
+
+      console.log("✅ Column Management Example loaded successfully!")
+      console.log("💡 Available column operations:")
+      console.log("  - setColumnVisibility(columnId, visible)")
+      console.log("  - getColumns()")
+      console.log("  - setColumns(columns)")
+    </script>
+  </body>
+</html>

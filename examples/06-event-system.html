@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Event System</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .event-log {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        max-height: 600px;
+        overflow-y: auto;
+      }
+      .event-log h3 {
+        margin: 0 0 1rem 0;
+        font-size: 0.875rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .event-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-radius: 0.375rem;
+        border-left: 3px solid #3b82f6;
+        background: #f9fafb;
+        font-size: 0.75rem;
+      }
+      .event-item.cell-change {
+        border-left-color: #10b981;
+      }
+      .event-item.row-click {
+        border-left-color: #f59e0b;
+      }
+      .event-item.mode-change {
+        border-left-color: #8b5cf6;
+      }
+      .event-item.data-change {
+        border-left-color: #ef4444;
+      }
+      .event-type {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.25rem;
+      }
+      .event-time {
+        color: #6b7280;
+        font-size: 0.7rem;
+      }
+      .event-data {
+        margin-top: 0.25rem;
+        color: #374151;
+      }
+      .info-box {
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .stat-card {
+        background: #f9fafb;
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        text-align: center;
+      }
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Event System Example</h1>
+      <p class="description">
+        This example demonstrates the comprehensive event system with real-time
+        event logging, custom event handlers, and event statistics tracking.
+      </p>
+
+      <div class="toolbar">
+        <button class="btn btn-primary" id="toggleMode">Toggle Mode</button>
+        <button class="btn" id="triggerUpdate">Trigger Update</button>
+        <button class="btn" id="addRow">Add Row</button>
+        <button class="btn" id="deleteRow">Delete Last Row</button>
+        <button class="btn" id="clearLog">Clear Event Log</button>
+      </div>
+
+      <div class="layout">
+        <div>
+          <div id="tableContainer"></div>
+
+          <div class="info-box" style="margin-top: 1rem">
+            <h3>💡 Available Events</h3>
+            <p>• <strong>STATE_CHANGE:</strong> State property changed</p>
+            <p>• <strong>DATA_CHANGE:</strong> Table data modified</p>
+            <p>• <strong>CELL_CHANGE:</strong> Individual cell value changed</p>
+            <p>• <strong>ROW_CLICK:</strong> Row was clicked</p>
+            <p>• <strong>ROW_ADD:</strong> New row added</p>
+            <p>• <strong>ROW_DELETE:</strong> Row deleted</p>
+            <p>• <strong>MODE_CHANGE:</strong> View/Edit mode switched</p>
+            <p>• <strong>BEFORE_RENDER:</strong> Before table renders</p>
+            <p>• <strong>RENDER:</strong> Table is rendering</p>
+            <p>• <strong>AFTER_RENDER:</strong> Table finished rendering</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="event-log">
+            <h3>
+              <span>📋 Event Log</span>
+              <button
+                class="btn"
+                style="padding: 0.25rem 0.5rem"
+                onclick="document.getElementById('eventList').innerHTML = ''; updateStats();"
+              >
+                Clear
+              </button>
+            </h3>
+            <div id="eventList"></div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-label">Total Events</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statCells">0</div>
+              <div class="stat-label">Cell Changes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statRows">0</div>
+              <div class="stat-label">Row Changes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { Table } from "../src/index.js"
+
+      // Event statistics
+      const stats = {
+        total: 0,
+        cellChanges: 0,
+        rowChanges: 0,
+        byType: {},
+      }
+
+      // Sample data
+      let nextId = 6
+      const sampleData = [
+        { id: 1, name: "John Doe", department: "Engineering", salary: 95000 },
+        { id: 2, name: "Jane Smith", department: "Design", salary: 87000 },
+        {
+          id: 3,
+          name: "Bob Johnson",
+          department: "Engineering",
+          salary: 92000,
+        },
+        {
+          id: 4,
+          name: "Alice Williams",
+          department: "Marketing",
+          salary: 78000,
+        },
+        { id: 5, name: "Charlie Brown", department: "Sales", salary: 65000 },
+      ]
+
+      const columns = [
+        { title: "ID", data: "id", width: "60px", editable: false },
+        { title: "Name", data: "name", width: "180px" },
+        { title: "Department", data: "department", width: "140px" },
+        {
+          title: "Salary",
+          data: "salary",
+          width: "120px",
+          type: "number",
+          format: (value) => (value ? `$${value.toLocaleString()}` : ""),
+        },
+      ]
+
+      // Create table
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: sampleData,
+        mode: "edit",
+      })
+
+      window.table = table
+
+      // Log event helper
+      function logEvent(eventType, data, className = "") {
+        const eventList = document.getElementById("eventList")
+        const time = new Date().toLocaleTimeString()
+
+        const eventItem = document.createElement("div")
+        eventItem.className = `event-item ${className}`
+
+        let dataPreview = ""
+        if (data) {
+          // Create a simplified preview of the data
+          if (data.rowId && data.columnName) {
+            dataPreview = `Row: ${data.rowId}, Column: ${data.columnName}`
+            if (data.oldValue !== undefined && data.newValue !== undefined) {
+              dataPreview += `\n${data.oldValue} → ${data.newValue}`
+            }
+          } else if (data.row) {
+            dataPreview = `Row ID: ${data.row.id || data.row._id}`
+          } else if (data.rowCount !== undefined) {
+            dataPreview = `Rows: ${data.rowCount}, Columns: ${data.columnCount}`
+          } else {
+            dataPreview = JSON.stringify(data, null, 2).substring(0, 100)
+          }
+        }
+
+        eventItem.innerHTML = `
+        <div class="event-type">${eventType}</div>
+        <div class="event-time">${time}</div>
+        ${dataPreview ? `<div class="event-data">${dataPreview}</div>` : ""}
+      `
+
+        eventList.insertBefore(eventItem, eventList.firstChild)
+
+        // Keep only last 50 events
+        while (eventList.children.length > 50) {
+          eventList.removeChild(eventList.lastChild)
+        }
+
+        // Update stats
+        stats.total++
+        stats.byType[eventType] = (stats.byType[eventType] || 0) + 1
+
+        if (eventType === "CELL_CHANGE") stats.cellChanges++
+        if (["ROW_ADD", "ROW_DELETE", "ROW_CHANGE"].includes(eventType))
+          stats.rowChanges++
+
+        updateStats()
+      }
+
+      function updateStats() {
+        document.getElementById("statTotal").textContent = stats.total
+        document.getElementById("statCells").textContent = stats.cellChanges
+        document.getElementById("statRows").textContent = stats.rowChanges
+      }
+
+      // Subscribe to ALL events
+      const TableEvents = Table.Events
+
+      table.on(TableEvents.STATE_CHANGE, (data) => {
+        logEvent("STATE_CHANGE", data)
+      })
+
+      table.on(TableEvents.DATA_CHANGE, (data) => {
+        logEvent("DATA_CHANGE", data, "data-change")
+      })
+
+      table.on(TableEvents.CELL_CHANGE, (data) => {
+        logEvent("CELL_CHANGE", data, "cell-change")
+      })
+
+      table.on(TableEvents.ROW_CLICK, (data) => {
+        logEvent("ROW_CLICK", data, "row-click")
+      })
+
+      table.on(TableEvents.ROW_CHANGE, (data) => {
+        logEvent("ROW_CHANGE", data)
+      })
+
+      table.on(TableEvents.ROW_ADD, (data) => {
+        logEvent("ROW_ADD", data)
+      })
+
+      table.on(TableEvents.ROW_DELETE, (data) => {
+        logEvent("ROW_DELETE", data)
+      })
+
+      table.on(TableEvents.MODE_CHANGE, (data) => {
+        logEvent("MODE_CHANGE", data, "mode-change")
+      })
+
+      table.on(TableEvents.BEFORE_RENDER, (data) => {
+        logEvent("BEFORE_RENDER", data)
+      })
+
+      table.on(TableEvents.RENDER, (data) => {
+        logEvent("RENDER", data)
+      })
+
+      table.on(TableEvents.AFTER_RENDER, (data) => {
+        logEvent("AFTER_RENDER", data)
+      })
+
+      table.on(TableEvents.CELL_FOCUS, (data) => {
+        logEvent("CELL_FOCUS", data)
+      })
+
+      table.on(TableEvents.CELL_BLUR, (data) => {
+        logEvent("CELL_BLUR", data)
+      })
+
+      // Button handlers
+      document.getElementById("toggleMode").addEventListener("click", () => {
+        table.toggleMode()
+        const mode = table.getMode()
+        document.getElementById(
+          "toggleMode"
+        ).textContent = `Mode: ${mode.toUpperCase()}`
+      })
+
+      document.getElementById("triggerUpdate").addEventListener("click", () => {
+        const data = table.getData()
+        if (data.length > 0) {
+          const firstRow = data[0]
+          table.updateCell(firstRow.id, "salary", firstRow.salary + 1000)
+        }
+      })
+
+      document.getElementById("addRow").addEventListener("click", () => {
+        table.addRow({
+          id: nextId++,
+          name: "New Employee",
+          department: "Engineering",
+          salary: 70000,
+        })
+      })
+
+      document.getElementById("deleteRow").addEventListener("click", () => {
+        const data = table.getData()
+        if (data.length > 0) {
+          const lastRow = data[data.length - 1]
+          table.deleteRow(lastRow.id)
+        }
+      })
+
+      document.getElementById("clearLog").addEventListener("click", () => {
+        document.getElementById("eventList").innerHTML = ""
+        stats.total = 0
+        stats.cellChanges = 0
+        stats.rowChanges = 0
+        stats.byType = {}
+        updateStats()
+      })
+
+      // Example: Unsubscribe from an event
+      const unsubscribe = table.on(TableEvents.CELL_CHANGE, (data) => {
+        console.log("This is a temporary listener:", data)
+      })
+
+      // Uncomment to unsubscribe after 5 seconds
+      // setTimeout(() => {
+      //   unsubscribe();
+      //   console.log('Temporary listener unsubscribed');
+      // }, 5000);
+
+      // Example: Use once() for one-time event
+      table.once(TableEvents.DATA_CHANGE, (data) => {
+        console.log("This will only fire ONCE for DATA_CHANGE:", data)
+      })
+
+      console.log("✅ Event System Example loaded successfully!")
+      console.log("💡 Available event types:", Object.keys(TableEvents))
+      console.log(
+        "💡 Try interacting with the table to see events in real-time"
+      )
+    </script>
+  </body>
+</html>

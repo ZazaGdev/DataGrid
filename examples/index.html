@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Examples</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+      }
+
+      .description {
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.85;
+        line-height: 1.6;
+      }
+
+      .examples-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .example-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .example-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .example-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: #111827;
+      }
+
+      .example-card p {
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .feature-tag {
+        background: #f3f4f6;
+        color: #374151;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .feature-tag.primary {
+        background: #eff6ff;
+        color: #1e40af;
+      }
+
+      .feature-tag.success {
+        background: #f0fdf4;
+        color: #15803d;
+      }
+
+      .feature-tag.warning {
+        background: #fefce8;
+        color: #a16207;
+      }
+
+      .footer {
+        text-align: center;
+        color: white;
+        padding: 2rem 0;
+        opacity: 0.85;
+      }
+
+      .footer a {
+        color: white;
+        text-decoration: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+        transition: border-color 0.3s ease;
+      }
+
+      .footer a:hover {
+        border-bottom-color: white;
+      }
+
+      .quick-start {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .quick-start h2 {
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .quick-start pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+
+      .quick-start p {
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>📊 DataGrid Examples</h1>
+        <p class="subtitle">A comprehensive showcase of all library features</p>
+        <p class="description">
+          Explore interactive examples demonstrating every capability of the
+          DataGrid library, from basic usage to advanced features like grouping,
+          exports, and event handling.
+        </p>
+      </header>
+
+      <div class="quick-start">
+        <h2>🚀 Quick Start</h2>
+        <p>
+          Getting started with DataGrid is simple. Here's a minimal example:
+        </p>
+        <pre>
+import { Table } from './src/index.js';
+
+const table = new Table({
+  container: '#myTable',
+  columns: [
+    { title: 'Name', data: 'name' },
+    { title: 'Email', data: 'email' }
+  ],
+  data: [
+    { name: 'John Doe', email: 'john@example.com' },
+    { name: 'Jane Smith', email: 'jane@example.com' }
+  ]
+});</pre
+        >
+        <p>Click any example below to see it in action!</p>
+      </div>
+
+      <div class="examples-grid">
+        <a href="01-basic-usage.html" class="example-card">
+          <div class="example-number">1</div>
+          <h3>Basic Usage</h3>
+          <p>
+            Learn the fundamentals: creating a table, switching between view and
+            edit modes, and basic cell editing with keyboard navigation.
+          </p>
+          <div class="features">
+            <span class="feature-tag primary">View/Edit Modes</span>
+            <span class="feature-tag primary">Cell Editing</span>
+            <span class="feature-tag">Data Display</span>
+          </div>
+        </a>
+
+        <a href="02-grouping.html" class="example-card">
+          <div class="example-number">2</div>
+          <h3>Row Grouping & Totals</h3>
+          <p>
+            Organize data by grouping rows with automatic aggregate totals.
+            Expand/collapse groups individually or all at once.
+          </p>
+          <div class="features">
+            <span class="feature-tag success">Grouping</span>
+            <span class="feature-tag success">Aggregates</span>
+            <span class="feature-tag">Expand/Collapse</span>
+          </div>
+        </a>
+
+        <a href="03-crud-operations.html" class="example-card">
+          <div class="example-number">3</div>
+          <h3>CRUD Operations</h3>
+          <p>
+            Complete Create, Read, Update, and Delete operations with batch
+            updates, row selection, and dirty state tracking.
+          </p>
+          <div class="features">
+            <span class="feature-tag warning">Add Rows</span>
+            <span class="feature-tag warning">Delete Rows</span>
+            <span class="feature-tag warning">Batch Updates</span>
+            <span class="feature-tag">Dirty Tracking</span>
+          </div>
+        </a>
+
+        <a href="04-advanced-features.html" class="example-card">
+          <div class="example-number">4</div>
+          <h3>Advanced Features</h3>
+          <p>
+            Explore fixed columns, expandable sub-rows, keyboard navigation, and
+            programmatic scroll management.
+          </p>
+          <div class="features">
+            <span class="feature-tag primary">Fixed Columns</span>
+            <span class="feature-tag primary">Sub-rows</span>
+            <span class="feature-tag">Keyboard Nav</span>
+            <span class="feature-tag">Scrolling</span>
+          </div>
+        </a>
+
+        <a href="05-export.html" class="example-card">
+          <div class="example-number">5</div>
+          <h3>Export Data</h3>
+          <p>
+            Export table data to CSV and Excel formats with column filtering,
+            custom delimiters, and row filtering options.
+          </p>
+          <div class="features">
+            <span class="feature-tag success">CSV Export</span>
+            <span class="feature-tag success">Excel Export</span>
+            <span class="feature-tag">Filtering</span>
+            <span class="feature-tag">Download</span>
+          </div>
+        </a>
+
+        <a href="06-event-system.html" class="example-card">
+          <div class="example-number">6</div>
+          <h3>Event System</h3>
+          <p>
+            Master the comprehensive event system with real-time logging, custom
+            handlers, and event statistics tracking.
+          </p>
+          <div class="features">
+            <span class="feature-tag warning">Event Listeners</span>
+            <span class="feature-tag warning">Callbacks</span>
+            <span class="feature-tag">Real-time Log</span>
+            <span class="feature-tag">Statistics</span>
+          </div>
+        </a>
+
+        <a href="07-column-management.html" class="example-card">
+          <div class="example-number">7</div>
+          <h3>Column Management</h3>
+          <p>
+            Control column visibility, apply custom formatters, and dynamically
+            update column configuration on-the-fly.
+          </p>
+          <div class="features">
+            <span class="feature-tag primary">Show/Hide</span>
+            <span class="feature-tag primary">Custom Formats</span>
+            <span class="feature-tag">Dynamic Config</span>
+          </div>
+        </a>
+
+        <a href="basic.html" class="example-card">
+          <div class="example-number">💎</div>
+          <h3>Original Basic Example</h3>
+          <p>
+            The original comprehensive example that combines multiple features
+            in a single demonstration.
+          </p>
+          <div class="features">
+            <span class="feature-tag">Legacy</span>
+            <span class="feature-tag">All Features</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="footer">
+        <p>
+          Built with ❤️ for developers who need powerful, flexible data grids.
+        </p>
+        <p>
+          View the <a href="../docs/README.md">documentation</a> or
+          <a href="../docs/QUICK-REFERENCE.md">quick reference</a> for more
+          details.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
