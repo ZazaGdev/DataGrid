@@ -3,7 +3,7 @@
  * Styles for edit mode inputs and form controls
  */
 
-@use 'variables' as *;
+@use "variables" as *;
 
 // ============================================
 // Base Input
@@ -21,34 +21,34 @@
   border: none;
   outline: none;
   @include et-transition(background-color, box-shadow);
-  
+
   &:focus {
     background-color: var(--et-color-bg);
     box-shadow: inset 0 0 0 2px var(--et-color-primary);
   }
-  
+
   &:disabled {
     background-color: var(--et-color-bg-alt);
     color: var(--et-color-text-muted);
     cursor: not-allowed;
   }
-  
+
   &::placeholder {
     color: var(--et-color-text-light);
   }
-  
+
   // Number inputs - right aligned
   &[type="number"] {
     text-align: right;
     font-variant-numeric: tabular-nums;
-    
+
     // Remove spinner buttons
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-    
+
     -moz-appearance: textfield;
   }
 }
@@ -64,11 +64,11 @@
   background-position: right var(--et-cell-padding-x) center;
   padding-right: calc(var(--et-cell-padding-x) * 2 + 12px);
   cursor: pointer;
-  
+
   &:focus {
     background-color: var(--et-color-bg);
   }
-  
+
   option {
     padding: var(--et-spacing-sm);
   }
@@ -94,7 +94,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  
+
   input[type="checkbox"] {
     width: 1rem;
     height: 1rem;
@@ -112,7 +112,7 @@
   &::-webkit-calendar-picker-indicator {
     cursor: pointer;
     opacity: 0.6;
-    
+
     &:hover {
       opacity: 1;
     }
@@ -128,7 +128,7 @@
   .et-cell:not(.et-cell-fixed) {
     cursor: text;
   }
-  
+
   // Non-editable cells in edit mode
   .et-cell[data-editable="false"] {
     cursor: default;
@@ -147,18 +147,18 @@
       box-shadow: inset 0 0 0 2px var(--et-color-success);
     }
   }
-  
+
   &.et-input-invalid {
     background-color: #fef2f2;
-    
+
     &:focus {
       box-shadow: inset 0 0 0 2px var(--et-color-error);
     }
   }
-  
+
   &.et-input-warning {
     background-color: #fffbeb;
-    
+
     &:focus {
       box-shadow: inset 0 0 0 2px var(--et-color-warning);
     }
@@ -180,9 +180,9 @@
   color: white;
   border-radius: var(--et-border-radius) var(--et-border-radius) 0 0;
   z-index: var(--et-z-dropdown);
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: var(--et-spacing-md);
@@ -205,7 +205,7 @@
   color: var(--et-color-text-light);
   cursor: pointer;
   @include et-transition(color, opacity);
-  
+
   &:hover {
     color: var(--et-color-primary);
   }
@@ -221,9 +221,9 @@
 
 .et-cell-loading {
   position: relative;
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     right: var(--et-cell-padding-x);

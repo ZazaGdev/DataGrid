@@ -2,7 +2,7 @@
  * Table Base Styles
  */
 
-@use 'variables' as *;
+@use "variables" as *;
 
 // ============================================
 // Container
@@ -69,11 +69,11 @@
   background-color: var(--et-color-bg-alt);
   border-right: var(--et-border-width) solid var(--et-color-border);
   user-select: none;
-  
+
   &:last-child {
     border-right: none;
   }
-  
+
   // Fixed column header
   &.et-cell-fixed {
     position: sticky;
@@ -104,35 +104,35 @@
 
 .et-row {
   @include et-transition(background-color);
-  
+
   &:hover {
     background-color: var(--et-color-bg-hover);
   }
-  
+
   // Data row
   &.et-row-data {
     cursor: pointer;
-    
+
     &:nth-child(even) {
       background-color: var(--et-color-bg-alt);
-      
+
       &:hover {
         background-color: var(--et-color-bg-hover);
       }
     }
   }
-  
+
   // Selected row
   &.et-row-selected {
     background-color: var(--et-color-bg-selected) !important;
   }
-  
+
   // Dirty (modified) row
   &.et-row-dirty {
     position: relative;
-    
+
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 0;
@@ -141,7 +141,7 @@
       background-color: var(--et-color-warning);
     }
   }
-  
+
   // Hidden row (for collapsed groups)
   &.et-row-hidden {
     display: none;
@@ -160,47 +160,47 @@
   border-bottom: var(--et-border-width) solid var(--et-color-border);
   @include et-truncate;
   @include et-transition(background-color, box-shadow);
-  
+
   &:last-child {
     border-right: none;
   }
-  
+
   // Fixed column cell
   &.et-cell-fixed {
     position: sticky;
     left: 0;
     z-index: var(--et-z-fixed);
     background-color: inherit;
-    
+
     // Ensure fixed cell inherits row background
     .et-row-data:nth-child(even) & {
       background-color: var(--et-color-bg-alt);
     }
-    
+
     .et-row:hover & {
       background-color: var(--et-color-bg-hover);
     }
-    
+
     .et-row-selected & {
       background-color: var(--et-color-bg-selected);
     }
   }
-  
+
   // Cell type alignments
   &.et-cell-number {
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
-  
+
   &.et-cell-currency {
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
-  
+
   &.et-cell-date {
     text-align: center;
   }
-  
+
   // Cell in edit mode
   &.et-cell-editing {
     padding: 0;

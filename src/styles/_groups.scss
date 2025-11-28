@@ -3,7 +3,7 @@
  * Styles for grouped rows, group headers, and totals
  */
 
-@use 'variables' as *;
+@use "variables" as *;
 
 // ============================================
 // Group Header Row
@@ -13,7 +13,7 @@
   background-color: var(--et-color-bg-alt);
   border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
   cursor: pointer;
-  
+
   &:hover {
     background-color: var(--et-color-bg-hover);
   }
@@ -39,15 +39,15 @@
   font-size: var(--et-font-size-sm);
   color: var(--et-color-text-muted);
   @include et-transition(transform, color);
-  
+
   &.et-expanded {
     color: var(--et-color-text);
   }
-  
+
   &.et-collapsed {
     color: var(--et-color-text-muted);
   }
-  
+
   &:hover {
     color: var(--et-color-primary);
   }
@@ -72,7 +72,7 @@
   background-color: var(--et-color-bg-alt);
   border-top: var(--et-border-width) solid var(--et-color-border-strong);
   font-weight: var(--et-font-weight-medium);
-  
+
   &:hover {
     background-color: var(--et-color-bg-alt); // No hover effect for totals
   }
@@ -91,11 +91,11 @@
   background-color: #e0e7ff; // Slightly highlighted
   border-top: 2px solid var(--et-color-primary);
   font-weight: var(--et-font-weight-bold);
-  
+
   &:hover {
     background-color: #e0e7ff;
   }
-  
+
   .et-cell {
     background-color: inherit;
   }
@@ -131,9 +131,9 @@
   // Add subtle left border to indicate grouping
   .et-row-data {
     position: relative;
-    
+
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 0;
@@ -142,9 +142,12 @@
       background-color: transparent;
     }
   }
-  
+
   // Alternating group colors (optional)
-  .et-row-group-header:nth-of-type(odd) ~ .et-row-data:not(.et-row-group-header ~ .et-row-group-header ~ .et-row-data) {
+  .et-row-group-header:nth-of-type(odd)
+    ~ .et-row-data:not(
+      .et-row-group-header ~ .et-row-group-header ~ .et-row-data
+    ) {
     // Can add subtle background differentiation here
   }
 }
@@ -157,7 +160,7 @@
   &.et-row-collapsing {
     animation: et-collapse $et-animation-duration ease-out forwards;
   }
-  
+
   &.et-row-expanding {
     animation: et-expand $et-animation-duration ease-out forwards;
   }

@@ -9,9 +9,9 @@
  * @returns {HTMLElement}
  */
 export function createElement(tag, attributes = {}) {
-  const element = document.createElement(tag);
-  setAttributes(element, attributes);
-  return element;
+  const element = document.createElement(tag)
+  setAttributes(element, attributes)
+  return element
 }
 
 /**
@@ -21,18 +21,18 @@ export function createElement(tag, attributes = {}) {
  */
 export function setAttributes(element, attributes) {
   Object.entries(attributes).forEach(([key, value]) => {
-    if (key === 'class') {
-      element.className = value;
-    } else if (key === 'style' && typeof value === 'object') {
-      Object.assign(element.style, value);
-    } else if (key.startsWith('data-')) {
-      element.setAttribute(key, value);
+    if (key === "class") {
+      element.className = value
+    } else if (key === "style" && typeof value === "object") {
+      Object.assign(element.style, value)
+    } else if (key.startsWith("data-")) {
+      element.setAttribute(key, value)
     } else if (key in element) {
-      element[key] = value;
+      element[key] = value
     } else {
-      element.setAttribute(key, value);
+      element.setAttribute(key, value)
     }
-  });
+  })
 }
 
 /**
@@ -41,11 +41,11 @@ export function setAttributes(element, attributes) {
  * @param {...string} classNames - Class names to add
  */
 export function addClass(element, ...classNames) {
-  classNames.forEach(className => {
+  classNames.forEach((className) => {
     if (className) {
-      element.classList.add(className);
+      element.classList.add(className)
     }
-  });
+  })
 }
 
 /**
@@ -54,11 +54,11 @@ export function addClass(element, ...classNames) {
  * @param {...string} classNames - Class names to remove
  */
 export function removeClass(element, ...classNames) {
-  classNames.forEach(className => {
+  classNames.forEach((className) => {
     if (className) {
-      element.classList.remove(className);
+      element.classList.remove(className)
     }
-  });
+  })
 }
 
 /**
@@ -69,7 +69,7 @@ export function removeClass(element, ...classNames) {
  * @returns {boolean} - Whether class is now present
  */
 export function toggleClass(element, className, force) {
-  return element.classList.toggle(className, force);
+  return element.classList.toggle(className, force)
 }
 
 /**
@@ -79,7 +79,7 @@ export function toggleClass(element, className, force) {
  * @returns {boolean}
  */
 export function hasClass(element, className) {
-  return element.classList.contains(className);
+  return element.classList.contains(className)
 }
 
 /**
@@ -89,7 +89,7 @@ export function hasClass(element, className) {
  * @returns {HTMLElement|null}
  */
 export function closest(element, selector) {
-  return element.closest(selector);
+  return element.closest(selector)
 }
 
 /**
@@ -99,7 +99,7 @@ export function closest(element, selector) {
  * @returns {HTMLElement|null}
  */
 export function $(selector, context = document) {
-  return context.querySelector(selector);
+  return context.querySelector(selector)
 }
 
 /**
@@ -109,7 +109,7 @@ export function $(selector, context = document) {
  * @returns {NodeListOf<HTMLElement>}
  */
 export function $$(selector, context = document) {
-  return context.querySelectorAll(selector);
+  return context.querySelectorAll(selector)
 }
 
 /**
@@ -118,11 +118,11 @@ export function $$(selector, context = document) {
  * @returns {{top: number, left: number}}
  */
 export function getOffset(element) {
-  const rect = element.getBoundingClientRect();
+  const rect = element.getBoundingClientRect()
   return {
     top: rect.top + window.scrollY,
-    left: rect.left + window.scrollX
-  };
+    left: rect.left + window.scrollX,
+  }
 }
 
 /**
@@ -133,8 +133,8 @@ export function getOffset(element) {
 export function getOuterDimensions(element) {
   return {
     width: element.offsetWidth,
-    height: element.offsetHeight
-  };
+    height: element.offsetHeight,
+  }
 }
 
 /**
@@ -143,11 +143,17 @@ export function getOuterDimensions(element) {
  * @returns {{width: number, height: number}}
  */
 export function getInnerDimensions(element) {
-  const style = getComputedStyle(element);
+  const style = getComputedStyle(element)
   return {
-    width: element.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
-    height: element.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
-  };
+    width:
+      element.clientWidth -
+      parseFloat(style.paddingLeft) -
+      parseFloat(style.paddingRight),
+    height:
+      element.clientHeight -
+      parseFloat(style.paddingTop) -
+      parseFloat(style.paddingBottom),
+  }
 }
 
 /**
@@ -157,11 +163,11 @@ export function getInnerDimensions(element) {
  */
 export function scrollIntoView(element, options = {}) {
   element.scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'nearest',
-    ...options
-  });
+    behavior: "smooth",
+    block: "nearest",
+    inline: "nearest",
+    ...options,
+  })
 }
 
 /**
@@ -174,15 +180,15 @@ export function scrollIntoView(element, options = {}) {
  */
 export function delegate(parent, eventType, selector, handler) {
   const listener = (event) => {
-    const target = event.target.closest(selector);
+    const target = event.target.closest(selector)
     if (target && parent.contains(target)) {
-      handler.call(target, event, target);
+      handler.call(target, event, target)
     }
-  };
-  
-  parent.addEventListener(eventType, listener);
-  
-  return () => parent.removeEventListener(eventType, listener);
+  }
+
+  parent.addEventListener(eventType, listener)
+
+  return () => parent.removeEventListener(eventType, listener)
 }
 
 /**
@@ -191,9 +197,9 @@ export function delegate(parent, eventType, selector, handler) {
  * @returns {DocumentFragment}
  */
 export function createFragment(html) {
-  const template = document.createElement('template');
-  template.innerHTML = html.trim();
-  return template.content;
+  const template = document.createElement("template")
+  template.innerHTML = html.trim()
+  return template.content
 }
 
 /**
@@ -202,7 +208,7 @@ export function createFragment(html) {
  */
 export function empty(element) {
   while (element.firstChild) {
-    element.removeChild(element.firstChild);
+    element.removeChild(element.firstChild)
   }
 }
 
@@ -212,11 +218,52 @@ export function empty(element) {
  * @returns {boolean}
  */
 export function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
+  const rect = element.getBoundingClientRect()
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
+  )
+}
+
+/**
+ * Throttle function execution
+ * @param {Function} func - Function to throttle
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {Function} - Throttled function
+ */
+export function throttle(func, wait) {
+  let timeout = null
+  let lastRan = null
+
+  return function (...args) {
+    if (!lastRan) {
+      func.apply(this, args)
+      lastRan = Date.now()
+    } else {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        if (Date.now() - lastRan >= wait) {
+          func.apply(this, args)
+          lastRan = Date.now()
+        }
+      }, wait - (Date.now() - lastRan))
+    }
+  }
+}
+
+/**
+ * Debounce function execution
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {Function} - Debounced function
+ */
+export function debounce(func, wait) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func.apply(this, args), wait)
+  }
 }

@@ -3,7 +3,7 @@
  * Styles for informational sub-rows (e.g., Sep 2025, Oct 2025)
  */
 
-@use 'variables' as *;
+@use "variables" as *;
 
 // ============================================
 // Sub-row Base
@@ -14,17 +14,17 @@
   font-size: var(--et-font-size-sm);
   color: var(--et-color-text-muted);
   cursor: default;
-  
+
   &:hover {
     background-color: var(--et-color-bg); // No hover effect
   }
-  
+
   // Indent sub-row content
   .et-cell:first-child {
     padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
-    
+
     &::before {
-      content: '';
+      content: "";
       display: inline-block;
       width: 8px;
       height: 8px;
@@ -34,11 +34,11 @@
       vertical-align: middle;
     }
   }
-  
+
   // Sub-row cells are typically read-only
   .et-cell {
     background-color: var(--et-color-bg);
-    
+
     &.et-cell-fixed {
       background-color: var(--et-color-bg);
     }
@@ -69,7 +69,7 @@
 // Informational sub-row (dates, periods, etc.)
 .et-row-subrow.et-subrow-info {
   background-color: #fafbfc;
-  
+
   .et-cell {
     background-color: inherit;
     font-style: italic;
@@ -79,7 +79,7 @@
 // Detail sub-row (additional data)
 .et-row-subrow.et-subrow-detail {
   background-color: var(--et-color-bg-alt);
-  
+
   .et-cell {
     background-color: inherit;
   }
@@ -89,7 +89,7 @@
 .et-row-subrow.et-subrow-summary {
   background-color: var(--et-color-bg-alt);
   font-weight: var(--et-font-weight-medium);
-  
+
   .et-cell {
     background-color: inherit;
     border-top: 1px solid var(--et-color-border-strong);
@@ -122,12 +122,12 @@
   cursor: pointer;
   border-radius: var(--et-border-radius);
   @include et-transition(color, background-color);
-  
+
   &:hover {
     color: var(--et-color-primary);
     background-color: var(--et-color-primary-light);
   }
-  
+
   &.et-expanded {
     transform: translateY(-50%) rotate(90deg);
   }
@@ -176,9 +176,9 @@
 .et-row-subrow.et-subrow-timeline {
   .et-cell:first-child {
     position: relative;
-    
+
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: calc(var(--et-cell-padding-x) + 0.5rem);
       top: 0;
@@ -186,9 +186,9 @@
       width: 1px;
       background-color: var(--et-color-border-strong);
     }
-    
+
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: calc(var(--et-cell-padding-x) + 0.25rem);
       top: 50%;
@@ -200,12 +200,12 @@
       border-radius: 50%;
     }
   }
-  
+
   // First timeline sub-row
   &:first-of-type .et-cell:first-child::before {
     top: 50%;
   }
-  
+
   // Last timeline sub-row
   &:last-of-type .et-cell:first-child::before,
   &:has(+ .et-row-data) .et-cell:first-child::before {
