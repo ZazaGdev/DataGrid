@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataGrid - CRUD Operations</title>
+  <link rel="stylesheet" href="../src/styles/main.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 2rem;
+      background: #f3f4f6;
+      margin: 0;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { color: #111827; margin-bottom: 0.5rem; }
+    .description { color: #6b7280; margin-bottom: 1.5rem; }
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      background: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 150ms ease;
+    }
+    .btn:hover { background: #f9fafb; }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-success {
+      background: #10b981;
+      color: white;
+      border-color: #10b981;
+    }
+    .btn-success:hover { background: #059669; }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      border-color: #ef4444;
+    }
+    .btn-danger:hover { background: #dc2626; }
+    .info-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+    }
+    .info-box h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      color: #111827;
+    }
+    .info-box p {
+      margin: 0.25rem 0;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      max-width: 500px;
+      width: 90%;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 CRUD Operations Example</h1>
+    <p class="description">
+      This example demonstrates Create, Read, Update, and Delete operations on table rows,
+      including batch updates, row selection, and dirty state tracking.
+    </p>
+
+    <div class="toolbar">
+      <button class="btn btn-success" id="addRow">➕ Add New Row</button>
+      <button class="btn btn-danger" id="deleteSelected">🗑️ Delete Selected</button>
+      <button class="btn btn-primary" id="batchUpdate">⚡ Batch Update</button>
+      <button class="btn" id="updateCell">✏️ Update Single Cell</button>
+      <button class="btn" id="getDirtyRows">📝 Get Modified Rows</button>
+      <button class="btn" id="clearSelection">Clear Selection</button>
+    </div>
+
+    <div id="tableContainer"></div>
+
+    <div class="info-box">
+      <h3>💡 How to Use</h3>
+      <p>• <strong>Add Row:</strong> Click "Add New Row" to insert a new employee at the end.</p>
+      <p>• <strong>Delete Row:</strong> Select rows (click on row IDs) and click "Delete Selected".</p>
+      <p>• <strong>Update Cell:</strong> Click "Update Single Cell" to modify a specific cell value.</p>
+      <p>• <strong>Batch Update:</strong> Update multiple cells at once for better performance.</p>
+      <p>• <strong>Dirty Tracking:</strong> Modified rows are tracked. Click "Get Modified Rows" to see changes.</p>
+      <p>• <strong>Row Selection:</strong> Click on any row to select it for operations.</p>
+    </div>
+
+    <div class="info-box" id="statusBox" style="display: none;">
+      <h3>📋 Status</h3>
+      <pre id="statusOutput"></pre>
+    </div>
+  </div>
+
+  <!-- Add Row Modal -->
+  <div id="addRowModal" class="modal">
+    <div class="modal-content">
+      <h3>Add New Employee</h3>
+      <form id="addRowForm">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <input type="text" name="department" required>
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <input type="text" name="position" required>
+        </div>
+        <div class="form-group">
+          <label>Salary</label>
+          <input type="number" name="salary" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn btn-primary">Add Employee</button>
+          <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Table } from '../src/index.js';
+
+    // Sample employee data
+    let nextId = 9;
+    const employeeData = [
+      { id: 1, name: 'John Doe', department: 'Engineering', position: 'Senior Developer', salary: 95000, email: 'john.doe@company.com' },
+      { id: 2, name: 'Jane Smith', department: 'Design', position: 'Lead Designer', salary: 87000, email: 'jane.smith@company.com' },
+      { id: 3, name: 'Bob Johnson', department: 'Engineering', position: 'DevOps Engineer', salary: 92000, email: 'bob.johnson@company.com' },
+      { id: 4, name: 'Alice Williams', department: 'Marketing', position: 'Marketing Manager', salary: 78000, email: 'alice.w@company.com' },
+      { id: 5, name: 'Charlie Brown', department: 'Sales', position: 'Sales Representative', salary: 65000, email: 'charlie.b@company.com' },
+      { id: 6, name: 'Diana Prince', department: 'Engineering', position: 'QA Engineer', salary: 75000, email: 'diana.p@company.com' },
+      { id: 7, name: 'Edward Norton', department: 'Design', position: 'UX Designer', salary: 71000, email: 'edward.n@company.com' },
+      { id: 8, name: 'Fiona Apple', department: 'HR', position: 'HR Manager', salary: 68000, email: 'fiona.a@company.com' },
+    ];
+
+    // Column definitions
+    const columns = [
+      {
+        title: 'ID',
+        data: 'id',
+        width: '60px',
+        editable: false
+      },
+      {
+        title: 'Employee Name',
+        data: 'name',
+        width: '180px'
+      },
+      {
+        title: 'Department',
+        data: 'department',
+        width: '140px'
+      },
+      {
+        title: 'Position',
+        data: 'position',
+        width: '180px'
+      },
+      {
+        title: 'Salary',
+        data: 'salary',
+        width: '120px',
+        type: 'number',
+        format: (value) => value ? `$${value.toLocaleString()}` : ''
+      },
+      {
+        title: 'Email',
+        data: 'email',
+        width: '220px'
+      }
+    ];
+
+    // Create table instance
+    const table = new Table({
+      container: '#tableContainer',
+      columns: columns,
+      data: employeeData,
+      mode: 'edit' // Start in edit mode for CRUD operations
+    });
+
+    // Store globally
+    window.table = table;
+    
+    // Track selected rows
+    let selectedRowIds = new Set();
+
+    // Button handlers
+    document.getElementById('addRow').addEventListener('click', () => {
+      document.getElementById('addRowModal').classList.add('active');
+    });
+
+    document.getElementById('addRowForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      const newEmployee = {
+        id: nextId++,
+        name: formData.get('name'),
+        department: formData.get('department'),
+        position: formData.get('position'),
+        salary: parseFloat(formData.get('salary')),
+        email: formData.get('email')
+      };
+
+      table.addRow(newEmployee);
+      showStatus(`Added new employee: ${newEmployee.name}`);
+      
+      e.target.reset();
+      closeModal();
+    });
+
+    window.closeModal = function() {
+      document.getElementById('addRowModal').classList.remove('active');
+    };
+
+    document.getElementById('deleteSelected').addEventListener('click', () => {
+      if (selectedRowIds.size === 0) {
+        showStatus('No rows selected. Click on row IDs to select rows.');
+        return;
+      }
+
+      const idsToDelete = Array.from(selectedRowIds);
+      idsToDelete.forEach(id => {
+        table.deleteRow(id);
+      });
+
+      showStatus(`Deleted ${idsToDelete.length} row(s)`);
+      selectedRowIds.clear();
+    });
+
+    document.getElementById('updateCell').addEventListener('click', () => {
+      const data = table.getData();
+      if (data.length === 0) {
+        showStatus('No data to update');
+        return;
+      }
+
+      // Update first row's salary as example
+      const firstRow = data[0];
+      const newSalary = firstRow.salary + 5000;
+      
+      table.updateCell(firstRow.id, 'salary', newSalary);
+      
+      showStatus(`Updated ${firstRow.name}'s salary from $${firstRow.salary.toLocaleString()} to $${newSalary.toLocaleString()}`);
+    });
+
+    document.getElementById('batchUpdate').addEventListener('click', () => {
+      const data = table.getData();
+      
+      // Give everyone a 10% raise
+      const updates = data.map(row => ({
+        rowId: row.id,
+        columnName: 'salary',
+        value: Math.round(row.salary * 1.1)
+      }));
+
+      table.batchUpdate(updates);
+      
+      showStatus(`Batch updated ${updates.length} rows - 10% salary increase for everyone!`);
+    });
+
+    document.getElementById('getDirtyRows').addEventListener('click', () => {
+      const dirtyRows = table.getDirtyRows();
+      
+      if (dirtyRows.length === 0) {
+        showStatus('No modified rows');
+      } else {
+        showStatus({
+          message: `${dirtyRows.length} modified row(s)`,
+          dirtyRows: dirtyRows
+        });
+      }
+    });
+
+    document.getElementById('clearSelection').addEventListener('click', () => {
+      selectedRowIds.clear();
+      showStatus('Selection cleared');
+    });
+
+    // Subscribe to row events
+    table.on(Table.Events.ROW_ADD, (data) => {
+      console.log('Row added:', data);
+    });
+
+    table.on(Table.Events.ROW_DELETE, (data) => {
+      console.log('Row deleted:', data);
+    });
+
+    table.on(Table.Events.ROW_CHANGE, (data) => {
+      console.log('Row changed:', data);
+    });
+
+    table.on(Table.Events.ROW_CLICK, (data) => {
+      const rowId = data.row.id;
+      
+      // Toggle selection
+      if (selectedRowIds.has(rowId)) {
+        selectedRowIds.delete(rowId);
+      } else {
+        selectedRowIds.add(rowId);
+      }
+      
+      console.log('Row clicked, selected IDs:', Array.from(selectedRowIds));
+    });
+
+    // Utility function to display status
+    function showStatus(message) {
+      const statusBox = document.getElementById('statusBox');
+      const statusOutput = document.getElementById('statusOutput');
+      
+      statusBox.style.display = 'block';
+      
+      if (typeof message === 'string') {
+        statusOutput.textContent = message;
+      } else {
+        statusOutput.textContent = JSON.stringify(message, null, 2);
+      }
+    }
+
+    console.log('✅ CRUD Operations Example loaded successfully!');
+  </script>
+</body>
+</html>

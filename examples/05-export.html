@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataGrid - Export Data</title>
+  <link rel="stylesheet" href="../src/styles/main.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 2rem;
+      background: #f3f4f6;
+      margin: 0;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { color: #111827; margin-bottom: 0.5rem; }
+    .description { color: #6b7280; margin-bottom: 1.5rem; }
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      background: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 150ms ease;
+    }
+    .btn:hover { background: #f9fafb; }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-success {
+      background: #10b981;
+      color: white;
+      border-color: #10b981;
+    }
+    .btn-success:hover { background: #059669; }
+    .info-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+    }
+    .info-box h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      color: #111827;
+    }
+    .info-box p {
+      margin: 0.25rem 0;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .export-preview {
+      margin-top: 1.5rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      padding: 1rem;
+    }
+    .export-preview h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+    }
+    .export-preview pre {
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      overflow: auto;
+      max-height: 300px;
+      font-size: 0.75rem;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Export Data Example</h1>
+    <p class="description">
+      This example demonstrates exporting table data to CSV and Excel formats
+      with various options including column filtering, custom delimiters, and row filtering.
+    </p>
+
+    <div class="toolbar">
+      <button class="btn btn-success" id="exportCsvAll">📥 Export All to CSV</button>
+      <button class="btn btn-success" id="exportCsvFiltered">📥 Export Filtered CSV</button>
+      <button class="btn btn-success" id="exportCsvCustom">📥 CSV (Custom Delimiter)</button>
+      <button class="btn btn-primary" id="exportExcel">📊 Export to Excel</button>
+      <button class="btn" id="downloadCsv">💾 Download CSV File</button>
+      <button class="btn" id="previewExport">👁️ Preview Export</button>
+    </div>
+
+    <div id="tableContainer"></div>
+
+    <div class="info-box">
+      <h3>💡 How to Use</h3>
+      <p>• <strong>Export All to CSV:</strong> Export the complete table with all columns to CSV format.</p>
+      <p>• <strong>Export Filtered CSV:</strong> Export only specific columns (name, department, salary).</p>
+      <p>• <strong>Custom Delimiter:</strong> Export CSV with semicolon (;) delimiter instead of comma.</p>
+      <p>• <strong>Export to Excel:</strong> Generate Excel-compatible data structure.</p>
+      <p>• <strong>Download:</strong> Trigger a file download with the exported data.</p>
+      <p>• <strong>Preview:</strong> See what the exported data looks like before downloading.</p>
+    </div>
+
+    <div class="export-preview" id="exportPreview" style="display: none;">
+      <h3>📋 Export Preview</h3>
+      <pre id="previewContent"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Table } from '../src/index.js';
+
+    // Sample employee data
+    const employeeData = [
+      { id: 1, name: 'John Doe', department: 'Engineering', position: 'Senior Developer', salary: 95000, email: 'john.doe@company.com', hireDate: '2020-03-15', status: 'Active' },
+      { id: 2, name: 'Jane Smith', department: 'Design', position: 'Lead Designer', salary: 87000, email: 'jane.smith@company.com', hireDate: '2019-07-22', status: 'Active' },
+      { id: 3, name: 'Bob Johnson', department: 'Engineering', position: 'DevOps Engineer', salary: 92000, email: 'bob.johnson@company.com', hireDate: '2021-01-10', status: 'Active' },
+      { id: 4, name: 'Alice Williams', department: 'Marketing', position: 'Marketing Manager', salary: 78000, email: 'alice.w@company.com', hireDate: '2018-11-05', status: 'Active' },
+      { id: 5, name: 'Charlie Brown', department: 'Sales', position: 'Sales Representative', salary: 65000, email: 'charlie.b@company.com', hireDate: '2022-02-14', status: 'Active' },
+      { id: 6, name: 'Diana Prince', department: 'Engineering', position: 'QA Engineer', salary: 75000, email: 'diana.p@company.com', hireDate: '2020-09-01', status: 'Active' },
+      { id: 7, name: 'Edward Norton', department: 'Design', position: 'UX Designer', salary: 71000, email: 'edward.n@company.com', hireDate: '2021-06-18', status: 'Active' },
+      { id: 8, name: 'Fiona Apple', department: 'HR', position: 'HR Manager', salary: 68000, email: 'fiona.a@company.com', hireDate: '2019-04-30', status: 'On Leave' },
+      { id: 9, name: 'George Martin', department: 'Engineering', position: 'Junior Developer', salary: 62000, email: 'george.m@company.com', hireDate: '2023-01-09', status: 'Active' },
+      { id: 10, name: 'Helen Garcia', department: 'Sales', position: 'Sales Manager', salary: 89000, email: 'helen.g@company.com', hireDate: '2017-08-14', status: 'Active' },
+    ];
+
+    // Column definitions
+    const columns = [
+      {
+        title: 'Employee ID',
+        data: 'id',
+        width: '100px'
+      },
+      {
+        title: 'Full Name',
+        data: 'name',
+        width: '180px'
+      },
+      {
+        title: 'Department',
+        data: 'department',
+        width: '140px'
+      },
+      {
+        title: 'Position',
+        data: 'position',
+        width: '180px'
+      },
+      {
+        title: 'Annual Salary',
+        data: 'salary',
+        width: '130px',
+        type: 'number',
+        format: (value) => value ? `$${value.toLocaleString()}` : '',
+        exportFormat: (value) => value // Export raw number
+      },
+      {
+        title: 'Email Address',
+        data: 'email',
+        width: '220px'
+      },
+      {
+        title: 'Hire Date',
+        data: 'hireDate',
+        width: '120px',
+        format: (value) => {
+          if (!value) return '';
+          const date = new Date(value);
+          return date.toLocaleDateString();
+        }
+      },
+      {
+        title: 'Status',
+        data: 'status',
+        width: '100px'
+      }
+    ];
+
+    // Create table instance
+    const table = new Table({
+      container: '#tableContainer',
+      columns: columns,
+      data: employeeData,
+      mode: 'view'
+    });
+
+    // Store globally
+    window.table = table;
+
+    // Export handlers
+    document.getElementById('exportCsvAll').addEventListener('click', () => {
+      const csv = table.exportCSV({
+        includeHeaders: true,
+        includeHidden: false
+      });
+
+      console.log('CSV Export (All columns):');
+      console.log(csv);
+      
+      showPreview('CSV Export - All Columns', csv);
+    });
+
+    document.getElementById('exportCsvFiltered').addEventListener('click', () => {
+      const csv = table.exportCSV({
+        includeHeaders: true,
+        columns: ['name', 'department', 'salary', 'status'], // Only export specific columns
+      });
+
+      console.log('CSV Export (Filtered columns):');
+      console.log(csv);
+      
+      showPreview('CSV Export - Filtered Columns (Name, Department, Salary, Status)', csv);
+    });
+
+    document.getElementById('exportCsvCustom').addEventListener('click', () => {
+      const csv = table.exportCSV({
+        delimiter: ';', // Use semicolon instead of comma
+        includeHeaders: true
+      });
+
+      console.log('CSV Export (Custom delimiter):');
+      console.log(csv);
+      
+      showPreview('CSV Export - Custom Delimiter (semicolon)', csv);
+    });
+
+    document.getElementById('exportExcel').addEventListener('click', () => {
+      const excelData = table.exportExcel({
+        sheetName: 'Employees',
+        includeHeaders: true
+      });
+
+      console.log('Excel Export:');
+      console.log(excelData);
+      
+      // Format for display
+      const preview = JSON.stringify(excelData, null, 2);
+      showPreview('Excel Export - Data Structure', preview);
+    });
+
+    document.getElementById('downloadCsv').addEventListener('click', () => {
+      const csv = table.exportCSV({
+        includeHeaders: true
+      });
+
+      // Create blob and download
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `employees_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showPreview('Download Initiated', 'CSV file download started!');
+    });
+
+    document.getElementById('previewExport').addEventListener('click', () => {
+      // Show filtered export with only active employees
+      const csv = table.exportCSV({
+        includeHeaders: true,
+        filter: (row) => row.status === 'Active' // Only export active employees
+      });
+
+      const lines = csv.split('\n');
+      const preview = `Total rows exported: ${lines.length - 1}\n\n${csv}`;
+      
+      showPreview('Preview - Active Employees Only', preview);
+    });
+
+    // Subscribe to export events
+    table.on(Table.Events.EXPORT_START, (data) => {
+      console.log('Export started:', data);
+    });
+
+    table.on(Table.Events.EXPORT_COMPLETE, (data) => {
+      console.log('Export completed:', data);
+    });
+
+    // Utility function to show preview
+    function showPreview(title, content) {
+      const previewBox = document.getElementById('exportPreview');
+      const previewContent = document.getElementById('previewContent');
+      const titleElement = previewBox.querySelector('h3');
+      
+      titleElement.textContent = `📋 ${title}`;
+      previewContent.textContent = content;
+      previewBox.style.display = 'block';
+      
+      // Scroll to preview
+      previewBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    console.log('✅ Export Example loaded successfully!');
+    console.log('💡 Tip: Check the console for export output');
+  </script>
+</body>
+</html>

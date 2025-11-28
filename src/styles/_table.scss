@@ -1,0 +1,220 @@
+/**
+ * Table Base Styles
+ */
+
+@use 'variables' as *;
+
+// ============================================
+// Container
+// ============================================
+
+.et-container {
+  position: relative;
+  width: 100%;
+  font-family: var(--et-font-family);
+  font-size: var(--et-font-size-base);
+  color: var(--et-color-text);
+  background-color: var(--et-color-bg);
+  border: var(--et-border-width) solid var(--et-color-border);
+  border-radius: var(--et-border-radius);
+  overflow: hidden;
+}
+
+// ============================================
+// Table Wrapper (for scroll handling)
+// ============================================
+
+.et-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 100%;
+  @include et-scrollbar;
+}
+
+// ============================================
+// Table
+// ============================================
+
+.et-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+// ============================================
+// Header
+// ============================================
+
+.et-thead {
+  position: sticky;
+  top: 0;
+  z-index: var(--et-z-header);
+  background-color: var(--et-color-bg);
+}
+
+.et-header-row {
+  background-color: var(--et-color-bg-alt);
+  border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
+}
+
+.et-header-cell {
+  position: relative;
+  height: var(--et-header-height);
+  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
+  font-weight: var(--et-font-weight-medium);
+  text-align: left;
+  vertical-align: middle;
+  background-color: var(--et-color-bg-alt);
+  border-right: var(--et-border-width) solid var(--et-color-border);
+  user-select: none;
+  
+  &:last-child {
+    border-right: none;
+  }
+  
+  // Fixed column header
+  &.et-cell-fixed {
+    position: sticky;
+    left: 0;
+    z-index: var(--et-z-fixed-header);
+    background-color: var(--et-color-bg-alt);
+  }
+}
+
+.et-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--et-spacing-sm);
+  @include et-truncate;
+}
+
+// ============================================
+// Body
+// ============================================
+
+.et-tbody {
+  background-color: var(--et-color-bg);
+}
+
+// ============================================
+// Rows
+// ============================================
+
+.et-row {
+  @include et-transition(background-color);
+  
+  &:hover {
+    background-color: var(--et-color-bg-hover);
+  }
+  
+  // Data row
+  &.et-row-data {
+    cursor: pointer;
+    
+    &:nth-child(even) {
+      background-color: var(--et-color-bg-alt);
+      
+      &:hover {
+        background-color: var(--et-color-bg-hover);
+      }
+    }
+  }
+  
+  // Selected row
+  &.et-row-selected {
+    background-color: var(--et-color-bg-selected) !important;
+  }
+  
+  // Dirty (modified) row
+  &.et-row-dirty {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background-color: var(--et-color-warning);
+    }
+  }
+  
+  // Hidden row (for collapsed groups)
+  &.et-row-hidden {
+    display: none;
+  }
+}
+
+// ============================================
+// Cells
+// ============================================
+
+.et-cell {
+  height: var(--et-row-height);
+  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
+  vertical-align: middle;
+  border-right: var(--et-border-width) solid var(--et-color-border);
+  border-bottom: var(--et-border-width) solid var(--et-color-border);
+  @include et-truncate;
+  @include et-transition(background-color, box-shadow);
+  
+  &:last-child {
+    border-right: none;
+  }
+  
+  // Fixed column cell
+  &.et-cell-fixed {
+    position: sticky;
+    left: 0;
+    z-index: var(--et-z-fixed);
+    background-color: inherit;
+    
+    // Ensure fixed cell inherits row background
+    .et-row-data:nth-child(even) & {
+      background-color: var(--et-color-bg-alt);
+    }
+    
+    .et-row:hover & {
+      background-color: var(--et-color-bg-hover);
+    }
+    
+    .et-row-selected & {
+      background-color: var(--et-color-bg-selected);
+    }
+  }
+  
+  // Cell type alignments
+  &.et-cell-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  &.et-cell-currency {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  &.et-cell-date {
+    text-align: center;
+  }
+  
+  // Cell in edit mode
+  &.et-cell-editing {
+    padding: 0;
+    box-shadow: inset 0 0 0 2px var(--et-color-primary);
+  }
+}
+
+// ============================================
+// Fixed Column Shadow
+// ============================================
+
+.et-container.et-scrolled {
+  .et-cell-fixed,
+  .et-header-cell.et-cell-fixed {
+    box-shadow: var(--et-shadow-fixed);
+  }
+}

@@ -1,0 +1,189 @@
+/**
+ * Group Styles
+ * Styles for grouped rows, group headers, and totals
+ */
+
+@use 'variables' as *;
+
+// ============================================
+// Group Header Row
+// ============================================
+
+.et-row-group-header {
+  background-color: var(--et-color-bg-alt);
+  border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--et-color-bg-hover);
+  }
+}
+
+.et-cell-group-toggle {
+  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
+  font-weight: var(--et-font-weight-medium);
+}
+
+.et-group-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--et-spacing-sm);
+}
+
+.et-group-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: var(--et-font-size-sm);
+  color: var(--et-color-text-muted);
+  @include et-transition(transform, color);
+  
+  &.et-expanded {
+    color: var(--et-color-text);
+  }
+  
+  &.et-collapsed {
+    color: var(--et-color-text-muted);
+  }
+  
+  &:hover {
+    color: var(--et-color-primary);
+  }
+}
+
+.et-group-label {
+  font-weight: var(--et-font-weight-medium);
+  color: var(--et-color-text);
+}
+
+.et-group-count {
+  font-size: var(--et-font-size-sm);
+  font-weight: var(--et-font-weight-normal);
+  color: var(--et-color-text-muted);
+}
+
+// ============================================
+// Totals Row
+// ============================================
+
+.et-row-totals {
+  background-color: var(--et-color-bg-alt);
+  border-top: var(--et-border-width) solid var(--et-color-border-strong);
+  font-weight: var(--et-font-weight-medium);
+  
+  &:hover {
+    background-color: var(--et-color-bg-alt); // No hover effect for totals
+  }
+}
+
+.et-cell-total {
+  color: var(--et-color-text);
+  background-color: var(--et-color-bg-alt);
+}
+
+// ============================================
+// Grand Totals Row
+// ============================================
+
+.et-row-grand-total {
+  background-color: #e0e7ff; // Slightly highlighted
+  border-top: 2px solid var(--et-color-primary);
+  font-weight: var(--et-font-weight-bold);
+  
+  &:hover {
+    background-color: #e0e7ff;
+  }
+  
+  .et-cell {
+    background-color: inherit;
+  }
+}
+
+// ============================================
+// Group Indentation (for nested groups)
+// ============================================
+
+.et-group-level-1 {
+  .et-group-header-content {
+    padding-left: var(--et-spacing-lg);
+  }
+}
+
+.et-group-level-2 {
+  .et-group-header-content {
+    padding-left: calc(var(--et-spacing-lg) * 2);
+  }
+}
+
+.et-group-level-3 {
+  .et-group-header-content {
+    padding-left: calc(var(--et-spacing-lg) * 3);
+  }
+}
+
+// ============================================
+// Grouped Container Modifier
+// ============================================
+
+.et-container.et-grouped {
+  // Add subtle left border to indicate grouping
+  .et-row-data {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: transparent;
+    }
+  }
+  
+  // Alternating group colors (optional)
+  .et-row-group-header:nth-of-type(odd) ~ .et-row-data:not(.et-row-group-header ~ .et-row-group-header ~ .et-row-data) {
+    // Can add subtle background differentiation here
+  }
+}
+
+// ============================================
+// Collapse/Expand Animation
+// ============================================
+
+.et-row {
+  &.et-row-collapsing {
+    animation: et-collapse $et-animation-duration ease-out forwards;
+  }
+  
+  &.et-row-expanding {
+    animation: et-expand $et-animation-duration ease-out forwards;
+  }
+}
+
+@keyframes et-collapse {
+  from {
+    opacity: 1;
+    max-height: var(--et-row-height);
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+  }
+}
+
+@keyframes et-expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: var(--et-row-height);
+  }
+}

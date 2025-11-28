@@ -1,0 +1,157 @@
+/**
+ * EditableTable - Main Stylesheet
+ * 
+ * Import this file in your project to get all table styles.
+ * Customize by overriding CSS custom properties defined in _variables.scss
+ * 
+ * @example
+ * // Override theme colors
+ * :root {
+ *   --et-color-primary: #8b5cf6;
+ *   --et-color-primary-hover: #7c3aed;
+ * }
+ */
+
+// Core
+@use 'variables';
+@use 'table';
+
+// Features
+@use 'groups';
+@use 'inputs';
+@use 'subrows';
+
+// ============================================
+// Utility Classes
+// ============================================
+
+// Text alignment
+.et-text-left { text-align: left !important; }
+.et-text-center { text-align: center !important; }
+.et-text-right { text-align: right !important; }
+
+// Font weight
+.et-font-normal { font-weight: var(--et-font-weight-normal) !important; }
+.et-font-medium { font-weight: var(--et-font-weight-medium) !important; }
+.et-font-bold { font-weight: var(--et-font-weight-bold) !important; }
+
+// Text color
+.et-text-muted { color: var(--et-color-text-muted) !important; }
+.et-text-success { color: var(--et-color-success) !important; }
+.et-text-warning { color: var(--et-color-warning) !important; }
+.et-text-error { color: var(--et-color-error) !important; }
+
+// Background color
+.et-bg-success { background-color: #d1fae5 !important; }
+.et-bg-warning { background-color: #fef3c7 !important; }
+.et-bg-error { background-color: #fee2e2 !important; }
+
+// Visibility
+.et-hidden { display: none !important; }
+.et-visible { display: block !important; }
+
+// ============================================
+// Responsive Adjustments
+// ============================================
+
+@media (max-width: 768px) {
+  :root {
+    --et-cell-padding-x: 0.5rem;
+    --et-cell-padding-y: 0.375rem;
+    --et-font-size-base: 0.8125rem;
+  }
+  
+  .et-header-cell,
+  .et-cell {
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --et-cell-padding-x: 0.375rem;
+    --et-cell-padding-y: 0.25rem;
+    --et-font-size-base: 0.75rem;
+  }
+}
+
+// ============================================
+// Print Styles
+// ============================================
+
+@media print {
+  .et-container {
+    border: 1px solid #000;
+    box-shadow: none;
+  }
+  
+  .et-header-cell,
+  .et-cell {
+    border-color: #000;
+  }
+  
+  .et-row:hover {
+    background-color: transparent;
+  }
+  
+  .et-cell-input {
+    border: none;
+    background: transparent;
+  }
+  
+  // Hide interactive elements
+  .et-group-toggle-icon,
+  .et-edit-trigger,
+  .et-subrow-toggle {
+    display: none;
+  }
+  
+  // Show all groups
+  .et-row-hidden {
+    display: table-row !important;
+  }
+}
+
+// ============================================
+// Dark Theme (optional)
+// ============================================
+
+.et-theme-dark {
+  --et-color-bg: #1f2937;
+  --et-color-bg-alt: #111827;
+  --et-color-bg-hover: #374151;
+  --et-color-bg-selected: #1e3a5f;
+  
+  --et-color-border: #374151;
+  --et-color-border-strong: #4b5563;
+  
+  --et-color-text: #f9fafb;
+  --et-color-text-muted: #9ca3af;
+  --et-color-text-light: #6b7280;
+  
+  --et-color-primary-light: #1e3a5f;
+}
+
+// ============================================
+// Compact Mode
+// ============================================
+
+.et-compact {
+  --et-cell-padding-x: 0.5rem;
+  --et-cell-padding-y: 0.25rem;
+  --et-header-height: 2rem;
+  --et-row-height: 1.75rem;
+  --et-font-size-base: 0.75rem;
+}
+
+// ============================================
+// Comfortable Mode
+// ============================================
+
+.et-comfortable {
+  --et-cell-padding-x: 1rem;
+  --et-cell-padding-y: 0.75rem;
+  --et-header-height: 3.25rem;
+  --et-row-height: 3rem;
+  --et-font-size-base: 0.9375rem;
+}

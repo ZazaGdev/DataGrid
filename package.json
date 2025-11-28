@@ -1,0 +1,37 @@
+{
+  "name": "editable-table",
+  "version": "1.0.0",
+  "description": "A modular, high-performance inline editing table library built with Vanilla JS and SCSS",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "build:css": "sass src/styles/main.scss dist/editable-table.css",
+    "build:css:min": "sass src/styles/main.scss dist/editable-table.min.css --style=compressed",
+    "watch:css": "sass --watch src/styles/main.scss dist/editable-table.css",
+    "build": "npm run build:css && npm run build:css:min",
+    "dev": "npm run watch:css"
+  },
+  "keywords": [
+    "table",
+    "editable",
+    "inline-editing",
+    "data-table",
+    "vanilla-js",
+    "scss"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.69.0"
+  },
+  "files": [
+    "src/",
+    "dist/",
+    "docs/"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./css": "./dist/editable-table.css",
+    "./css/min": "./dist/editable-table.min.css"
+  }
+}
