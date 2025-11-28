@@ -1,227 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DataGrid - Basic Usage</title>
-  <link rel="stylesheet" href="../src/styles/main.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 2rem;
-      background: #f3f4f6;
-      margin: 0;
-    }
-    .container { max-width: 1200px; margin: 0 auto; }
-    h1 { color: #111827; margin-bottom: 0.5rem; }
-    .description { color: #6b7280; margin-bottom: 1.5rem; }
-    .toolbar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 0.5rem 1rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      background: white;
-      cursor: pointer;
-      font-size: 0.875rem;
-      transition: all 150ms ease;
-    }
-    .btn:hover { background: #f9fafb; }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
-    .btn-primary:hover { background: #2563eb; }
-    .info-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background: white;
-      border-radius: 0.375rem;
-      border: 1px solid #e5e7eb;
-    }
-    .info-box h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 0.875rem;
-      color: #111827;
-    }
-    .info-box p {
-      margin: 0.25rem 0;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .code {
-      background: #f3f4f6;
-      padding: 0.125rem 0.375rem;
-      border-radius: 0.25rem;
-      font-family: monospace;
-      font-size: 0.8em;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📊 Basic Usage Example</h1>
-    <p class="description">
-      This example demonstrates the fundamental features of DataGrid: 
-      creating a table, switching between view and edit modes, and basic cell editing.
-    </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Basic Usage</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .code {
+        background: #f3f4f6;
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Basic Usage Example</h1>
+      <p class="description">
+        This example demonstrates the fundamental features of DataGrid: creating
+        a table, switching between view and edit modes, and basic cell editing.
+      </p>
 
-    <div class="toolbar">
-      <button class="btn btn-primary" id="toggleMode">Toggle Mode (View/Edit)</button>
-      <button class="btn" id="getData">Get Current Data</button>
-      <button class="btn" id="revertChanges">Revert Changes</button>
-      <button class="btn" id="clearDirty">Clear Dirty State</button>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="toggleMode">
+          Toggle Mode (View/Edit)
+        </button>
+        <button class="btn" id="getData">Get Current Data</button>
+        <button class="btn" id="revertChanges">Revert Changes</button>
+        <button class="btn" id="clearDirty">Clear Dirty State</button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="info-box">
+        <h3>💡 How to Use</h3>
+        <p>
+          • <strong>View Mode:</strong> Click on any cell to view data. Rows are
+          read-only.
+        </p>
+        <p>
+          • <strong>Edit Mode:</strong> Click "Toggle Mode" to switch to edit
+          mode. Now you can click on cells to edit values.
+        </p>
+        <p>
+          • <strong>Navigation:</strong> Use Tab/Shift+Tab to move between
+          cells, or arrow keys in edit mode.
+        </p>
+        <p>
+          • <strong>Modified Data:</strong> Changes are tracked. Click "Get
+          Current Data" to see all data including changes.
+        </p>
+        <p>
+          • <strong>Dirty State:</strong> Modified rows are tracked. Use "Clear
+          Dirty State" to mark all changes as saved.
+        </p>
+      </div>
+
+      <div class="info-box" id="statusBox" style="display: none">
+        <h3>📋 Status</h3>
+        <pre id="statusOutput"></pre>
+      </div>
     </div>
 
-    <div id="tableContainer"></div>
+    <script type="module">
+      import { Table } from "../src/index.js"
 
-    <div class="info-box">
-      <h3>💡 How to Use</h3>
-      <p>• <strong>View Mode:</strong> Click on any cell to view data. Rows are read-only.</p>
-      <p>• <strong>Edit Mode:</strong> Click "Toggle Mode" to switch to edit mode. Now you can click on cells to edit values.</p>
-      <p>• <strong>Navigation:</strong> Use Tab/Shift+Tab to move between cells, or arrow keys in edit mode.</p>
-      <p>• <strong>Modified Data:</strong> Changes are tracked. Click "Get Current Data" to see all data including changes.</p>
-      <p>• <strong>Dirty State:</strong> Modified rows are tracked. Use "Clear Dirty State" to mark all changes as saved.</p>
-    </div>
+      // Sample employee data
+      const sampleData = [
+        {
+          id: 1,
+          name: "John Doe",
+          department: "Engineering",
+          position: "Senior Developer",
+          salary: 95000,
+          email: "john.doe@company.com",
+        },
+        {
+          id: 2,
+          name: "Jane Smith",
+          department: "Design",
+          position: "Lead Designer",
+          salary: 87000,
+          email: "jane.smith@company.com",
+        },
+        {
+          id: 3,
+          name: "Bob Johnson",
+          department: "Engineering",
+          position: "DevOps Engineer",
+          salary: 92000,
+          email: "bob.johnson@company.com",
+        },
+        {
+          id: 4,
+          name: "Alice Williams",
+          department: "Marketing",
+          position: "Marketing Manager",
+          salary: 78000,
+          email: "alice.w@company.com",
+        },
+        {
+          id: 5,
+          name: "Charlie Brown",
+          department: "Sales",
+          position: "Sales Representative",
+          salary: 65000,
+          email: "charlie.b@company.com",
+        },
+        {
+          id: 6,
+          name: "Diana Prince",
+          department: "Engineering",
+          position: "QA Engineer",
+          salary: 75000,
+          email: "diana.p@company.com",
+        },
+        {
+          id: 7,
+          name: "Edward Norton",
+          department: "Design",
+          position: "UX Designer",
+          salary: 71000,
+          email: "edward.n@company.com",
+        },
+        {
+          id: 8,
+          name: "Fiona Apple",
+          department: "HR",
+          position: "HR Manager",
+          salary: 68000,
+          email: "fiona.a@company.com",
+        },
+      ]
 
-    <div class="info-box" id="statusBox" style="display: none;">
-      <h3>📋 Status</h3>
-      <pre id="statusOutput"></pre>
-    </div>
-  </div>
+      // Column definitions
+      const columns = [
+        {
+          title: "ID",
+          data: "id",
+          width: "60px",
+          editable: false, // ID is not editable
+        },
+        {
+          title: "Employee Name",
+          data: "name",
+          width: "180px",
+        },
+        {
+          title: "Department",
+          data: "department",
+          width: "140px",
+        },
+        {
+          title: "Position",
+          data: "position",
+          width: "180px",
+        },
+        {
+          title: "Salary",
+          data: "salary",
+          width: "120px",
+          type: "number",
+          format: (value) => {
+            return value ? `$${value.toLocaleString()}` : ""
+          },
+        },
+        {
+          title: "Email",
+          data: "email",
+          width: "220px",
+        },
+      ]
 
-  <script type="module">
-    import { Table } from '../src/index.js';
+      // Create table instance
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: sampleData,
+        mode: "view", // Start in view mode
+        onRowClick: (data) => {
+          console.log("Row clicked:", data)
+        },
+        onChange: (data) => {
+          console.log("Data changed:", data)
+        },
+      })
 
-    // Sample employee data
-    const sampleData = [
-      { id: 1, name: 'John Doe', department: 'Engineering', position: 'Senior Developer', salary: 95000, email: 'john.doe@company.com' },
-      { id: 2, name: 'Jane Smith', department: 'Design', position: 'Lead Designer', salary: 87000, email: 'jane.smith@company.com' },
-      { id: 3, name: 'Bob Johnson', department: 'Engineering', position: 'DevOps Engineer', salary: 92000, email: 'bob.johnson@company.com' },
-      { id: 4, name: 'Alice Williams', department: 'Marketing', position: 'Marketing Manager', salary: 78000, email: 'alice.w@company.com' },
-      { id: 5, name: 'Charlie Brown', department: 'Sales', position: 'Sales Representative', salary: 65000, email: 'charlie.b@company.com' },
-      { id: 6, name: 'Diana Prince', department: 'Engineering', position: 'QA Engineer', salary: 75000, email: 'diana.p@company.com' },
-      { id: 7, name: 'Edward Norton', department: 'Design', position: 'UX Designer', salary: 71000, email: 'edward.n@company.com' },
-      { id: 8, name: 'Fiona Apple', department: 'HR', position: 'HR Manager', salary: 68000, email: 'fiona.a@company.com' },
-    ];
+      // Store table instance globally for debugging
+      window.table = table
 
-    // Column definitions
-    const columns = [
-      {
-        title: 'ID',
-        data: 'id',
-        width: '60px',
-        editable: false // ID is not editable
-      },
-      {
-        title: 'Employee Name',
-        data: 'name',
-        width: '180px'
-      },
-      {
-        title: 'Department',
-        data: 'department',
-        width: '140px'
-      },
-      {
-        title: 'Position',
-        data: 'position',
-        width: '180px'
-      },
-      {
-        title: 'Salary',
-        data: 'salary',
-        width: '120px',
-        type: 'number',
-        format: (value) => {
-          return value ? `$${value.toLocaleString()}` : '';
+      // Button handlers
+      document.getElementById("toggleMode").addEventListener("click", () => {
+        const currentMode = table.getMode()
+        table.toggleMode()
+        const newMode = table.getMode()
+
+        const btn = document.getElementById("toggleMode")
+        btn.textContent = `Mode: ${newMode.toUpperCase()} (Click to switch)`
+
+        showStatus(`Switched from ${currentMode} to ${newMode} mode`)
+      })
+
+      document.getElementById("getData").addEventListener("click", () => {
+        const data = table.getData()
+        const dirtyRows = table.getDirtyRows()
+
+        showStatus({
+          totalRows: data.length,
+          modifiedRows: dirtyRows.length,
+          data: data,
+          dirtyRows: dirtyRows,
+        })
+      })
+
+      document.getElementById("revertChanges").addEventListener("click", () => {
+        table.revertChanges()
+        showStatus("All changes have been reverted to original values")
+      })
+
+      document.getElementById("clearDirty").addEventListener("click", () => {
+        table.clearDirty()
+        showStatus("Dirty state cleared - all changes marked as saved")
+      })
+
+      // Utility function to display status
+      function showStatus(message) {
+        const statusBox = document.getElementById("statusBox")
+        const statusOutput = document.getElementById("statusOutput")
+
+        statusBox.style.display = "block"
+
+        if (typeof message === "string") {
+          statusOutput.textContent = message
+        } else {
+          statusOutput.textContent = JSON.stringify(message, null, 2)
         }
-      },
-      {
-        title: 'Email',
-        data: 'email',
-        width: '220px'
       }
-    ];
 
-    // Create table instance
-    const table = new Table({
-      container: '#tableContainer',
-      columns: columns,
-      data: sampleData,
-      mode: 'view', // Start in view mode
-      onRowClick: (data) => {
-        console.log('Row clicked:', data);
-      },
-      onChange: (data) => {
-        console.log('Data changed:', data);
-      }
-    });
+      // Subscribe to cell changes
+      table.on(
+        Table.Events.CELL_CHANGE,
+        ({ rowId, columnName, oldValue, newValue }) => {
+          console.log(`Cell changed: Row ${rowId}, Column ${columnName}`)
+          console.log(`  Old: ${oldValue} → New: ${newValue}`)
+        }
+      )
 
-    // Store table instance globally for debugging
-    window.table = table;
-
-    // Button handlers
-    document.getElementById('toggleMode').addEventListener('click', () => {
-      const currentMode = table.getMode();
-      table.toggleMode();
-      const newMode = table.getMode();
-      
-      const btn = document.getElementById('toggleMode');
-      btn.textContent = `Mode: ${newMode.toUpperCase()} (Click to switch)`;
-      
-      showStatus(`Switched from ${currentMode} to ${newMode} mode`);
-    });
-
-    document.getElementById('getData').addEventListener('click', () => {
-      const data = table.getData();
-      const dirtyRows = table.getDirtyRows();
-      
-      showStatus({
-        totalRows: data.length,
-        modifiedRows: dirtyRows.length,
-        data: data,
-        dirtyRows: dirtyRows
-      });
-    });
-
-    document.getElementById('revertChanges').addEventListener('click', () => {
-      table.revertChanges();
-      showStatus('All changes have been reverted to original values');
-    });
-
-    document.getElementById('clearDirty').addEventListener('click', () => {
-      table.clearDirty();
-      showStatus('Dirty state cleared - all changes marked as saved');
-    });
-
-    // Utility function to display status
-    function showStatus(message) {
-      const statusBox = document.getElementById('statusBox');
-      const statusOutput = document.getElementById('statusOutput');
-      
-      statusBox.style.display = 'block';
-      
-      if (typeof message === 'string') {
-        statusOutput.textContent = message;
-      } else {
-        statusOutput.textContent = JSON.stringify(message, null, 2);
-      }
-    }
-
-    // Subscribe to cell changes
-    table.on(Table.Events.CELL_CHANGE, ({ rowId, columnName, oldValue, newValue }) => {
-      console.log(`Cell changed: Row ${rowId}, Column ${columnName}`);
-      console.log(`  Old: ${oldValue} → New: ${newValue}`);
-    });
-
-    console.log('✅ Basic Example loaded successfully!');
-    console.log('💡 Tip: Access the table instance via window.table in the console');
-  </script>
-</body>
+      console.log("✅ Basic Example loaded successfully!")
+      console.log(
+        "💡 Tip: Access the table instance via window.table in the console"
+      )
+    </script>
+  </body>
 </html>

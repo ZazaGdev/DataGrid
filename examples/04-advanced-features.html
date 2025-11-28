@@ -1,441 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DataGrid - Advanced Features</title>
-  <link rel="stylesheet" href="../src/styles/main.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 2rem;
-      background: #f3f4f6;
-      margin: 0;
-    }
-    .container { max-width: 1400px; margin: 0 auto; }
-    h1 { color: #111827; margin-bottom: 0.5rem; }
-    .description { color: #6b7280; margin-bottom: 1.5rem; }
-    .toolbar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 0.5rem 1rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      background: white;
-      cursor: pointer;
-      font-size: 0.875rem;
-      transition: all 150ms ease;
-    }
-    .btn:hover { background: #f9fafb; }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
-    .btn-primary:hover { background: #2563eb; }
-    .info-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background: white;
-      border-radius: 0.375rem;
-      border: 1px solid #e5e7eb;
-    }
-    .info-box h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 0.875rem;
-      color: #111827;
-    }
-    .info-box p {
-      margin: 0.25rem 0;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .kbd {
-      background: #f3f4f6;
-      border: 1px solid #d1d5db;
-      border-radius: 0.25rem;
-      padding: 0.125rem 0.375rem;
-      font-family: monospace;
-      font-size: 0.8em;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📊 Advanced Features Example</h1>
-    <p class="description">
-      This example demonstrates advanced features: fixed first column, sub-rows (expandable details),
-      keyboard navigation, and scroll management with programmatic scrolling.
-    </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Advanced Features</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .kbd {
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.125rem 0.375rem;
+        font-family: monospace;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Advanced Features Example</h1>
+      <p class="description">
+        This example demonstrates advanced features: fixed first column,
+        sub-rows (expandable details), keyboard navigation, and scroll
+        management with programmatic scrolling.
+      </p>
 
-    <div class="toolbar">
-      <button class="btn btn-primary" id="addSubRow">➕ Add Sub-row to First</button>
-      <button class="btn" id="scrollToRow">📍 Scroll to Row #5</button>
-      <button class="btn" id="scrollToTop">⬆️ Scroll to Top</button>
-      <button class="btn" id="scrollToBottom">⬇️ Scroll to Bottom</button>
-      <button class="btn" id="getVisibleRows">👁️ Get Visible Rows</button>
-      <button class="btn" id="getScrollPosition">📏 Get Scroll Position</button>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="addSubRow">
+          ➕ Add Sub-row to First
+        </button>
+        <button class="btn" id="scrollToRow">📍 Scroll to Row #5</button>
+        <button class="btn" id="scrollToTop">⬆️ Scroll to Top</button>
+        <button class="btn" id="scrollToBottom">⬇️ Scroll to Bottom</button>
+        <button class="btn" id="getVisibleRows">👁️ Get Visible Rows</button>
+        <button class="btn" id="getScrollPosition">
+          📏 Get Scroll Position
+        </button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="info-box">
+        <h3>💡 How to Use</h3>
+        <p>
+          • <strong>Fixed Column:</strong> The first column (ID) stays fixed
+          when scrolling horizontally.
+        </p>
+        <p>
+          • <strong>Sub-rows:</strong> Click "Add Sub-row" to add expandable
+          detail rows beneath main rows.
+        </p>
+        <p>
+          • <strong>Keyboard Navigation:</strong> Use
+          <span class="kbd">↑</span> <span class="kbd">↓</span>
+          <span class="kbd">←</span> <span class="kbd">→</span> arrow keys to
+          navigate between cells in edit mode.
+        </p>
+        <p>
+          • <strong>Tab Navigation:</strong> Press
+          <span class="kbd">Tab</span> to move to next cell,
+          <span class="kbd">Shift+Tab</span> for previous.
+        </p>
+        <p>
+          • <strong>Scroll Management:</strong> Use toolbar buttons to
+          programmatically control scrolling.
+        </p>
+        <p>
+          • <strong>Enter Key:</strong> Press <span class="kbd">Enter</span> to
+          move down to the next row while editing.
+        </p>
+      </div>
+
+      <div class="info-box" id="statusBox" style="display: none">
+        <h3>📋 Status</h3>
+        <pre id="statusOutput"></pre>
+      </div>
     </div>
 
-    <div id="tableContainer"></div>
+    <script type="module">
+      import { Table } from "../src/index.js"
 
-    <div class="info-box">
-      <h3>💡 How to Use</h3>
-      <p>• <strong>Fixed Column:</strong> The first column (ID) stays fixed when scrolling horizontally.</p>
-      <p>• <strong>Sub-rows:</strong> Click "Add Sub-row" to add expandable detail rows beneath main rows.</p>
-      <p>• <strong>Keyboard Navigation:</strong> Use <span class="kbd">↑</span> <span class="kbd">↓</span> <span class="kbd">←</span> <span class="kbd">→</span> arrow keys to navigate between cells in edit mode.</p>
-      <p>• <strong>Tab Navigation:</strong> Press <span class="kbd">Tab</span> to move to next cell, <span class="kbd">Shift+Tab</span> for previous.</p>
-      <p>• <strong>Scroll Management:</strong> Use toolbar buttons to programmatically control scrolling.</p>
-      <p>• <strong>Enter Key:</strong> Press <span class="kbd">Enter</span> to move down to the next row while editing.</p>
-    </div>
+      // Sample product data with more columns for horizontal scrolling
+      const productData = [
+        {
+          id: 1,
+          product: 'Laptop Pro 15"',
+          category: "Electronics",
+          sku: "LAP-PRO-15",
+          price: 1299.99,
+          stock: 45,
+          supplier: "TechCorp Inc.",
+          warehouse: "Warehouse A",
+          reorderPoint: 10,
+          notes: "High-end laptop",
+        },
+        {
+          id: 2,
+          product: "Wireless Mouse",
+          category: "Accessories",
+          sku: "MOU-WIR-01",
+          price: 29.99,
+          stock: 230,
+          supplier: "Peripheral Plus",
+          warehouse: "Warehouse B",
+          reorderPoint: 50,
+          notes: "Ergonomic design",
+        },
+        {
+          id: 3,
+          product: "USB-C Hub",
+          category: "Accessories",
+          sku: "HUB-USBC-08",
+          price: 49.99,
+          stock: 120,
+          supplier: "Connector Co.",
+          warehouse: "Warehouse A",
+          reorderPoint: 30,
+          notes: "8-port hub",
+        },
+        {
+          id: 4,
+          product: 'Monitor 27" 4K',
+          category: "Electronics",
+          sku: "MON-4K-27",
+          price: 449.99,
+          stock: 32,
+          supplier: "Display World",
+          warehouse: "Warehouse C",
+          reorderPoint: 8,
+          notes: "Ultra HD display",
+        },
+        {
+          id: 5,
+          product: "Mechanical Keyboard",
+          category: "Accessories",
+          sku: "KEY-MECH-RGB",
+          price: 129.99,
+          stock: 78,
+          supplier: "KeyTech Ltd.",
+          warehouse: "Warehouse B",
+          reorderPoint: 20,
+          notes: "RGB backlit",
+        },
+        {
+          id: 6,
+          product: "Webcam HD",
+          category: "Electronics",
+          sku: "CAM-HD-01",
+          price: 79.99,
+          stock: 156,
+          supplier: "VisionTech",
+          warehouse: "Warehouse A",
+          reorderPoint: 35,
+          notes: "1080p resolution",
+        },
+        {
+          id: 7,
+          product: "External SSD 1TB",
+          category: "Storage",
+          sku: "SSD-EXT-1TB",
+          price: 149.99,
+          stock: 89,
+          supplier: "Storage Solutions",
+          warehouse: "Warehouse C",
+          reorderPoint: 25,
+          notes: "Portable SSD",
+        },
+        {
+          id: 8,
+          product: "Headphones Wireless",
+          category: "Audio",
+          sku: "HEAD-WIR-NC",
+          price: 199.99,
+          stock: 67,
+          supplier: "Audio Plus",
+          warehouse: "Warehouse B",
+          reorderPoint: 15,
+          notes: "Noise cancelling",
+        },
+        {
+          id: 9,
+          product: "Desk Lamp LED",
+          category: "Office",
+          sku: "LAMP-LED-ADJ",
+          price: 39.99,
+          stock: 143,
+          supplier: "Office Essentials",
+          warehouse: "Warehouse A",
+          reorderPoint: 40,
+          notes: "Adjustable brightness",
+        },
+        {
+          id: 10,
+          product: "Cable Organizer",
+          category: "Office",
+          sku: "ORG-CABLE-BLK",
+          price: 14.99,
+          stock: 312,
+          supplier: "Office Essentials",
+          warehouse: "Warehouse B",
+          reorderPoint: 80,
+          notes: "Cable management",
+        },
+      ]
 
-    <div class="info-box" id="statusBox" style="display: none;">
-      <h3>📋 Status</h3>
-      <pre id="statusOutput"></pre>
-    </div>
-  </div>
+      // Column definitions
+      const columns = [
+        {
+          title: "ID",
+          data: "id",
+          width: "60px",
+          editable: false,
+        },
+        {
+          title: "Product Name",
+          data: "product",
+          width: "200px",
+        },
+        {
+          title: "Category",
+          data: "category",
+          width: "140px",
+        },
+        {
+          title: "SKU",
+          data: "sku",
+          width: "140px",
+        },
+        {
+          title: "Price",
+          data: "price",
+          width: "110px",
+          type: "number",
+          format: (value) => (value ? `$${value.toFixed(2)}` : ""),
+        },
+        {
+          title: "Stock",
+          data: "stock",
+          width: "90px",
+          type: "number",
+        },
+        {
+          title: "Supplier",
+          data: "supplier",
+          width: "180px",
+        },
+        {
+          title: "Warehouse",
+          data: "warehouse",
+          width: "150px",
+        },
+        {
+          title: "Reorder Point",
+          data: "reorderPoint",
+          width: "130px",
+          type: "number",
+        },
+        {
+          title: "Notes",
+          data: "notes",
+          width: "200px",
+        },
+      ]
 
-  <script type="module">
-    import { Table } from '../src/index.js';
+      // Create table with advanced features
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: productData,
+        mode: "edit",
+        fixedFirstColumn: true, // Enable fixed first column
+        enableSubRows: true, // Enable sub-rows
+      })
 
-    // Sample product data with more columns for horizontal scrolling
-    const productData = [
-      { 
-        id: 1, 
-        product: 'Laptop Pro 15"', 
-        category: 'Electronics', 
-        sku: 'LAP-PRO-15',
-        price: 1299.99, 
-        stock: 45,
-        supplier: 'TechCorp Inc.',
-        warehouse: 'Warehouse A',
-        reorderPoint: 10,
-        notes: 'High-end laptop'
-      },
-      { 
-        id: 2, 
-        product: 'Wireless Mouse', 
-        category: 'Accessories', 
-        sku: 'MOU-WIR-01',
-        price: 29.99, 
-        stock: 230,
-        supplier: 'Peripheral Plus',
-        warehouse: 'Warehouse B',
-        reorderPoint: 50,
-        notes: 'Ergonomic design'
-      },
-      { 
-        id: 3, 
-        product: 'USB-C Hub', 
-        category: 'Accessories', 
-        sku: 'HUB-USBC-08',
-        price: 49.99, 
-        stock: 120,
-        supplier: 'Connector Co.',
-        warehouse: 'Warehouse A',
-        reorderPoint: 30,
-        notes: '8-port hub'
-      },
-      { 
-        id: 4, 
-        product: 'Monitor 27" 4K', 
-        category: 'Electronics', 
-        sku: 'MON-4K-27',
-        price: 449.99, 
-        stock: 32,
-        supplier: 'Display World',
-        warehouse: 'Warehouse C',
-        reorderPoint: 8,
-        notes: 'Ultra HD display'
-      },
-      { 
-        id: 5, 
-        product: 'Mechanical Keyboard', 
-        category: 'Accessories', 
-        sku: 'KEY-MECH-RGB',
-        price: 129.99, 
-        stock: 78,
-        supplier: 'KeyTech Ltd.',
-        warehouse: 'Warehouse B',
-        reorderPoint: 20,
-        notes: 'RGB backlit'
-      },
-      { 
-        id: 6, 
-        product: 'Webcam HD', 
-        category: 'Electronics', 
-        sku: 'CAM-HD-01',
-        price: 79.99, 
-        stock: 156,
-        supplier: 'VisionTech',
-        warehouse: 'Warehouse A',
-        reorderPoint: 35,
-        notes: '1080p resolution'
-      },
-      { 
-        id: 7, 
-        product: 'External SSD 1TB', 
-        category: 'Storage', 
-        sku: 'SSD-EXT-1TB',
-        price: 149.99, 
-        stock: 89,
-        supplier: 'Storage Solutions',
-        warehouse: 'Warehouse C',
-        reorderPoint: 25,
-        notes: 'Portable SSD'
-      },
-      { 
-        id: 8, 
-        product: 'Headphones Wireless', 
-        category: 'Audio', 
-        sku: 'HEAD-WIR-NC',
-        price: 199.99, 
-        stock: 67,
-        supplier: 'Audio Plus',
-        warehouse: 'Warehouse B',
-        reorderPoint: 15,
-        notes: 'Noise cancelling'
-      },
-      { 
-        id: 9, 
-        product: 'Desk Lamp LED', 
-        category: 'Office', 
-        sku: 'LAMP-LED-ADJ',
-        price: 39.99, 
-        stock: 143,
-        supplier: 'Office Essentials',
-        warehouse: 'Warehouse A',
-        reorderPoint: 40,
-        notes: 'Adjustable brightness'
-      },
-      { 
-        id: 10, 
-        product: 'Cable Organizer', 
-        category: 'Office', 
-        sku: 'ORG-CABLE-BLK',
-        price: 14.99, 
-        stock: 312,
-        supplier: 'Office Essentials',
-        warehouse: 'Warehouse B',
-        reorderPoint: 80,
-        notes: 'Cable management'
-      },
-    ];
+      // Store globally
+      window.table = table
 
-    // Column definitions
-    const columns = [
-      {
-        title: 'ID',
-        data: 'id',
-        width: '60px',
-        editable: false
-      },
-      {
-        title: 'Product Name',
-        data: 'product',
-        width: '200px'
-      },
-      {
-        title: 'Category',
-        data: 'category',
-        width: '140px'
-      },
-      {
-        title: 'SKU',
-        data: 'sku',
-        width: '140px'
-      },
-      {
-        title: 'Price',
-        data: 'price',
-        width: '110px',
-        type: 'number',
-        format: (value) => value ? `$${value.toFixed(2)}` : ''
-      },
-      {
-        title: 'Stock',
-        data: 'stock',
-        width: '90px',
-        type: 'number'
-      },
-      {
-        title: 'Supplier',
-        data: 'supplier',
-        width: '180px'
-      },
-      {
-        title: 'Warehouse',
-        data: 'warehouse',
-        width: '150px'
-      },
-      {
-        title: 'Reorder Point',
-        data: 'reorderPoint',
-        width: '130px',
-        type: 'number'
-      },
-      {
-        title: 'Notes',
-        data: 'notes',
-        width: '200px'
-      }
-    ];
+      // Button handlers
+      document.getElementById("addSubRow").addEventListener("click", () => {
+        const data = table.getData()
+        if (data.length === 0) return
 
-    // Create table with advanced features
-    const table = new Table({
-      container: '#tableContainer',
-      columns: columns,
-      data: productData,
-      mode: 'edit',
-      fixedFirstColumn: true, // Enable fixed first column
-      enableSubRows: true // Enable sub-rows
-    });
+        const firstRow = data[0]
 
-    // Store globally
-    window.table = table;
+        // Add a sub-row with additional details
+        table.addRow(
+          {
+            id: "detail",
+            product: "  ↳ Product Details",
+            category: 'Specs: 15.6" display',
+            sku: "CPU: Intel i7",
+            price: null,
+            stock: null,
+            supplier: "RAM: 16GB DDR4",
+            warehouse: "Storage: 512GB SSD",
+            reorderPoint: null,
+            notes: "Detailed specifications",
+          },
+          {
+            afterRowId: firstRow.id,
+            type: "subrow",
+          }
+        )
 
-    // Button handlers
-    document.getElementById('addSubRow').addEventListener('click', () => {
-      const data = table.getData();
-      if (data.length === 0) return;
+        showStatus(
+          "Sub-row added to first product with detailed specifications"
+        )
+      })
 
-      const firstRow = data[0];
-      
-      // Add a sub-row with additional details
-      table.addRow({
-        id: 'detail',
-        product: '  ↳ Product Details',
-        category: 'Specs: 15.6" display',
-        sku: 'CPU: Intel i7',
-        price: null,
-        stock: null,
-        supplier: 'RAM: 16GB DDR4',
-        warehouse: 'Storage: 512GB SSD',
-        reorderPoint: null,
-        notes: 'Detailed specifications'
-      }, {
-        afterRowId: firstRow.id,
-        type: 'subrow'
-      });
-
-      showStatus('Sub-row added to first product with detailed specifications');
-    });
-
-    document.getElementById('scrollToRow').addEventListener('click', () => {
-      const data = table.getData();
-      if (data.length >= 5) {
-        table.scrollToRow(data[4].id); // Scroll to 5th row
-        showStatus('Scrolled to Row #5');
-      } else {
-        showStatus('Not enough rows to scroll to row #5');
-      }
-    });
-
-    document.getElementById('scrollToTop').addEventListener('click', () => {
-      // Access scroll manager through table instance
-      const container = document.getElementById('tableContainer');
-      const scrollable = container.querySelector('.et-table-wrapper');
-      if (scrollable) {
-        scrollable.scrollTo({ top: 0, behavior: 'smooth' });
-        showStatus('Scrolled to top');
-      }
-    });
-
-    document.getElementById('scrollToBottom').addEventListener('click', () => {
-      const container = document.getElementById('tableContainer');
-      const scrollable = container.querySelector('.et-table-wrapper');
-      if (scrollable) {
-        scrollable.scrollTo({ top: scrollable.scrollHeight, behavior: 'smooth' });
-        showStatus('Scrolled to bottom');
-      }
-    });
-
-    document.getElementById('getVisibleRows').addEventListener('click', () => {
-      // In a real implementation, this would use the ScrollManager
-      // For demo purposes, we'll estimate based on viewport
-      const container = document.getElementById('tableContainer');
-      const rows = container.querySelectorAll('.et-row-data');
-      const visibleRows = [];
-      
-      rows.forEach(row => {
-        const rect = row.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        
-        if (rect.top >= containerRect.top && rect.bottom <= containerRect.bottom) {
-          const rowId = row.getAttribute('data-row-id');
-          if (rowId) visibleRows.push(rowId);
+      document.getElementById("scrollToRow").addEventListener("click", () => {
+        const data = table.getData()
+        if (data.length >= 5) {
+          table.scrollToRow(data[4].id) // Scroll to 5th row
+          showStatus("Scrolled to Row #5")
+        } else {
+          showStatus("Not enough rows to scroll to row #5")
         }
-      });
+      })
 
-      showStatus({
-        message: 'Currently visible rows',
-        count: visibleRows.length,
-        rowIds: visibleRows
-      });
-    });
+      document.getElementById("scrollToTop").addEventListener("click", () => {
+        // Access scroll manager through table instance
+        const container = document.getElementById("tableContainer")
+        const scrollable = container.querySelector(".et-table-wrapper")
+        if (scrollable) {
+          scrollable.scrollTo({ top: 0, behavior: "smooth" })
+          showStatus("Scrolled to top")
+        }
+      })
 
-    document.getElementById('getScrollPosition').addEventListener('click', () => {
-      const container = document.getElementById('tableContainer');
-      const scrollable = container.querySelector('.et-table-wrapper');
-      
+      document
+        .getElementById("scrollToBottom")
+        .addEventListener("click", () => {
+          const container = document.getElementById("tableContainer")
+          const scrollable = container.querySelector(".et-table-wrapper")
+          if (scrollable) {
+            scrollable.scrollTo({
+              top: scrollable.scrollHeight,
+              behavior: "smooth",
+            })
+            showStatus("Scrolled to bottom")
+          }
+        })
+
+      document
+        .getElementById("getVisibleRows")
+        .addEventListener("click", () => {
+          // In a real implementation, this would use the ScrollManager
+          // For demo purposes, we'll estimate based on viewport
+          const container = document.getElementById("tableContainer")
+          const rows = container.querySelectorAll(".et-row-data")
+          const visibleRows = []
+
+          rows.forEach((row) => {
+            const rect = row.getBoundingClientRect()
+            const containerRect = container.getBoundingClientRect()
+
+            if (
+              rect.top >= containerRect.top &&
+              rect.bottom <= containerRect.bottom
+            ) {
+              const rowId = row.getAttribute("data-row-id")
+              if (rowId) visibleRows.push(rowId)
+            }
+          })
+
+          showStatus({
+            message: "Currently visible rows",
+            count: visibleRows.length,
+            rowIds: visibleRows,
+          })
+        })
+
+      document
+        .getElementById("getScrollPosition")
+        .addEventListener("click", () => {
+          const container = document.getElementById("tableContainer")
+          const scrollable = container.querySelector(".et-table-wrapper")
+
+          if (scrollable) {
+            showStatus({
+              scrollTop: scrollable.scrollTop,
+              scrollLeft: scrollable.scrollLeft,
+              scrollHeight: scrollable.scrollHeight,
+              scrollWidth: scrollable.scrollWidth,
+              clientHeight: scrollable.clientHeight,
+              clientWidth: scrollable.clientWidth,
+            })
+          }
+        })
+
+      // Subscribe to scroll events
+      const container = document.getElementById("tableContainer")
+      const scrollable = container.querySelector(".et-table-wrapper")
       if (scrollable) {
-        showStatus({
-          scrollTop: scrollable.scrollTop,
-          scrollLeft: scrollable.scrollLeft,
-          scrollHeight: scrollable.scrollHeight,
-          scrollWidth: scrollable.scrollWidth,
-          clientHeight: scrollable.clientHeight,
-          clientWidth: scrollable.clientWidth
-        });
+        let scrollTimeout
+        scrollable.addEventListener("scroll", () => {
+          clearTimeout(scrollTimeout)
+          scrollTimeout = setTimeout(() => {
+            console.log("Scroll position:", {
+              top: scrollable.scrollTop,
+              left: scrollable.scrollLeft,
+            })
+          }, 100)
+        })
       }
-    });
 
-    // Subscribe to scroll events
-    const container = document.getElementById('tableContainer');
-    const scrollable = container.querySelector('.et-table-wrapper');
-    if (scrollable) {
-      let scrollTimeout;
-      scrollable.addEventListener('scroll', () => {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          console.log('Scroll position:', {
-            top: scrollable.scrollTop,
-            left: scrollable.scrollLeft
-          });
-        }, 100);
-      });
-    }
+      // Subscribe to keyboard events
+      document.addEventListener("keydown", (e) => {
+        if (table.getMode() === "edit") {
+          const key = e.key
+          if (
+            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)
+          ) {
+            console.log(`Navigation key pressed: ${key}`)
+          }
+        }
+      })
 
-    // Subscribe to keyboard events
-    document.addEventListener('keydown', (e) => {
-      if (table.getMode() === 'edit') {
-        const key = e.key;
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
-          console.log(`Navigation key pressed: ${key}`);
+      // Utility function to display status
+      function showStatus(message) {
+        const statusBox = document.getElementById("statusBox")
+        const statusOutput = document.getElementById("statusOutput")
+
+        statusBox.style.display = "block"
+
+        if (typeof message === "string") {
+          statusOutput.textContent = message
+        } else {
+          statusOutput.textContent = JSON.stringify(message, null, 2)
         }
       }
-    });
 
-    // Utility function to display status
-    function showStatus(message) {
-      const statusBox = document.getElementById('statusBox');
-      const statusOutput = document.getElementById('statusOutput');
-      
-      statusBox.style.display = 'block';
-      
-      if (typeof message === 'string') {
-        statusOutput.textContent = message;
-      } else {
-        statusOutput.textContent = JSON.stringify(message, null, 2);
-      }
-    }
-
-    console.log('✅ Advanced Features Example loaded successfully!');
-    console.log('💡 Tip: Try using arrow keys to navigate between cells in edit mode');
-  </script>
-</body>
+      console.log("✅ Advanced Features Example loaded successfully!")
+      console.log(
+        "💡 Tip: Try using arrow keys to navigate between cells in edit mode"
+      )
+    </script>
+  </body>
 </html>

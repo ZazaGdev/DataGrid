@@ -1,295 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DataGrid - Row Grouping & Totals</title>
-  <link rel="stylesheet" href="../src/styles/main.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 2rem;
-      background: #f3f4f6;
-      margin: 0;
-    }
-    .container { max-width: 1400px; margin: 0 auto; }
-    h1 { color: #111827; margin-bottom: 0.5rem; }
-    .description { color: #6b7280; margin-bottom: 1.5rem; }
-    .toolbar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 0.5rem 1rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      background: white;
-      cursor: pointer;
-      font-size: 0.875rem;
-      transition: all 150ms ease;
-    }
-    .btn:hover { background: #f9fafb; }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
-    .btn-primary:hover { background: #2563eb; }
-    .info-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background: white;
-      border-radius: 0.375rem;
-      border: 1px solid #e5e7eb;
-    }
-    .info-box h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 0.875rem;
-      color: #111827;
-    }
-    .info-box p {
-      margin: 0.25rem 0;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📊 Row Grouping & Totals Example</h1>
-    <p class="description">
-      This example demonstrates row grouping by department with aggregate totals 
-      (sum, average, count). Groups can be expanded/collapsed individually or all at once.
-    </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Row Grouping & Totals</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Row Grouping & Totals Example</h1>
+      <p class="description">
+        This example demonstrates row grouping by department with aggregate
+        totals (sum, average, count). Groups can be expanded/collapsed
+        individually or all at once.
+      </p>
 
-    <div class="toolbar">
-      <button class="btn btn-primary" id="expandAll">Expand All Groups</button>
-      <button class="btn btn-primary" id="collapseAll">Collapse All Groups</button>
-      <button class="btn" id="getGroupInfo">Get Group Information</button>
-      <button class="btn" id="getGrandTotals">Get Grand Totals</button>
-      <button class="btn" id="toggleGrouping">Disable Grouping</button>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="expandAll">
+          Expand All Groups
+        </button>
+        <button class="btn btn-primary" id="collapseAll">
+          Collapse All Groups
+        </button>
+        <button class="btn" id="getGroupInfo">Get Group Information</button>
+        <button class="btn" id="getGrandTotals">Get Grand Totals</button>
+        <button class="btn" id="toggleGrouping">Disable Grouping</button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="info-box">
+        <h3>💡 How to Use</h3>
+        <p>
+          • <strong>Group Headers:</strong> Click on group headers to
+          expand/collapse individual groups.
+        </p>
+        <p>
+          • <strong>Group Totals:</strong> Each group shows aggregate totals
+          (sum for salary, count for employees).
+        </p>
+        <p>
+          • <strong>Expand/Collapse All:</strong> Use the toolbar buttons to
+          expand or collapse all groups at once.
+        </p>
+        <p>
+          • <strong>Grand Totals:</strong> Click "Get Grand Totals" to see
+          totals across all groups.
+        </p>
+        <p>
+          • <strong>Toggle Grouping:</strong> Enable/disable grouping to see the
+          difference in data presentation.
+        </p>
+      </div>
+
+      <div class="info-box" id="statusBox" style="display: none">
+        <h3>📋 Status</h3>
+        <pre id="statusOutput"></pre>
+      </div>
     </div>
 
-    <div id="tableContainer"></div>
+    <script type="module">
+      import { Table } from "../src/index.js"
 
-    <div class="info-box">
-      <h3>💡 How to Use</h3>
-      <p>• <strong>Group Headers:</strong> Click on group headers to expand/collapse individual groups.</p>
-      <p>• <strong>Group Totals:</strong> Each group shows aggregate totals (sum for salary, count for employees).</p>
-      <p>• <strong>Expand/Collapse All:</strong> Use the toolbar buttons to expand or collapse all groups at once.</p>
-      <p>• <strong>Grand Totals:</strong> Click "Get Grand Totals" to see totals across all groups.</p>
-      <p>• <strong>Toggle Grouping:</strong> Enable/disable grouping to see the difference in data presentation.</p>
-    </div>
+      // Sample sales data by region
+      const salesData = [
+        {
+          id: 1,
+          employee: "John Doe",
+          department: "Engineering",
+          sales: 125000,
+          commission: 12500,
+          bonus: 5000,
+        },
+        {
+          id: 2,
+          employee: "Jane Smith",
+          department: "Engineering",
+          sales: 135000,
+          commission: 13500,
+          bonus: 6000,
+        },
+        {
+          id: 3,
+          employee: "Bob Johnson",
+          department: "Engineering",
+          sales: 98000,
+          commission: 9800,
+          bonus: 4000,
+        },
+        {
+          id: 4,
+          employee: "Alice Williams",
+          department: "Sales",
+          sales: 245000,
+          commission: 24500,
+          bonus: 15000,
+        },
+        {
+          id: 5,
+          employee: "Charlie Brown",
+          department: "Sales",
+          sales: 189000,
+          commission: 18900,
+          bonus: 10000,
+        },
+        {
+          id: 6,
+          employee: "Diana Prince",
+          department: "Sales",
+          sales: 278000,
+          commission: 27800,
+          bonus: 18000,
+        },
+        {
+          id: 7,
+          employee: "Edward Norton",
+          department: "Sales",
+          sales: 156000,
+          commission: 15600,
+          bonus: 8000,
+        },
+        {
+          id: 8,
+          employee: "Fiona Apple",
+          department: "Marketing",
+          sales: 87000,
+          commission: 8700,
+          bonus: 3500,
+        },
+        {
+          id: 9,
+          employee: "George Lucas",
+          department: "Marketing",
+          sales: 92000,
+          commission: 9200,
+          bonus: 4000,
+        },
+        {
+          id: 10,
+          employee: "Helen Troy",
+          department: "Marketing",
+          sales: 105000,
+          commission: 10500,
+          bonus: 5000,
+        },
+        {
+          id: 11,
+          employee: "Ivan Drago",
+          department: "Support",
+          sales: 45000,
+          commission: 4500,
+          bonus: 2000,
+        },
+        {
+          id: 12,
+          employee: "Julia Roberts",
+          department: "Support",
+          sales: 52000,
+          commission: 5200,
+          bonus: 2500,
+        },
+        {
+          id: 13,
+          employee: "Kevin Spacey",
+          department: "Support",
+          sales: 48000,
+          commission: 4800,
+          bonus: 2200,
+        },
+      ]
 
-    <div class="info-box" id="statusBox" style="display: none;">
-      <h3>📋 Status</h3>
-      <pre id="statusOutput"></pre>
-    </div>
-  </div>
+      // Column definitions with aggregates
+      const columns = [
+        {
+          title: "ID",
+          data: "id",
+          width: "60px",
+          visible: false, // Hidden by default
+        },
+        {
+          title: "Employee",
+          data: "employee",
+          width: "180px",
+        },
+        {
+          title: "Department",
+          data: "department",
+          width: "140px",
+        },
+        {
+          title: "Sales",
+          data: "sales",
+          width: "130px",
+          type: "number",
+          aggregate: "sum", // Sum all sales in group
+          format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
+        },
+        {
+          title: "Commission",
+          data: "commission",
+          width: "130px",
+          type: "number",
+          aggregate: "sum", // Sum all commissions
+          format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
+        },
+        {
+          title: "Bonus",
+          data: "bonus",
+          width: "120px",
+          type: "number",
+          aggregate: "sum", // Sum all bonuses
+          format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
+        },
+        {
+          title: "Total Comp",
+          data: "totalComp",
+          width: "140px",
+          type: "number",
+          aggregate: "sum",
+          format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
+          // Computed column
+          compute: (row) => {
+            return (row.sales || 0) + (row.commission || 0) + (row.bonus || 0)
+          },
+        },
+      ]
 
-  <script type="module">
-    import { Table } from '../src/index.js';
+      // Create table with grouping enabled
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: salesData,
+        enableGrouping: true,
+        groupBy: "department", // Group by department
+        mode: "view",
+      })
 
-    // Sample sales data by region
-    const salesData = [
-      { id: 1, employee: 'John Doe', department: 'Engineering', sales: 125000, commission: 12500, bonus: 5000 },
-      { id: 2, employee: 'Jane Smith', department: 'Engineering', sales: 135000, commission: 13500, bonus: 6000 },
-      { id: 3, employee: 'Bob Johnson', department: 'Engineering', sales: 98000, commission: 9800, bonus: 4000 },
-      { id: 4, employee: 'Alice Williams', department: 'Sales', sales: 245000, commission: 24500, bonus: 15000 },
-      { id: 5, employee: 'Charlie Brown', department: 'Sales', sales: 189000, commission: 18900, bonus: 10000 },
-      { id: 6, employee: 'Diana Prince', department: 'Sales', sales: 278000, commission: 27800, bonus: 18000 },
-      { id: 7, employee: 'Edward Norton', department: 'Sales', sales: 156000, commission: 15600, bonus: 8000 },
-      { id: 8, employee: 'Fiona Apple', department: 'Marketing', sales: 87000, commission: 8700, bonus: 3500 },
-      { id: 9, employee: 'George Lucas', department: 'Marketing', sales: 92000, commission: 9200, bonus: 4000 },
-      { id: 10, employee: 'Helen Troy', department: 'Marketing', sales: 105000, commission: 10500, bonus: 5000 },
-      { id: 11, employee: 'Ivan Drago', department: 'Support', sales: 45000, commission: 4500, bonus: 2000 },
-      { id: 12, employee: 'Julia Roberts', department: 'Support', sales: 52000, commission: 5200, bonus: 2500 },
-      { id: 13, employee: 'Kevin Spacey', department: 'Support', sales: 48000, commission: 4800, bonus: 2200 },
-    ];
+      // Store globally for debugging
+      window.table = table
 
-    // Column definitions with aggregates
-    const columns = [
-      {
-        title: 'ID',
-        data: 'id',
-        width: '60px',
-        visible: false // Hidden by default
-      },
-      {
-        title: 'Employee',
-        data: 'employee',
-        width: '180px'
-      },
-      {
-        title: 'Department',
-        data: 'department',
-        width: '140px'
-      },
-      {
-        title: 'Sales',
-        data: 'sales',
-        width: '130px',
-        type: 'number',
-        aggregate: 'sum', // Sum all sales in group
-        format: (value) => value ? `$${value.toLocaleString()}` : '$0'
-      },
-      {
-        title: 'Commission',
-        data: 'commission',
-        width: '130px',
-        type: 'number',
-        aggregate: 'sum', // Sum all commissions
-        format: (value) => value ? `$${value.toLocaleString()}` : '$0'
-      },
-      {
-        title: 'Bonus',
-        data: 'bonus',
-        width: '120px',
-        type: 'number',
-        aggregate: 'sum', // Sum all bonuses
-        format: (value) => value ? `$${value.toLocaleString()}` : '$0'
-      },
-      {
-        title: 'Total Comp',
-        data: 'totalComp',
-        width: '140px',
-        type: 'number',
-        aggregate: 'sum',
-        format: (value) => value ? `$${value.toLocaleString()}` : '$0',
-        // Computed column
-        compute: (row) => {
-          return (row.sales || 0) + (row.commission || 0) + (row.bonus || 0);
+      // Track grouping state
+      let groupingEnabled = true
+
+      // Button handlers
+      document.getElementById("expandAll").addEventListener("click", () => {
+        table.expandAllGroups()
+        showStatus("All groups expanded")
+      })
+
+      document.getElementById("collapseAll").addEventListener("click", () => {
+        table.collapseAllGroups()
+        showStatus("All groups collapsed")
+      })
+
+      document.getElementById("getGroupInfo").addEventListener("click", () => {
+        // This would require accessing internal state
+        // For demo purposes, we'll show a summary
+        const data = table.getData()
+        const groups = {}
+
+        data.forEach((row) => {
+          const dept = row.department
+          if (!groups[dept]) {
+            groups[dept] = { count: 0, totalSales: 0 }
+          }
+          groups[dept].count++
+          groups[dept].totalSales += row.sales || 0
+        })
+
+        showStatus({
+          message: "Group Summary by Department",
+          groups: groups,
+        })
+      })
+
+      document
+        .getElementById("getGrandTotals")
+        .addEventListener("click", () => {
+          // Calculate grand totals manually for demo
+          const data = table.getData()
+          const totals = {
+            totalEmployees: data.length,
+            totalSales: data.reduce((sum, row) => sum + (row.sales || 0), 0),
+            totalCommission: data.reduce(
+              (sum, row) => sum + (row.commission || 0),
+              0
+            ),
+            totalBonus: data.reduce((sum, row) => sum + (row.bonus || 0), 0),
+          }
+          totals.grandTotal =
+            totals.totalSales + totals.totalCommission + totals.totalBonus
+
+          showStatus({
+            message: "Grand Totals Across All Departments",
+            ...totals,
+            formattedTotals: {
+              sales: `$${totals.totalSales.toLocaleString()}`,
+              commission: `$${totals.totalCommission.toLocaleString()}`,
+              bonus: `$${totals.totalBonus.toLocaleString()}`,
+              grandTotal: `$${totals.grandTotal.toLocaleString()}`,
+            },
+          })
+        })
+
+      document
+        .getElementById("toggleGrouping")
+        .addEventListener("click", () => {
+          const btn = document.getElementById("toggleGrouping")
+
+          if (groupingEnabled) {
+            // Disable grouping - recreate table
+            const newTable = new Table({
+              container: "#tableContainer",
+              columns: columns,
+              data: salesData,
+              enableGrouping: false,
+              mode: "view",
+            })
+            window.table = newTable
+            btn.textContent = "Enable Grouping"
+            showStatus("Grouping disabled - showing flat table")
+          } else {
+            // Enable grouping - recreate table
+            const newTable = new Table({
+              container: "#tableContainer",
+              columns: columns,
+              data: salesData,
+              enableGrouping: true,
+              groupBy: "department",
+              mode: "view",
+            })
+            window.table = newTable
+            btn.textContent = "Disable Grouping"
+            showStatus("Grouping enabled - grouped by department")
+          }
+
+          groupingEnabled = !groupingEnabled
+        })
+
+      // Subscribe to group toggle events
+      table.on(Table.Events.GROUP_TOGGLE, (data) => {
+        console.log("Group toggled:", data)
+      })
+
+      // Utility function to display status
+      function showStatus(message) {
+        const statusBox = document.getElementById("statusBox")
+        const statusOutput = document.getElementById("statusOutput")
+
+        statusBox.style.display = "block"
+
+        if (typeof message === "string") {
+          statusOutput.textContent = message
+        } else {
+          statusOutput.textContent = JSON.stringify(message, null, 2)
         }
       }
-    ];
 
-    // Create table with grouping enabled
-    const table = new Table({
-      container: '#tableContainer',
-      columns: columns,
-      data: salesData,
-      enableGrouping: true,
-      groupBy: 'department', // Group by department
-      mode: 'view'
-    });
-
-    // Store globally for debugging
-    window.table = table;
-
-    // Track grouping state
-    let groupingEnabled = true;
-
-    // Button handlers
-    document.getElementById('expandAll').addEventListener('click', () => {
-      table.expandAllGroups();
-      showStatus('All groups expanded');
-    });
-
-    document.getElementById('collapseAll').addEventListener('click', () => {
-      table.collapseAllGroups();
-      showStatus('All groups collapsed');
-    });
-
-    document.getElementById('getGroupInfo').addEventListener('click', () => {
-      // This would require accessing internal state
-      // For demo purposes, we'll show a summary
-      const data = table.getData();
-      const groups = {};
-      
-      data.forEach(row => {
-        const dept = row.department;
-        if (!groups[dept]) {
-          groups[dept] = { count: 0, totalSales: 0 };
-        }
-        groups[dept].count++;
-        groups[dept].totalSales += row.sales || 0;
-      });
-
-      showStatus({
-        message: 'Group Summary by Department',
-        groups: groups
-      });
-    });
-
-    document.getElementById('getGrandTotals').addEventListener('click', () => {
-      // Calculate grand totals manually for demo
-      const data = table.getData();
-      const totals = {
-        totalEmployees: data.length,
-        totalSales: data.reduce((sum, row) => sum + (row.sales || 0), 0),
-        totalCommission: data.reduce((sum, row) => sum + (row.commission || 0), 0),
-        totalBonus: data.reduce((sum, row) => sum + (row.bonus || 0), 0),
-      };
-      totals.grandTotal = totals.totalSales + totals.totalCommission + totals.totalBonus;
-
-      showStatus({
-        message: 'Grand Totals Across All Departments',
-        ...totals,
-        formattedTotals: {
-          sales: `$${totals.totalSales.toLocaleString()}`,
-          commission: `$${totals.totalCommission.toLocaleString()}`,
-          bonus: `$${totals.totalBonus.toLocaleString()}`,
-          grandTotal: `$${totals.grandTotal.toLocaleString()}`
-        }
-      });
-    });
-
-    document.getElementById('toggleGrouping').addEventListener('click', () => {
-      const btn = document.getElementById('toggleGrouping');
-      
-      if (groupingEnabled) {
-        // Disable grouping - recreate table
-        const newTable = new Table({
-          container: '#tableContainer',
-          columns: columns,
-          data: salesData,
-          enableGrouping: false,
-          mode: 'view'
-        });
-        window.table = newTable;
-        btn.textContent = 'Enable Grouping';
-        showStatus('Grouping disabled - showing flat table');
-      } else {
-        // Enable grouping - recreate table
-        const newTable = new Table({
-          container: '#tableContainer',
-          columns: columns,
-          data: salesData,
-          enableGrouping: true,
-          groupBy: 'department',
-          mode: 'view'
-        });
-        window.table = newTable;
-        btn.textContent = 'Disable Grouping';
-        showStatus('Grouping enabled - grouped by department');
-      }
-      
-      groupingEnabled = !groupingEnabled;
-    });
-
-    // Subscribe to group toggle events
-    table.on(Table.Events.GROUP_TOGGLE, (data) => {
-      console.log('Group toggled:', data);
-    });
-
-    // Utility function to display status
-    function showStatus(message) {
-      const statusBox = document.getElementById('statusBox');
-      const statusOutput = document.getElementById('statusOutput');
-      
-      statusBox.style.display = 'block';
-      
-      if (typeof message === 'string') {
-        statusOutput.textContent = message;
-      } else {
-        statusOutput.textContent = JSON.stringify(message, null, 2);
-      }
-    }
-
-    console.log('✅ Grouping Example loaded successfully!');
-    console.log('💡 Tip: Click on group headers to expand/collapse groups');
-  </script>
-</body>
+      console.log("✅ Grouping Example loaded successfully!")
+      console.log("💡 Tip: Click on group headers to expand/collapse groups")
+    </script>
+  </body>
 </html>
