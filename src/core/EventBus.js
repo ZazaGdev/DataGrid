@@ -97,14 +97,24 @@ export class EventBus {
   endBatch() {
     this._isBatching = false
 
-    // Deduplicate: keep only the latest event of each type
+    // Deduplicate: for CELL_CHANGE events, use rowId:columnName as key
+    // For other events, use just the event name
     const eventMap = new Map()
     this._batchQueue.forEach(({ event, data }) => {
-      eventMap.set(event, data)
+      let key = event
+
+      // For cell-specific events, create unique key per cell
+      if (event === TableEvents.CELL_CHANGE && data.rowId && data.columnName) {
+        key = `${event}:${data.rowId}:${data.columnName}`
+      } else if (event === TableEvents.ROW_CHANGE && data.rowId) {
+        key = `${event}:${data.rowId}`
+      }
+
+      eventMap.set(key, { event, data })
     })
 
     // Emit deduplicated events
-    eventMap.forEach((data, event) => {
+    eventMap.forEach(({ event, data }) => {
       this.emit(event, data)
     })
 

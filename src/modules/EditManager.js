@@ -25,6 +25,9 @@ export class EditManager {
     /** @type {boolean} */
     this._isEditing = false
 
+    /** @type {Array<Function>} - Unsubscribe functions for cleanup */
+    this._unsubscribers = []
+
     // Setup event listeners
     this._setupListeners()
   }
@@ -293,28 +296,38 @@ export class EditManager {
     })
 
     // Track cell focus
-    this._eventBus.on(TableEvents.CELL_FOCUS, ({ rowId, columnName }) => {
-      this._focusedCell = { rowId, columnName }
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.CELL_FOCUS, ({ rowId, columnName }) => {
+        this._focusedCell = { rowId, columnName }
+      })
+    )
 
     // Track cell blur
-    this._eventBus.on(TableEvents.CELL_BLUR, () => {
-      this._isEditing = false
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.CELL_BLUR, () => {
+        this._isEditing = false
+      })
+    )
 
     // Clear focus when mode changes to view
-    this._eventBus.on(TableEvents.MODE_CHANGE, ({ newMode }) => {
-      if (newMode === "view") {
-        this._focusedCell = null
-        this._isEditing = false
-      }
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.MODE_CHANGE, ({ newMode }) => {
+        if (newMode === "view") {
+          this._focusedCell = null
+          this._isEditing = false
+        }
+      })
+    )
   }
 
   /**
    * Cleanup
    */
   destroy() {
+    // Unsubscribe from all event listeners
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe())
+    this._unsubscribers = []
+
     this._focusedCell = null
     this._isEditing = false
   }

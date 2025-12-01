@@ -42,6 +42,9 @@ export class TableRenderer {
     /** @type {Map<string, HTMLElement>} */
     this._cellElements = new Map()
 
+    /** @type {Array<Function>} - Unsubscribe functions for cleanup */
+    this._unsubscribers = []
+
     // Subscribe to state changes
     this._setupEventListeners()
   }
@@ -131,9 +134,15 @@ export class TableRenderer {
    * Cleanup and destroy
    */
   destroy() {
+    // Unsubscribe from all event listeners
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe())
+    this._unsubscribers = []
+
+    // Clear element caches
     this._rowElements.clear()
     this._cellElements.clear()
 
+    // Remove DOM elements
     if (this._tableWrapper) {
       this._tableWrapper.remove()
     }
@@ -148,28 +157,38 @@ export class TableRenderer {
    * @private
    */
   _setupEventListeners() {
-    this._eventBus.on(
-      TableEvents.CELL_CHANGE,
-      ({ rowId, columnName, newValue }) => {
-        this.updateCell(rowId, columnName, newValue)
-      }
+    this._unsubscribers.push(
+      this._eventBus.on(
+        TableEvents.CELL_CHANGE,
+        ({ rowId, columnName, newValue }) => {
+          this.updateCell(rowId, columnName, newValue)
+        }
+      )
     )
 
-    this._eventBus.on(TableEvents.MODE_CHANGE, () => {
-      this.render()
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.MODE_CHANGE, () => {
+        this.render()
+      })
+    )
 
-    this._eventBus.on(TableEvents.GROUP_TOGGLE, ({ groupId, collapsed }) => {
-      this._toggleGroupVisibility(groupId, collapsed)
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.GROUP_TOGGLE, ({ groupId, collapsed }) => {
+        this._toggleGroupVisibility(groupId, collapsed)
+      })
+    )
 
-    this._eventBus.on(TableEvents.GROUP_EXPAND_ALL, () => {
-      this._setAllGroupsVisibility(false)
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.GROUP_EXPAND_ALL, () => {
+        this._setAllGroupsVisibility(false)
+      })
+    )
 
-    this._eventBus.on(TableEvents.GROUP_COLLAPSE_ALL, () => {
-      this._setAllGroupsVisibility(true)
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.GROUP_COLLAPSE_ALL, () => {
+        this._setAllGroupsVisibility(true)
+      })
+    )
   }
 
   /**

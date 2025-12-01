@@ -19,6 +19,9 @@ export class RowManager {
     /** @type {Set<string>} Selected row IDs */
     this._selectedRows = new Set()
 
+    /** @type {Array<Function>} - Unsubscribe functions for cleanup */
+    this._unsubscribers = []
+
     // Setup event listeners
     this._setupListeners()
   }
@@ -349,17 +352,23 @@ export class RowManager {
    */
   _setupListeners() {
     // Clear selection when data changes
-    this._eventBus.on(TableEvents.DATA_CHANGE, ({ source }) => {
-      if (source === "setData") {
-        this._selectedRows.clear()
-      }
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.DATA_CHANGE, ({ source }) => {
+        if (source === "setData") {
+          this._selectedRows.clear()
+        }
+      })
+    )
   }
 
   /**
    * Cleanup
    */
   destroy() {
+    // Unsubscribe from all event listeners
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe())
+    this._unsubscribers = []
+
     this._selectedRows.clear()
   }
 }

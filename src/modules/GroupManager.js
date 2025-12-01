@@ -17,6 +17,9 @@ export class GroupManager {
     this._state = state
     this._eventBus = eventBus
 
+    /** @type {Array<Function>} - Unsubscribe functions for cleanup */
+    this._unsubscribers = []
+
     // Setup event listeners
     this._setupListeners()
   }
@@ -303,26 +306,30 @@ export class GroupManager {
    */
   _setupListeners() {
     // Recalculate totals when cells change
-    this._eventBus.on(TableEvents.CELL_CHANGE, ({ rowId, columnName }) => {
-      const column = this._state.getColumn(columnName)
-      if (column && column.aggregate) {
-        // Find which group this row belongs to
-        const row = this._state.getRow(rowId)
-        if (row) {
-          const config = this._state.getConfig()
-          const groupBy = config.groupBy
-          const groupId =
-            typeof groupBy === "function" ? groupBy(row) : row[groupBy]
-          this.recalculateTotals(groupId)
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.CELL_CHANGE, ({ rowId, columnName }) => {
+        const column = this._state.getColumn(columnName)
+        if (column && column.aggregate) {
+          // Find which group this row belongs to
+          const row = this._state.getRow(rowId)
+          if (row) {
+            const config = this._state.getConfig()
+            const groupBy = config.groupBy
+            const groupId =
+              typeof groupBy === "function" ? groupBy(row) : row[groupBy]
+            this.recalculateTotals(groupId)
+          }
         }
-      }
-    })
+      })
+    )
   }
 
   /**
    * Cleanup
    */
   destroy() {
-    // Nothing specific to cleanup
+    // Unsubscribe from all event listeners
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe())
+    this._unsubscribers = []
   }
 }

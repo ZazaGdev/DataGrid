@@ -33,13 +33,18 @@ export class ScrollManager {
     /** @type {number} */
     this._scrollTop = 0
 
+    /** @type {Array<Function>} - Unsubscribe functions for cleanup */
+    this._unsubscribers = []
+
     // Throttled scroll handler for performance
     this._handleScroll = throttle(this._onScroll.bind(this), 16)
 
     // Setup after initial render
-    this._eventBus.on(TableEvents.AFTER_RENDER, () => {
-      this._setupScrollContainer()
-    })
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.AFTER_RENDER, () => {
+        this._setupScrollContainer()
+      })
+    )
   }
 
   /**
@@ -227,6 +232,11 @@ export class ScrollManager {
    * Cleanup
    */
   destroy() {
+    // Unsubscribe from all event listeners
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe())
+    this._unsubscribers = []
+
+    // Remove DOM event listener
     if (this._scrollContainer) {
       this._scrollContainer.removeEventListener("scroll", this._handleScroll)
     }
