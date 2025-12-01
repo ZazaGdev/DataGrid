@@ -1,11 +1,11 @@
 /**
  * RowManager - Handles row-related operations
- * 
+ *
  * Manages row CRUD operations, selection, and row types.
  */
 
-import { TableEvents } from '../core/EventBus.js';
-import { generateId, deepClone } from '../utils/helpers.js';
+import { TableEvents } from "../core/EventBus.js"
+import { generateId, deepClone } from "../utils/helpers.js"
 
 export class RowManager {
   /**
@@ -13,14 +13,14 @@ export class RowManager {
    * @param {EventBus} eventBus - Event bus instance
    */
   constructor(state, eventBus) {
-    this._state = state;
-    this._eventBus = eventBus;
-    
+    this._state = state
+    this._eventBus = eventBus
+
     /** @type {Set<string>} Selected row IDs */
-    this._selectedRows = new Set();
-    
+    this._selectedRows = new Set()
+
     // Setup event listeners
-    this._setupListeners();
+    this._setupListeners()
   }
 
   /**
@@ -34,58 +34,59 @@ export class RowManager {
    * @returns {Object} Added row
    */
   addRow(rowData, options = {}) {
-    const data = this._state.getData();
-    const { index, groupId, afterRowId, type = 'data' } = options;
-    
+    const data = this._state.getData()
+    const { index, groupId, afterRowId, type = "data" } = options
+
     const newRow = {
       ...rowData,
       _id: rowData._id || generateId(),
-      _type: type
-    };
-    
-    let insertIndex = data.length;
-    
+      _type: type,
+    }
+
+    let insertIndex = data.length
+
     if (index !== undefined) {
-      insertIndex = Math.max(0, Math.min(index, data.length));
+      insertIndex = Math.max(0, Math.min(index, data.length))
     } else if (afterRowId) {
-      const afterIndex = data.findIndex(r => r._id === afterRowId);
+      const afterIndex = data.findIndex((r) => r._id === afterRowId)
       if (afterIndex !== -1) {
-        insertIndex = afterIndex + 1;
+        insertIndex = afterIndex + 1
       }
     } else if (groupId) {
       // Find last row in group
-      const config = this._state.getConfig();
-      const groupBy = config.groupBy;
+      const config = this._state.getConfig()
+      const groupBy = config.groupBy
       for (let i = data.length - 1; i >= 0; i--) {
-        const rowGroup = typeof groupBy === 'function' ? groupBy(data[i]) : data[i][groupBy];
+        const rowGroup =
+          typeof groupBy === "function" ? groupBy(data[i]) : data[i][groupBy]
         if (rowGroup === groupId) {
-          insertIndex = i + 1;
-          break;
+          insertIndex = i + 1
+          break
         }
       }
-      
+
       // Set group key on new row
-      if (typeof groupBy === 'string') {
-        newRow[groupBy] = groupId;
+      if (typeof groupBy === "string") {
+        newRow[groupBy] = groupId
       }
     }
-    
+
     // Insert row
-    data.splice(insertIndex, 0, newRow);
-    
+    data.splice(insertIndex, 0, newRow)
+
     // Update indices
     data.forEach((row, idx) => {
-      row._index = idx;
-    });
-    
-    this._state.setData(data);
-    
+      row._index = idx
+    })
+
+    this._state.setData(data)
+
     this._eventBus.emit(TableEvents.ROW_ADD, {
       row: newRow,
-      index: insertIndex
-    });
-    
-    return newRow;
+      index: insertIndex,
+    })
+
+    return newRow
   }
 
   /**
@@ -97,8 +98,8 @@ export class RowManager {
   addSubRow(parentRowId, subRowData) {
     return this.addRow(subRowData, {
       afterRowId: parentRowId,
-      type: 'subrow'
-    });
+      type: "subrow",
+    })
   }
 
   /**
@@ -107,30 +108,30 @@ export class RowManager {
    * @returns {boolean} Success
    */
   deleteRow(rowId) {
-    const data = this._state.getData();
-    const rowIndex = data.findIndex(r => r._id === rowId);
-    
+    const data = this._state.getData()
+    const rowIndex = data.findIndex((r) => r._id === rowId)
+
     if (rowIndex === -1) {
-      return false;
+      return false
     }
-    
-    const deletedRow = data[rowIndex];
-    data.splice(rowIndex, 1);
-    
+
+    const deletedRow = data[rowIndex]
+    data.splice(rowIndex, 1)
+
     // Update indices
     data.forEach((row, idx) => {
-      row._index = idx;
-    });
-    
-    this._state.setData(data);
-    
+      row._index = idx
+    })
+
+    this._state.setData(data)
+
     this._eventBus.emit(TableEvents.ROW_DELETE, {
       rowId,
       row: deletedRow,
-      index: rowIndex
-    });
-    
-    return true;
+      index: rowIndex,
+    })
+
+    return true
   }
 
   /**
@@ -139,28 +140,28 @@ export class RowManager {
    * @returns {number} Number of deleted rows
    */
   deleteRows(rowIds) {
-    let deletedCount = 0;
-    const rowIdSet = new Set(rowIds);
-    const data = this._state.getData();
-    
-    const filteredData = data.filter(row => {
+    let deletedCount = 0
+    const rowIdSet = new Set(rowIds)
+    const data = this._state.getData()
+
+    const filteredData = data.filter((row) => {
       if (rowIdSet.has(row._id)) {
-        deletedCount++;
-        return false;
+        deletedCount++
+        return false
       }
-      return true;
-    });
-    
+      return true
+    })
+
     if (deletedCount > 0) {
       // Update indices
       filteredData.forEach((row, idx) => {
-        row._index = idx;
-      });
-      
-      this._state.setData(filteredData);
+        row._index = idx
+      })
+
+      this._state.setData(filteredData)
     }
-    
-    return deletedCount;
+
+    return deletedCount
   }
 
   /**
@@ -169,14 +170,14 @@ export class RowManager {
    * @returns {Object|null} Duplicated row
    */
   duplicateRow(rowId) {
-    const row = this._state.getRow(rowId);
-    if (!row) return null;
-    
-    const { _id, _index, ...rowData } = row;
-    
+    const row = this._state.getRow(rowId)
+    if (!row) return null
+
+    const { _id, _index, ...rowData } = row
+
     return this.addRow(rowData, {
-      afterRowId: rowId
-    });
+      afterRowId: rowId,
+    })
   }
 
   /**
@@ -186,22 +187,22 @@ export class RowManager {
    * @returns {boolean} Success
    */
   moveRow(rowId, newIndex) {
-    const data = this._state.getData();
-    const currentIndex = data.findIndex(r => r._id === rowId);
-    
-    if (currentIndex === -1) return false;
-    
-    const [movedRow] = data.splice(currentIndex, 1);
-    data.splice(newIndex, 0, movedRow);
-    
+    const data = this._state.getData()
+    const currentIndex = data.findIndex((r) => r._id === rowId)
+
+    if (currentIndex === -1) return false
+
+    const [movedRow] = data.splice(currentIndex, 1)
+    data.splice(newIndex, 0, movedRow)
+
     // Update indices
     data.forEach((row, idx) => {
-      row._index = idx;
-    });
-    
-    this._state.setData(data);
-    
-    return true;
+      row._index = idx
+    })
+
+    this._state.setData(data)
+
+    return true
   }
 
   /**
@@ -211,14 +212,14 @@ export class RowManager {
    */
   selectRow(rowId, addToSelection = false) {
     if (!addToSelection) {
-      this._selectedRows.clear();
+      this._selectedRows.clear()
     }
-    this._selectedRows.add(rowId);
-    
+    this._selectedRows.add(rowId)
+
     this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: 'selectedRows',
-      value: Array.from(this._selectedRows)
-    });
+      property: "selectedRows",
+      value: Array.from(this._selectedRows),
+    })
   }
 
   /**
@@ -226,12 +227,12 @@ export class RowManager {
    * @param {string} rowId - Row ID
    */
   deselectRow(rowId) {
-    this._selectedRows.delete(rowId);
-    
+    this._selectedRows.delete(rowId)
+
     this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: 'selectedRows',
-      value: Array.from(this._selectedRows)
-    });
+      property: "selectedRows",
+      value: Array.from(this._selectedRows),
+    })
   }
 
   /**
@@ -240,9 +241,9 @@ export class RowManager {
    */
   toggleRowSelection(rowId) {
     if (this._selectedRows.has(rowId)) {
-      this.deselectRow(rowId);
+      this.deselectRow(rowId)
     } else {
-      this.selectRow(rowId, true);
+      this.selectRow(rowId, true)
     }
   }
 
@@ -250,29 +251,29 @@ export class RowManager {
    * Select all rows
    */
   selectAllRows() {
-    const data = this._state.getData();
-    data.forEach(row => {
-      if (row._type === 'data') {
-        this._selectedRows.add(row._id);
+    const data = this._state.getData()
+    data.forEach((row) => {
+      if (row._type === "data") {
+        this._selectedRows.add(row._id)
       }
-    });
-    
+    })
+
     this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: 'selectedRows',
-      value: Array.from(this._selectedRows)
-    });
+      property: "selectedRows",
+      value: Array.from(this._selectedRows),
+    })
   }
 
   /**
    * Clear selection
    */
   clearSelection() {
-    this._selectedRows.clear();
-    
+    this._selectedRows.clear()
+
     this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: 'selectedRows',
-      value: []
-    });
+      property: "selectedRows",
+      value: [],
+    })
   }
 
   /**
@@ -280,7 +281,9 @@ export class RowManager {
    * @returns {Array<Object>}
    */
   getSelectedRows() {
-    return this._state.getData().filter(row => this._selectedRows.has(row._id));
+    return this._state
+      .getData()
+      .filter((row) => this._selectedRows.has(row._id))
   }
 
   /**
@@ -288,7 +291,7 @@ export class RowManager {
    * @returns {Array<string>}
    */
   getSelectedRowIds() {
-    return Array.from(this._selectedRows);
+    return Array.from(this._selectedRows)
   }
 
   /**
@@ -297,7 +300,7 @@ export class RowManager {
    * @returns {boolean}
    */
   isRowSelected(rowId) {
-    return this._selectedRows.has(rowId);
+    return this._selectedRows.has(rowId)
   }
 
   /**
@@ -306,7 +309,7 @@ export class RowManager {
    * @returns {Array<Object>}
    */
   getRowsByType(type) {
-    return this._state.getData().filter(row => row._type === type);
+    return this._state.getData().filter((row) => row._type === type)
   }
 
   /**
@@ -314,7 +317,7 @@ export class RowManager {
    * @returns {Array<Object>}
    */
   getDataRows() {
-    return this.getRowsByType('data');
+    return this.getRowsByType("data")
   }
 
   /**
@@ -323,21 +326,21 @@ export class RowManager {
    * @returns {Array<Object>}
    */
   getSubRows(parentRowId) {
-    const data = this._state.getData();
-    const parentIndex = data.findIndex(r => r._id === parentRowId);
-    
-    if (parentIndex === -1) return [];
-    
-    const subRows = [];
+    const data = this._state.getData()
+    const parentIndex = data.findIndex((r) => r._id === parentRowId)
+
+    if (parentIndex === -1) return []
+
+    const subRows = []
     for (let i = parentIndex + 1; i < data.length; i++) {
-      if (data[i]._type === 'subrow') {
-        subRows.push(data[i]);
+      if (data[i]._type === "subrow") {
+        subRows.push(data[i])
       } else {
-        break; // Sub-rows are contiguous after parent
+        break // Sub-rows are contiguous after parent
       }
     }
-    
-    return subRows;
+
+    return subRows
   }
 
   /**
@@ -347,16 +350,16 @@ export class RowManager {
   _setupListeners() {
     // Clear selection when data changes
     this._eventBus.on(TableEvents.DATA_CHANGE, ({ source }) => {
-      if (source === 'setData') {
-        this._selectedRows.clear();
+      if (source === "setData") {
+        this._selectedRows.clear()
       }
-    });
+    })
   }
 
   /**
    * Cleanup
    */
   destroy() {
-    this._selectedRows.clear();
+    this._selectedRows.clear()
   }
 }

@@ -1,20 +1,20 @@
 /**
  * Table - Main orchestrator class for the editable table
- * 
+ *
  * This is the primary entry point that coordinates all modules,
  * manages the lifecycle, and exposes the public API.
  */
 
-import { EventBus, TableEvents } from './EventBus.js';
-import { TableState } from './TableState.js';
-import { TableRenderer } from './TableRenderer.js';
-import { ColumnManager } from '../modules/ColumnManager.js';
-import { RowManager } from '../modules/RowManager.js';
-import { GroupManager } from '../modules/GroupManager.js';
-import { EditManager } from '../modules/EditManager.js';
-import { ScrollManager } from '../modules/ScrollManager.js';
-import { ExportManager } from '../modules/ExportManager.js';
-import { addClass, removeClass } from '../utils/dom.js';
+import { EventBus, TableEvents } from "./EventBus.js"
+import { TableState } from "./TableState.js"
+import { TableRenderer } from "./TableRenderer.js"
+import { ColumnManager } from "../modules/ColumnManager.js"
+import { RowManager } from "../modules/RowManager.js"
+import { GroupManager } from "../modules/GroupManager.js"
+import { EditManager } from "../modules/EditManager.js"
+import { ScrollManager } from "../modules/ScrollManager.js"
+import { ExportManager } from "../modules/ExportManager.js"
+import { addClass, removeClass } from "../utils/dom.js"
 
 /**
  * @typedef {Object} TableConfig
@@ -38,28 +38,29 @@ export class Table {
    * @param {TableConfig} config - Table configuration
    */
   constructor(config) {
-    this._validateConfig(config);
-    
+    this._validateConfig(config)
+
     // Store configuration
     this._config = {
       fixedFirstColumn: false,
       enableGrouping: false,
       enableSubRows: false,
-      mode: 'view',
-      ...config
-    };
+      mode: "view",
+      ...config,
+    }
 
     // Get container element
-    this._container = typeof config.container === 'string'
-      ? document.querySelector(config.container)
-      : config.container;
+    this._container =
+      typeof config.container === "string"
+        ? document.querySelector(config.container)
+        : config.container
 
     if (!this._container) {
-      throw new Error('Table: Container element not found');
+      throw new Error("Table: Container element not found")
     }
 
     // Initialize core systems
-    this._eventBus = new EventBus();
+    this._eventBus = new EventBus()
     this._state = new TableState(this._eventBus, {
       data: config.data || [],
       columns: config.columns || [],
@@ -67,21 +68,21 @@ export class Table {
         fixedFirstColumn: config.fixedFirstColumn,
         enableGrouping: config.enableGrouping,
         groupBy: config.groupBy,
-        enableSubRows: config.enableSubRows
-      }
-    });
+        enableSubRows: config.enableSubRows,
+      },
+    })
 
     // Initialize modules
-    this._initModules();
-    
+    this._initModules()
+
     // Set initial mode
-    this._state.setMode(config.mode || 'view');
+    this._state.setMode(config.mode || "view")
 
     // Register callbacks
-    this._registerCallbacks();
+    this._registerCallbacks()
 
     // Initial render
-    this._render();
+    this._render()
   }
 
   // ============================================
@@ -93,7 +94,7 @@ export class Table {
    * @returns {Array<Object>}
    */
   getData() {
-    return this._state.getData();
+    return this._state.getData()
   }
 
   /**
@@ -101,8 +102,8 @@ export class Table {
    * @param {Array<Object>} data - New data array
    */
   setData(data) {
-    this._state.setData(data);
-    this._render();
+    this._state.setData(data)
+    this._render()
   }
 
   /**
@@ -111,7 +112,7 @@ export class Table {
    * @returns {Object|null}
    */
   getRow(rowId) {
-    return this._state.getRow(rowId);
+    return this._state.getRow(rowId)
   }
 
   /**
@@ -121,7 +122,7 @@ export class Table {
    * @param {any} value - New value
    */
   updateCell(rowId, columnName, value) {
-    this._state.updateCell(rowId, columnName, value);
+    this._state.updateCell(rowId, columnName, value)
   }
 
   /**
@@ -129,7 +130,7 @@ export class Table {
    * @param {Array<{rowId, columnName, value}>} updates - Updates array
    */
   batchUpdate(updates) {
-    this._state.batchUpdate(updates);
+    this._state.batchUpdate(updates)
   }
 
   /**
@@ -138,7 +139,7 @@ export class Table {
    * @param {Object} [options] - Options (position, groupId, etc.)
    */
   addRow(rowData, options = {}) {
-    this._rowManager.addRow(rowData, options);
+    this._rowManager.addRow(rowData, options)
   }
 
   /**
@@ -146,7 +147,7 @@ export class Table {
    * @param {string|number} rowId - Row identifier
    */
   deleteRow(rowId) {
-    this._rowManager.deleteRow(rowId);
+    this._rowManager.deleteRow(rowId)
   }
 
   /**
@@ -154,22 +155,22 @@ export class Table {
    * @returns {Array<Object>}
    */
   getDirtyRows() {
-    return this._state.getDirtyRows();
+    return this._state.getDirtyRows()
   }
 
   /**
    * Clear dirty state
    */
   clearDirty() {
-    this._state.clearDirty();
+    this._state.clearDirty()
   }
 
   /**
    * Revert all changes
    */
   revertChanges() {
-    this._state.revertChanges();
-    this._render();
+    this._state.revertChanges()
+    this._render()
   }
 
   // ============================================
@@ -181,7 +182,7 @@ export class Table {
    * @returns {Array<Object>}
    */
   getColumns() {
-    return this._state.getColumns();
+    return this._state.getColumns()
   }
 
   /**
@@ -189,8 +190,8 @@ export class Table {
    * @param {Array<Object>} columns - New column definitions
    */
   setColumns(columns) {
-    this._state.setColumns(columns);
-    this._render();
+    this._state.setColumns(columns)
+    this._render()
   }
 
   /**
@@ -199,7 +200,7 @@ export class Table {
    * @param {boolean} visible - Visibility state
    */
   setColumnVisibility(columnId, visible) {
-    this._columnManager.setVisibility(columnId, visible);
+    this._columnManager.setVisibility(columnId, visible)
   }
 
   // ============================================
@@ -211,7 +212,7 @@ export class Table {
    * @returns {'view'|'edit'}
    */
   getMode() {
-    return this._state.getMode();
+    return this._state.getMode()
   }
 
   /**
@@ -219,15 +220,15 @@ export class Table {
    * @param {'view'|'edit'} mode - Mode to set
    */
   setMode(mode) {
-    this._state.setMode(mode);
+    this._state.setMode(mode)
   }
 
   /**
    * Toggle between view and edit mode
    */
   toggleMode() {
-    const currentMode = this._state.getMode();
-    this._state.setMode(currentMode === 'view' ? 'edit' : 'view');
+    const currentMode = this._state.getMode()
+    this._state.setMode(currentMode === "view" ? "edit" : "view")
   }
 
   // ============================================
@@ -239,21 +240,21 @@ export class Table {
    * @param {string} groupId - Group identifier
    */
   toggleGroup(groupId) {
-    this._state.toggleGroup(groupId);
+    this._state.toggleGroup(groupId)
   }
 
   /**
    * Expand all groups
    */
   expandAllGroups() {
-    this._state.expandAllGroups();
+    this._state.expandAllGroups()
   }
 
   /**
    * Collapse all groups
    */
   collapseAllGroups() {
-    this._state.collapseAllGroups();
+    this._state.collapseAllGroups()
   }
 
   // ============================================
@@ -266,7 +267,7 @@ export class Table {
    * @returns {string} CSV string
    */
   exportCSV(options = {}) {
-    return this._exportManager.toCSV(options);
+    return this._exportManager.toCSV(options)
   }
 
   /**
@@ -274,7 +275,7 @@ export class Table {
    * @param {Object} [options] - Export options
    */
   exportExcel(options = {}) {
-    return this._exportManager.toExcel(options);
+    return this._exportManager.toExcel(options)
   }
 
   /**
@@ -283,7 +284,7 @@ export class Table {
    * @param {string} [filename] - File name
    */
   download(format, filename) {
-    this._exportManager.download(format, filename);
+    this._exportManager.download(format, filename)
   }
 
   // ============================================
@@ -294,7 +295,7 @@ export class Table {
    * Force re-render of the table
    */
   render() {
-    this._render();
+    this._render()
   }
 
   /**
@@ -302,7 +303,7 @@ export class Table {
    * @param {string|number} rowId - Row identifier
    */
   scrollToRow(rowId) {
-    this._scrollManager.scrollToRow(rowId);
+    this._scrollManager.scrollToRow(rowId)
   }
 
   /**
@@ -312,7 +313,7 @@ export class Table {
    * @returns {Function} Unsubscribe function
    */
   on(event, callback) {
-    return this._eventBus.on(event, callback);
+    return this._eventBus.on(event, callback)
   }
 
   /**
@@ -321,31 +322,31 @@ export class Table {
    * @param {Function} callback - Event handler
    */
   off(event, callback) {
-    this._eventBus.off(event, callback);
+    this._eventBus.off(event, callback)
   }
 
   /**
    * Destroy the table instance
    */
   destroy() {
-    this._eventBus.emit(TableEvents.DESTROY, {});
-    
+    this._eventBus.emit(TableEvents.DESTROY, {})
+
     // Destroy modules
-    this._renderer.destroy();
-    this._columnManager.destroy();
-    this._rowManager.destroy();
-    this._groupManager.destroy();
-    this._editManager.destroy();
-    this._scrollManager.destroy();
-    this._exportManager.destroy();
-    
+    this._renderer.destroy()
+    this._columnManager.destroy()
+    this._rowManager.destroy()
+    this._groupManager.destroy()
+    this._editManager.destroy()
+    this._scrollManager.destroy()
+    this._exportManager.destroy()
+
     // Destroy core
-    this._state.destroy();
-    this._eventBus.destroy();
-    
+    this._state.destroy()
+    this._eventBus.destroy()
+
     // Clear container
-    this._container.innerHTML = '';
-    removeClass(this._container, 'et-container');
+    this._container.innerHTML = ""
+    removeClass(this._container, "et-container")
   }
 
   // ============================================
@@ -358,13 +359,13 @@ export class Table {
    */
   _validateConfig(config) {
     if (!config) {
-      throw new Error('Table: Configuration object is required');
+      throw new Error("Table: Configuration object is required")
     }
     if (!config.container) {
-      throw new Error('Table: Container element or selector is required');
+      throw new Error("Table: Container element or selector is required")
     }
     if (!config.columns || !Array.isArray(config.columns)) {
-      throw new Error('Table: Columns array is required');
+      throw new Error("Table: Columns array is required")
     }
   }
 
@@ -374,19 +375,23 @@ export class Table {
    */
   _initModules() {
     // Initialize renderer first
-    this._renderer = new TableRenderer(
+    this._renderer = new TableRenderer(this._container, this._state)
+
+    // Initialize feature modules
+    this._columnManager = new ColumnManager(this._state, this._eventBus)
+    this._rowManager = new RowManager(this._state, this._eventBus)
+    this._groupManager = new GroupManager(this._state, this._eventBus)
+    this._editManager = new EditManager(
+      this._state,
+      this._eventBus,
+      this._renderer
+    )
+    this._scrollManager = new ScrollManager(
       this._container,
       this._state,
       this._eventBus
-    );
-
-    // Initialize feature modules
-    this._columnManager = new ColumnManager(this._state, this._eventBus);
-    this._rowManager = new RowManager(this._state, this._eventBus);
-    this._groupManager = new GroupManager(this._state, this._eventBus);
-    this._editManager = new EditManager(this._state, this._eventBus, this._renderer);
-    this._scrollManager = new ScrollManager(this._container, this._state, this._eventBus);
-    this._exportManager = new ExportManager(this._state, this._eventBus);
+    )
+    this._exportManager = new ExportManager(this._state, this._eventBus)
   }
 
   /**
@@ -394,22 +399,22 @@ export class Table {
    * @private
    */
   _registerCallbacks() {
-    const { onRowClick, onRender, onChange, onRowChange } = this._config;
+    const { onRowClick, onRender, onChange, onRowChange } = this._config
 
     if (onRowClick) {
-      this._eventBus.on(TableEvents.ROW_CLICK, onRowClick);
+      this._eventBus.on(TableEvents.ROW_CLICK, onRowClick)
     }
 
     if (onRender) {
-      this._eventBus.on(TableEvents.AFTER_RENDER, onRender);
+      this._eventBus.on(TableEvents.AFTER_RENDER, onRender)
     }
 
     if (onChange) {
-      this._eventBus.on(TableEvents.DATA_CHANGE, onChange);
+      this._eventBus.on(TableEvents.DATA_CHANGE, onChange)
     }
 
     if (onRowChange) {
-      this._eventBus.on(TableEvents.ROW_CHANGE, onRowChange);
+      this._eventBus.on(TableEvents.ROW_CHANGE, onRowChange)
     }
   }
 
@@ -418,19 +423,19 @@ export class Table {
    * @private
    */
   _render() {
-    this._eventBus.emit(TableEvents.BEFORE_RENDER, {});
-    this._renderer.render();
-    this._eventBus.emit(TableEvents.RENDER, {});
-    
+    this._eventBus.emit(TableEvents.BEFORE_RENDER, {})
+    this._renderer.render()
+    this._eventBus.emit(TableEvents.RENDER, {})
+
     // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
       this._eventBus.emit(TableEvents.AFTER_RENDER, {
         rowCount: this._state.getData().length,
-        columnCount: this._state.getColumns().length
-      });
-    });
+        columnCount: this._state.getColumns().length,
+      })
+    })
   }
 }
 
 // Expose event types for external use
-Table.Events = TableEvents;
+Table.Events = TableEvents

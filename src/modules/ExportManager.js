@@ -1,11 +1,11 @@
 /**
  * ExportManager - Handles data export operations
- * 
+ *
  * Exports table data to CSV and Excel formats.
  */
 
-import { TableEvents } from '../core/EventBus.js';
-import { transformForExport } from '../utils/data.js';
+import { TableEvents } from "../core/EventBus.js"
+import { transformForExport } from "../utils/data.js"
 
 export class ExportManager {
   /**
@@ -13,8 +13,8 @@ export class ExportManager {
    * @param {EventBus} eventBus - Event bus instance
    */
   constructor(state, eventBus) {
-    this._state = state;
-    this._eventBus = eventBus;
+    this._state = state
+    this._eventBus = eventBus
   }
 
   /**
@@ -29,67 +29,69 @@ export class ExportManager {
    */
   toCSV(options = {}) {
     const {
-      delimiter = ',',
+      delimiter = ",",
       includeHeaders = true,
       includeHidden = false,
       columns: columnFilter = null,
-      filter = null
-    } = options;
+      filter = null,
+    } = options
 
-    this._eventBus.emit(TableEvents.EXPORT_START, { format: 'csv' });
+    this._eventBus.emit(TableEvents.EXPORT_START, { format: "csv" })
 
-    let data = this._state.getData();
-    let columns = this._state.getColumns();
+    let data = this._state.getData()
+    let columns = this._state.getColumns()
 
     // Filter columns
     if (columnFilter) {
-      columns = columns.filter(col => columnFilter.includes(col.data));
+      columns = columns.filter((col) => columnFilter.includes(col.data))
     } else if (!includeHidden) {
-      columns = columns.filter(col => col.visible !== false);
+      columns = columns.filter((col) => col.visible !== false)
     }
 
     // Filter rows
     if (filter) {
-      data = data.filter(filter);
+      data = data.filter(filter)
     }
 
     // Build CSV
-    const rows = [];
+    const rows = []
 
     // Header row
     if (includeHeaders) {
-      const headerRow = columns.map(col => this._escapeCSV(col.title || col.data, delimiter));
-      rows.push(headerRow.join(delimiter));
+      const headerRow = columns.map((col) =>
+        this._escapeCSV(col.title || col.data, delimiter)
+      )
+      rows.push(headerRow.join(delimiter))
     }
 
     // Data rows
-    data.forEach(row => {
-      if (row._type !== 'data' && row._type !== 'subrow') return;
-      
-      const csvRow = columns.map(col => {
-        let value = row[col.data];
-        
+    data.forEach((row) => {
+      if (row._type !== "data" && row._type !== "subrow") return
+
+      const csvRow = columns.map((col) => {
+        let value = row[col.data]
+
         // Format value if formatter exists
         if (col.exportFormat) {
-          value = col.exportFormat(value, row, col);
+          value = col.exportFormat(value, row, col)
         } else if (col.format) {
-          value = col.format(value, row, col);
+          value = col.format(value, row, col)
         }
-        
-        return this._escapeCSV(value, delimiter);
-      });
-      
-      rows.push(csvRow.join(delimiter));
-    });
 
-    const csvString = rows.join('\n');
+        return this._escapeCSV(value, delimiter)
+      })
 
-    this._eventBus.emit(TableEvents.EXPORT_COMPLETE, { 
-      format: 'csv',
-      rowCount: rows.length - (includeHeaders ? 1 : 0)
-    });
+      rows.push(csvRow.join(delimiter))
+    })
 
-    return csvString;
+    const csvString = rows.join("\n")
+
+    this._eventBus.emit(TableEvents.EXPORT_COMPLETE, {
+      format: "csv",
+      rowCount: rows.length - (includeHeaders ? 1 : 0),
+    })
+
+    return csvString
   }
 
   /**
@@ -100,78 +102,80 @@ export class ExportManager {
    */
   toExcel(options = {}) {
     const {
-      sheetName = 'Sheet1',
+      sheetName = "Sheet1",
       includeHeaders = true,
       includeHidden = false,
       columns: columnFilter = null,
-      filter = null
-    } = options;
+      filter = null,
+    } = options
 
-    this._eventBus.emit(TableEvents.EXPORT_START, { format: 'excel' });
+    this._eventBus.emit(TableEvents.EXPORT_START, { format: "excel" })
 
-    let data = this._state.getData();
-    let columns = this._state.getColumns();
+    let data = this._state.getData()
+    let columns = this._state.getColumns()
 
     // Filter columns
     if (columnFilter) {
-      columns = columns.filter(col => columnFilter.includes(col.data));
+      columns = columns.filter((col) => columnFilter.includes(col.data))
     } else if (!includeHidden) {
-      columns = columns.filter(col => col.visible !== false);
+      columns = columns.filter((col) => col.visible !== false)
     }
 
     // Filter rows
     if (filter) {
-      data = data.filter(filter);
+      data = data.filter(filter)
     }
 
     // Build Excel data structure
-    const worksheetData = [];
+    const worksheetData = []
 
     // Header row
     if (includeHeaders) {
-      worksheetData.push(columns.map(col => col.title || col.data));
+      worksheetData.push(columns.map((col) => col.title || col.data))
     }
 
     // Data rows
-    data.forEach(row => {
-      if (row._type !== 'data' && row._type !== 'subrow') return;
-      
-      const excelRow = columns.map(col => {
-        let value = row[col.data];
-        
+    data.forEach((row) => {
+      if (row._type !== "data" && row._type !== "subrow") return
+
+      const excelRow = columns.map((col) => {
+        let value = row[col.data]
+
         // Keep numbers as numbers for Excel
-        if (col.type === 'number' && typeof value === 'number') {
-          return value;
+        if (col.type === "number" && typeof value === "number") {
+          return value
         }
-        
+
         // Format other values
         if (col.exportFormat) {
-          value = col.exportFormat(value, row, col);
+          value = col.exportFormat(value, row, col)
         }
-        
-        return value;
-      });
-      
-      worksheetData.push(excelRow);
-    });
+
+        return value
+      })
+
+      worksheetData.push(excelRow)
+    })
 
     const result = {
-      sheets: [{
-        name: sheetName,
-        data: worksheetData,
-        columns: columns.map(col => ({
-          width: col.width || 100,
-          type: col.type || 'string'
-        }))
-      }]
-    };
+      sheets: [
+        {
+          name: sheetName,
+          data: worksheetData,
+          columns: columns.map((col) => ({
+            width: col.width || 100,
+            type: col.type || "string",
+          })),
+        },
+      ],
+    }
 
-    this._eventBus.emit(TableEvents.EXPORT_COMPLETE, { 
-      format: 'excel',
-      rowCount: worksheetData.length - (includeHeaders ? 1 : 0)
-    });
+    this._eventBus.emit(TableEvents.EXPORT_COMPLETE, {
+      format: "excel",
+      rowCount: worksheetData.length - (includeHeaders ? 1 : 0),
+    })
 
-    return result;
+    return result
   }
 
   /**
@@ -180,11 +184,11 @@ export class ExportManager {
    * @param {string} [filename] - File name (without extension)
    * @param {Object} [options] - Export options
    */
-  download(format, filename = 'table-export', options = {}) {
-    if (format === 'csv') {
-      this._downloadCSV(filename, options);
-    } else if (format === 'excel') {
-      this._downloadExcel(filename, options);
+  download(format, filename = "table-export", options = {}) {
+    if (format === "csv") {
+      this._downloadCSV(filename, options)
+    } else if (format === "excel") {
+      this._downloadExcel(filename, options)
     }
   }
 
@@ -193,9 +197,9 @@ export class ExportManager {
    * @private
    */
   _downloadCSV(filename, options) {
-    const csv = this.toCSV(options);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    this._downloadBlob(blob, `${filename}.csv`);
+    const csv = this.toCSV(options)
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    this._downloadBlob(blob, `${filename}.csv`)
   }
 
   /**
@@ -205,9 +209,11 @@ export class ExportManager {
    */
   _downloadExcel(filename, options) {
     // Basic Excel export using tab-delimited format
-    const csv = this.toCSV({ ...options, delimiter: '\t' });
-    const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    this._downloadBlob(blob, `${filename}.xls`);
+    const csv = this.toCSV({ ...options, delimiter: "\t" })
+    const blob = new Blob([csv], {
+      type: "application/vnd.ms-excel;charset=utf-8;",
+    })
+    this._downloadBlob(blob, `${filename}.xls`)
   }
 
   /**
@@ -215,17 +221,17 @@ export class ExportManager {
    * @private
    */
   _downloadBlob(blob, filename) {
-    const link = document.createElement('a');
-    
+    const link = document.createElement("a")
+
     if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', filename);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(blob)
+      link.setAttribute("href", url)
+      link.setAttribute("download", filename)
+      link.style.visibility = "hidden"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     }
   }
 
@@ -233,25 +239,25 @@ export class ExportManager {
    * Escape value for CSV
    * @private
    */
-  _escapeCSV(value, delimiter = ',') {
+  _escapeCSV(value, delimiter = ",") {
     if (value === null || value === undefined) {
-      return '';
+      return ""
     }
-    
-    const stringValue = String(value);
-    
+
+    const stringValue = String(value)
+
     // Check if escaping is needed
     if (
       stringValue.includes(delimiter) ||
       stringValue.includes('"') ||
-      stringValue.includes('\n') ||
-      stringValue.includes('\r')
+      stringValue.includes("\n") ||
+      stringValue.includes("\r")
     ) {
       // Escape double quotes and wrap in quotes
-      return `"${stringValue.replace(/"/g, '""')}"`;
+      return `"${stringValue.replace(/"/g, '""')}"`
     }
-    
-    return stringValue;
+
+    return stringValue
   }
 
   /**
@@ -260,23 +266,23 @@ export class ExportManager {
    * @param {'csv'|'excel'} [format='csv'] - Format to preview
    * @returns {string|Object}
    */
-  preview(rowCount = 5, format = 'csv') {
-    const data = this._state.getData().slice(0, rowCount);
-    const columns = this._state.getColumns().filter(c => c.visible !== false);
-    
-    if (format === 'csv') {
+  preview(rowCount = 5, format = "csv") {
+    const data = this._state.getData().slice(0, rowCount)
+    const columns = this._state.getColumns().filter((c) => c.visible !== false)
+
+    if (format === "csv") {
       // Build preview CSV
-      const headers = columns.map(c => c.title || c.data).join(',');
-      const rows = data.map(row => 
-        columns.map(col => this._escapeCSV(row[col.data])).join(',')
-      );
-      return [headers, ...rows].join('\n');
+      const headers = columns.map((c) => c.title || c.data).join(",")
+      const rows = data.map((row) =>
+        columns.map((col) => this._escapeCSV(row[col.data])).join(",")
+      )
+      return [headers, ...rows].join("\n")
     }
-    
+
     return {
-      headers: columns.map(c => c.title || c.data),
-      rows: data.map(row => columns.map(col => row[col.data]))
-    };
+      headers: columns.map((c) => c.title || c.data),
+      rows: data.map((row) => columns.map((col) => row[col.data])),
+    }
   }
 
   /**

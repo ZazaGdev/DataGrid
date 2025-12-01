@@ -1,10 +1,10 @@
 /**
  * ColumnManager - Handles column-related operations
- * 
+ *
  * Manages column visibility, ordering, and configuration.
  */
 
-import { TableEvents } from '../core/EventBus.js';
+import { TableEvents } from "../core/EventBus.js"
 
 export class ColumnManager {
   /**
@@ -12,11 +12,11 @@ export class ColumnManager {
    * @param {EventBus} eventBus - Event bus instance
    */
   constructor(state, eventBus) {
-    this._state = state;
-    this._eventBus = eventBus;
-    
+    this._state = state
+    this._eventBus = eventBus
+
     /** @type {Map<string, Object>} Column overrides */
-    this._overrides = new Map();
+    this._overrides = new Map()
   }
 
   /**
@@ -25,15 +25,15 @@ export class ColumnManager {
    * @param {boolean} visible - Visibility state
    */
   setVisibility(columnId, visible) {
-    const columns = this._state.getColumns();
-    const updatedColumns = columns.map(col => {
+    const columns = this._state.getColumns()
+    const updatedColumns = columns.map((col) => {
       if (col._id === columnId || col.data === columnId) {
-        return { ...col, visible };
+        return { ...col, visible }
       }
-      return col;
-    });
-    
-    this._state.setColumns(updatedColumns);
+      return col
+    })
+
+    this._state.setColumns(updatedColumns)
   }
 
   /**
@@ -42,13 +42,13 @@ export class ColumnManager {
    * @returns {boolean} New visibility state
    */
   toggleVisibility(columnId) {
-    const column = this._state.getColumn(columnId);
+    const column = this._state.getColumn(columnId)
     if (column) {
-      const newVisibility = column.visible === false;
-      this.setVisibility(columnId, newVisibility);
-      return newVisibility;
+      const newVisibility = column.visible === false
+      this.setVisibility(columnId, newVisibility)
+      return newVisibility
     }
-    return false;
+    return false
   }
 
   /**
@@ -56,7 +56,7 @@ export class ColumnManager {
    * @returns {Array<Object>}
    */
   getVisibleColumns() {
-    return this._state.getColumns().filter(col => col.visible !== false);
+    return this._state.getColumns().filter((col) => col.visible !== false)
   }
 
   /**
@@ -64,7 +64,7 @@ export class ColumnManager {
    * @returns {Array<Object>}
    */
   getHiddenColumns() {
-    return this._state.getColumns().filter(col => col.visible === false);
+    return this._state.getColumns().filter((col) => col.visible === false)
   }
 
   /**
@@ -73,16 +73,16 @@ export class ColumnManager {
    * @param {number} toIndex - Target index
    */
   reorderColumns(fromIndex, toIndex) {
-    const columns = [...this._state.getColumns()];
-    const [movedColumn] = columns.splice(fromIndex, 1);
-    columns.splice(toIndex, 0, movedColumn);
-    
+    const columns = [...this._state.getColumns()]
+    const [movedColumn] = columns.splice(fromIndex, 1)
+    columns.splice(toIndex, 0, movedColumn)
+
     // Update indices
     columns.forEach((col, index) => {
-      col._index = index;
-    });
-    
-    this._state.setColumns(columns);
+      col._index = index
+    })
+
+    this._state.setColumns(columns)
   }
 
   /**
@@ -91,15 +91,15 @@ export class ColumnManager {
    * @param {Object} config - Configuration updates
    */
   updateColumn(columnId, config) {
-    const columns = this._state.getColumns();
-    const updatedColumns = columns.map(col => {
+    const columns = this._state.getColumns()
+    const updatedColumns = columns.map((col) => {
       if (col._id === columnId || col.data === columnId) {
-        return { ...col, ...config };
+        return { ...col, ...config }
       }
-      return col;
-    });
-    
-    this._state.setColumns(updatedColumns);
+      return col
+    })
+
+    this._state.setColumns(updatedColumns)
   }
 
   /**
@@ -108,7 +108,7 @@ export class ColumnManager {
    * @param {number|string} width - New width
    */
   resizeColumn(columnId, width) {
-    this.updateColumn(columnId, { width });
+    this.updateColumn(columnId, { width })
   }
 
   /**
@@ -116,7 +116,7 @@ export class ColumnManager {
    * @returns {Array<Object>}
    */
   getAggregateColumns() {
-    return this._state.getColumns().filter(col => col.aggregate);
+    return this._state.getColumns().filter((col) => col.aggregate)
   }
 
   /**
@@ -124,7 +124,7 @@ export class ColumnManager {
    * @returns {Array<Object>}
    */
   getEditableColumns() {
-    return this._state.getColumns().filter(col => col.editable !== false);
+    return this._state.getColumns().filter((col) => col.editable !== false)
   }
 
   /**
@@ -133,21 +133,21 @@ export class ColumnManager {
    */
   resetColumns(columnId = null) {
     if (columnId) {
-      this._overrides.delete(columnId);
+      this._overrides.delete(columnId)
     } else {
-      this._overrides.clear();
+      this._overrides.clear()
     }
-    
+
     this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: 'columns',
-      action: 'reset'
-    });
+      property: "columns",
+      action: "reset",
+    })
   }
 
   /**
    * Cleanup
    */
   destroy() {
-    this._overrides.clear();
+    this._overrides.clear()
   }
 }
