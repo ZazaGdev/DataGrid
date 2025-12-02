@@ -59,6 +59,8 @@
   --et-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
   --et-shadow-fixed: 4px 0 8px -2px rgb(0 0 0 / 0.1);
+  --et-fixed-border-color: var(--et-color-border-strong);
+  --et-fixed-border-width: 2px;
   --et-transition-fast: 150ms ease;
   --et-transition-base: 200ms ease;
   --et-transition-slow: 300ms ease;
@@ -158,6 +160,15 @@
   z-index: var(--et-z-fixed-header);
   background-color: var(--et-color-bg-alt);
 }
+.et-header-cell.et-cell-fixed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--et-fixed-border-width);
+  background-color: var(--et-fixed-border-color);
+}
 
 .et-header-content {
   display: flex;
@@ -228,10 +239,22 @@
   position: sticky;
   left: 0;
   z-index: var(--et-z-fixed);
-  background-color: inherit;
+  background-color: var(--et-color-bg);
+}
+.et-cell.et-cell-fixed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--et-fixed-border-width);
+  background-color: var(--et-fixed-border-color);
 }
 .et-row-data:nth-child(even) .et-cell.et-cell-fixed {
   background-color: var(--et-color-bg-alt);
+}
+.et-row-data:nth-child(odd) .et-cell.et-cell-fixed {
+  background-color: var(--et-color-bg);
 }
 .et-row:hover .et-cell.et-cell-fixed {
   background-color: var(--et-color-bg-hover);

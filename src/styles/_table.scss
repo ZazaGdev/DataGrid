@@ -80,6 +80,17 @@
     left: 0;
     z-index: var(--et-z-fixed-header);
     background-color: var(--et-color-bg-alt);
+
+    // Use pseudo-element for border (stays with sticky element)
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--et-fixed-border-width);
+      background-color: var(--et-fixed-border-color);
+    }
   }
 }
 
@@ -170,11 +181,27 @@
     position: sticky;
     left: 0;
     z-index: var(--et-z-fixed);
-    background-color: inherit;
+    background-color: var(--et-color-bg); // Explicit background for odd rows
 
-    // Ensure fixed cell inherits row background
+    // Use pseudo-element for border (stays with sticky element)
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--et-fixed-border-width);
+      background-color: var(--et-fixed-border-color);
+    }
+
+    // Even rows
     .et-row-data:nth-child(even) & {
       background-color: var(--et-color-bg-alt);
+    }
+
+    // Odd rows (explicit)
+    .et-row-data:nth-child(odd) & {
+      background-color: var(--et-color-bg);
     }
 
     .et-row:hover & {

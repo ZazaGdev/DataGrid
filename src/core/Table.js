@@ -14,6 +14,7 @@ import { GroupManager } from "../modules/GroupManager.js"
 import { EditManager } from "../modules/EditManager.js"
 import { ScrollManager } from "../modules/ScrollManager.js"
 import { ExportManager } from "../modules/ExportManager.js"
+import { ThemeManager } from "../modules/ThemeManager.js"
 import { addClass, removeClass } from "../utils/dom.js"
 
 /**
@@ -30,6 +31,7 @@ import { addClass, removeClass } from "../utils/dom.js"
  * @property {Function} [onRender] - Render complete callback
  * @property {Function} [onChange] - Table data change callback
  * @property {Function} [onRowChange] - Individual row change callback
+ * @property {Object} [theme] - Theme customization
  */
 
 export class Table {
@@ -306,6 +308,33 @@ export class Table {
     this._scrollManager.scrollToRow(rowId)
   }
 
+  // ============================================
+  // Public API - Theme
+  // ============================================
+
+  /**
+   * Update theme at runtime
+   * @param {Object} theme - Partial theme configuration
+   */
+  updateTheme(theme) {
+    this._themeManager.updateTheme(theme)
+  }
+
+  /**
+   * Reset to default theme
+   */
+  resetTheme() {
+    this._themeManager.resetTheme()
+  }
+
+  /**
+   * Get current theme
+   * @returns {Object} Current theme configuration
+   */
+  getTheme() {
+    return this._themeManager.getTheme()
+  }
+
   /**
    * Subscribe to table events
    * @param {string} event - Event name
@@ -333,6 +362,7 @@ export class Table {
 
     // Destroy modules
     this._renderer.destroy()
+    this._themeManager.resetTheme()
     this._columnManager.destroy()
     this._rowManager.destroy()
     this._groupManager.destroy()
@@ -376,6 +406,9 @@ export class Table {
   _initModules() {
     // Initialize renderer first
     this._renderer = new TableRenderer(this._container, this._state)
+
+    // Initialize theme manager
+    this._themeManager = new ThemeManager(this._container, this._config.theme)
 
     // Initialize feature modules
     this._columnManager = new ColumnManager(this._state, this._eventBus)

@@ -148,8 +148,8 @@
   background-color: var(--et-color-bg-alt);
   border-right: var(--et-border-width) solid var(--et-color-border);
   -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 .et-header-cell:last-child {
   border-right: none;
@@ -159,6 +159,7 @@
   left: 0;
   z-index: var(--et-z-fixed-header);
   background-color: var(--et-color-bg-alt);
+  border-right: var(--et-border-width) solid var(--et-color-border);
 }
 
 .et-header-content {
@@ -459,21 +460,20 @@
 .et-cell-input::placeholder {
   color: var(--et-color-text-light);
 }
-.et-cell-input[type="number"] {
+.et-cell-input[type=number] {
   text-align: right;
   font-variant-numeric: tabular-nums;
   -moz-appearance: textfield;
 }
-.et-cell-input[type="number"]::-webkit-outer-spin-button,
-.et-cell-input[type="number"]::-webkit-inner-spin-button {
+.et-cell-input[type=number]::-webkit-outer-spin-button, .et-cell-input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 .et-cell-select {
   -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--et-cell-padding-x) center;
@@ -500,7 +500,7 @@
   justify-content: center;
   height: 100%;
 }
-.et-cell-checkbox input[type="checkbox"] {
+.et-cell-checkbox input[type=checkbox] {
   width: 1rem;
   height: 1rem;
   margin: 0;
@@ -519,7 +519,7 @@
 .et-container.et-mode-edit .et-cell:not(.et-cell-fixed) {
   cursor: text;
 }
-.et-container.et-mode-edit .et-cell[data-editable="false"] {
+.et-container.et-mode-edit .et-cell[data-editable=false] {
   cursor: default;
   background-color: var(--et-color-bg-alt);
   color: var(--et-color-text-muted);
@@ -761,9 +761,7 @@
 .et-row-subrow.et-subrow-timeline:first-of-type .et-cell:first-child::before {
   top: 50%;
 }
-.et-row-subrow.et-subrow-timeline:last-of-type .et-cell:first-child::before,
-.et-row-subrow.et-subrow-timeline:has(+ .et-row-data)
-  .et-cell:first-child::before {
+.et-row-subrow.et-subrow-timeline:last-of-type .et-cell:first-child::before, .et-row-subrow.et-subrow-timeline:has(+ .et-row-data) .et-cell:first-child::before {
   bottom: 50%;
 }
 
@@ -897,4 +895,4 @@
   --et-header-height: 3.25rem;
   --et-row-height: 3rem;
   --et-font-size-base: 0.9375rem;
-} /*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

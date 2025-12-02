@@ -207,13 +207,7 @@ export class ScrollManager {
 
     if (!config.fixedFirstColumn) return
 
-    const fixedCells = this._container.querySelectorAll(".et-cell-fixed")
-
-    fixedCells.forEach((cell) => {
-      cell.style.transform = `translateX(${this._scrollLeft}px)`
-    })
-
-    // Add shadow when scrolled
+    // Add shadow when scrolled (sticky position handled by CSS)
     if (this._scrollLeft > 0) {
       addClass(this._container, "et-scrolled")
     } else {

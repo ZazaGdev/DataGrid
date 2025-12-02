@@ -68,6 +68,10 @@
     0 4px 6px -4px rgb(0 0 0 / 0.1);
   --et-shadow-fixed: 4px 0 8px -2px rgb(0 0 0 / 0.1);
 
+  // Fixed column
+  --et-fixed-border-color: var(--et-color-border-strong);
+  --et-fixed-border-width: 2px;
+
   // Transitions
   --et-transition-fast: 150ms ease;
   --et-transition-base: 200ms ease;

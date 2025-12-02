@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - Theme Customization</title>
+    <link rel="stylesheet" href="../dist/editable-table.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .theme-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .theme-card {
+        padding: 1rem;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+      .theme-card:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .theme-card h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .theme-colors {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .color-box {
+        width: 30px;
+        height: 30px;
+        border-radius: 0.25rem;
+        border: 1px solid #e5e7eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎨 Theme Customization Example</h1>
+      <p class="description">
+        Customize the table's appearance with your own color scheme. Click on
+        preset themes below or use the toolbar to apply custom colors.
+      </p>
+
+      <div class="toolbar">
+        <button class="btn btn-primary" id="applyDark">🌙 Dark Theme</button>
+        <button class="btn btn-primary" id="applyOcean">🌊 Ocean Theme</button>
+        <button class="btn btn-primary" id="applySunset">
+          🌅 Sunset Theme
+        </button>
+        <button class="btn btn-primary" id="applyForest">
+          🌲 Forest Theme
+        </button>
+        <button class="btn" id="resetTheme">↺ Reset to Default</button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="info-box">
+        <h3>💡 Available Theme Options</h3>
+        <p>
+          • <strong>rowEven:</strong> Background color for even rows (default:
+          #f9fafb)
+        </p>
+        <p>
+          • <strong>rowOdd:</strong> Background color for odd rows (default:
+          #ffffff)
+        </p>
+        <p>
+          • <strong>rowHover:</strong> Background color when hovering rows
+          (default: #f3f4f6)
+        </p>
+        <p>
+          • <strong>rowSelected:</strong> Background color for selected rows
+          (default: #eff6ff)
+        </p>
+        <p>
+          • <strong>borderLight:</strong> Light border color (default: #e5e7eb)
+        </p>
+        <p>
+          • <strong>borderStrong:</strong> Strong border color (default:
+          #d1d5db)
+        </p>
+        <p>
+          • <strong>headerBackground:</strong> Header background color (default:
+          #f9fafb)
+        </p>
+        <p>
+          • <strong>headerText:</strong> Header text color (default: #111827)
+        </p>
+        <p>
+          • <strong>cellBackground:</strong> Cell background color (default:
+          #ffffff)
+        </p>
+        <p>• <strong>cellText:</strong> Cell text color (default: #111827)</p>
+        <p>
+          • <strong>primary:</strong> Primary/accent color (default: #3b82f6)
+        </p>
+        <p>
+          • <strong>primaryHover:</strong> Primary hover color (default:
+          #2563eb)
+        </p>
+        <p>
+          • <strong>success:</strong> Success indicator color (default: #10b981)
+        </p>
+        <p>
+          • <strong>warning:</strong> Warning indicator color (default: #f59e0b)
+        </p>
+        <p>
+          • <strong>error:</strong> Error indicator color (default: #ef4444)
+        </p>
+      </div>
+
+      <div class="theme-preview">
+        <div class="theme-card" data-theme="dark">
+          <h4>🌙 Dark Theme</h4>
+          <div class="theme-colors">
+            <div class="color-box" style="background: #1f2937"></div>
+            <div class="color-box" style="background: #111827"></div>
+            <div class="color-box" style="background: #374151"></div>
+            <div class="color-box" style="background: #60a5fa"></div>
+          </div>
+        </div>
+
+        <div class="theme-card" data-theme="ocean">
+          <h4>🌊 Ocean Theme</h4>
+          <div class="theme-colors">
+            <div class="color-box" style="background: #ecfeff"></div>
+            <div class="color-box" style="background: #cffafe"></div>
+            <div class="color-box" style="background: #06b6d4"></div>
+            <div class="color-box" style="background: #0891b2"></div>
+          </div>
+        </div>
+
+        <div class="theme-card" data-theme="sunset">
+          <h4>🌅 Sunset Theme</h4>
+          <div class="theme-colors">
+            <div class="color-box" style="background: #fff7ed"></div>
+            <div class="color-box" style="background: #ffedd5"></div>
+            <div class="color-box" style="background: #f97316"></div>
+            <div class="color-box" style="background: #ea580c"></div>
+          </div>
+        </div>
+
+        <div class="theme-card" data-theme="forest">
+          <h4>🌲 Forest Theme</h4>
+          <div class="theme-colors">
+            <div class="color-box" style="background: #f0fdf4"></div>
+            <div class="color-box" style="background: #dcfce7"></div>
+            <div class="color-box" style="background: #22c55e"></div>
+            <div class="color-box" style="background: #16a34a"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { Table } from "../src/index.js"
+
+      // Sample data
+      const employeeData = [
+        {
+          id: 1,
+          name: "Alice Johnson",
+          department: "Engineering",
+          position: "Senior Developer",
+          salary: 95000,
+          email: "alice.j@company.com",
+          hireDate: "2020-03-15",
+          phone: "555-0101",
+          location: "New York",
+          performance: 4.8,
+          status: "Active",
+        },
+        {
+          id: 2,
+          name: "Bob Smith",
+          department: "Sales",
+          position: "Sales Manager",
+          salary: 75000,
+          email: "bob.s@company.com",
+          hireDate: "2019-07-22",
+          phone: "555-0102",
+          location: "Chicago",
+          performance: 4.2,
+          status: "Active",
+        },
+        {
+          id: 3,
+          name: "Carol Williams",
+          department: "Engineering",
+          position: "DevOps Engineer",
+          salary: 88000,
+          email: "carol.w@company.com",
+          hireDate: "2021-01-10",
+          phone: "555-0103",
+          location: "San Francisco",
+          performance: 4.5,
+          status: "Active",
+        },
+        {
+          id: 4,
+          name: "David Brown",
+          department: "Marketing",
+          position: "Marketing Director",
+          salary: 92000,
+          email: "david.b@company.com",
+          hireDate: "2018-11-05",
+          phone: "555-0104",
+          location: "Los Angeles",
+          performance: 4.6,
+          status: "Active",
+        },
+        {
+          id: 5,
+          name: "Eve Davis",
+          department: "Sales",
+          position: "Account Executive",
+          salary: 68000,
+          email: "eve.d@company.com",
+          hireDate: "2022-05-18",
+          phone: "555-0105",
+          location: "Chicago",
+          performance: 3.9,
+          status: "Active",
+        },
+        {
+          id: 6,
+          name: "Frank Miller",
+          department: "Engineering",
+          position: "Junior Developer",
+          salary: 62000,
+          email: "frank.m@company.com",
+          hireDate: "2023-02-28",
+          phone: "555-0106",
+          location: "Austin",
+          performance: 4.0,
+          status: "Active",
+        },
+        {
+          id: 7,
+          name: "Grace Wilson",
+          department: "HR",
+          position: "HR Manager",
+          salary: 72000,
+          email: "grace.w@company.com",
+          hireDate: "2017-09-12",
+          phone: "555-0107",
+          location: "New York",
+          performance: 4.4,
+          status: "Active",
+        },
+        {
+          id: 8,
+          name: "Henry Moore",
+          department: "Finance",
+          position: "Financial Analyst",
+          salary: 70000,
+          email: "henry.m@company.com",
+          hireDate: "2021-08-01",
+          phone: "555-0108",
+          location: "Boston",
+          performance: 4.1,
+          status: "Active",
+        },
+        {
+          id: 9,
+          name: "Ivy Chen",
+          department: "Engineering",
+          position: "Tech Lead",
+          salary: 115000,
+          email: "ivy.c@company.com",
+          hireDate: "2016-04-20",
+          phone: "555-0109",
+          location: "San Francisco",
+          performance: 4.9,
+          status: "Active",
+        },
+        {
+          id: 10,
+          name: "Jack Taylor",
+          department: "Sales",
+          position: "Regional Director",
+          salary: 98000,
+          email: "jack.t@company.com",
+          hireDate: "2015-12-01",
+          phone: "555-0110",
+          location: "Miami",
+          performance: 4.3,
+          status: "Active",
+        },
+        {
+          id: 11,
+          name: "Karen White",
+          department: "Marketing",
+          position: "Content Manager",
+          salary: 65000,
+          email: "karen.w@company.com",
+          hireDate: "2022-09-14",
+          phone: "555-0111",
+          location: "Seattle",
+          performance: 4.0,
+          status: "Active",
+        },
+        {
+          id: 12,
+          name: "Leo Martinez",
+          department: "Engineering",
+          position: "QA Engineer",
+          salary: 72000,
+          email: "leo.m@company.com",
+          hireDate: "2020-11-30",
+          phone: "555-0112",
+          location: "Denver",
+          performance: 4.2,
+          status: "Active",
+        },
+        {
+          id: 13,
+          name: "Mia Thompson",
+          department: "Finance",
+          position: "Controller",
+          salary: 105000,
+          email: "mia.t@company.com",
+          hireDate: "2014-06-15",
+          phone: "555-0113",
+          location: "New York",
+          performance: 4.7,
+          status: "Active",
+        },
+        {
+          id: 14,
+          name: "Nathan Lee",
+          department: "HR",
+          position: "Recruiter",
+          salary: 58000,
+          email: "nathan.l@company.com",
+          hireDate: "2023-07-10",
+          phone: "555-0114",
+          location: "Portland",
+          performance: 3.8,
+          status: "Active",
+        },
+        {
+          id: 15,
+          name: "Olivia Garcia",
+          department: "Engineering",
+          position: "Data Scientist",
+          salary: 102000,
+          email: "olivia.g@company.com",
+          hireDate: "2019-03-25",
+          phone: "555-0115",
+          location: "San Francisco",
+          performance: 4.6,
+          status: "Active",
+        },
+        {
+          id: 16,
+          name: "Peter Robinson",
+          department: "Sales",
+          position: "Sales Rep",
+          salary: 55000,
+          email: "peter.r@company.com",
+          hireDate: "2024-01-08",
+          phone: "555-0116",
+          location: "Phoenix",
+          performance: 3.5,
+          status: "Probation",
+        },
+        {
+          id: 17,
+          name: "Quinn Adams",
+          department: "Marketing",
+          position: "SEO Specialist",
+          salary: 67000,
+          email: "quinn.a@company.com",
+          hireDate: "2021-05-20",
+          phone: "555-0117",
+          location: "Austin",
+          performance: 4.1,
+          status: "Active",
+        },
+        {
+          id: 18,
+          name: "Rachel Kim",
+          department: "Engineering",
+          position: "Frontend Developer",
+          salary: 85000,
+          email: "rachel.k@company.com",
+          hireDate: "2020-08-12",
+          phone: "555-0118",
+          location: "Seattle",
+          performance: 4.4,
+          status: "Active",
+        },
+        {
+          id: 19,
+          name: "Steve Patel",
+          department: "Finance",
+          position: "Accountant",
+          salary: 63000,
+          email: "steve.p@company.com",
+          hireDate: "2022-02-14",
+          phone: "555-0119",
+          location: "Chicago",
+          performance: 4.0,
+          status: "Active",
+        },
+        {
+          id: 20,
+          name: "Tina Nguyen",
+          department: "HR",
+          position: "Training Coordinator",
+          salary: 60000,
+          email: "tina.n@company.com",
+          hireDate: "2021-10-03",
+          phone: "555-0120",
+          location: "Los Angeles",
+          performance: 4.3,
+          status: "Active",
+        },
+      ]
+
+      // Column definitions
+      const columns = [
+        {
+          title: "ID",
+          data: "id",
+          width: "60px",
+          editable: false,
+        },
+        {
+          title: "Name",
+          data: "name",
+          width: "180px",
+        },
+        {
+          title: "Department",
+          data: "department",
+          width: "150px",
+        },
+        {
+          title: "Position",
+          data: "position",
+          width: "180px",
+        },
+        {
+          title: "Salary",
+          data: "salary",
+          width: "120px",
+          type: "number",
+          format: (value) => (value ? `$${value.toLocaleString()}` : ""),
+        },
+        {
+          title: "Email",
+          data: "email",
+          width: "200px",
+        },
+        {
+          title: "Hire Date",
+          data: "hireDate",
+          width: "120px",
+          type: "date",
+          format: (v) => (v ? new Date(v).toLocaleDateString() : ""),
+        },
+        {
+          title: "Phone",
+          data: "phone",
+          width: "110px",
+        },
+        {
+          title: "Location",
+          data: "location",
+          width: "130px",
+        },
+        {
+          title: "Performance",
+          data: "performance",
+          width: "110px",
+          type: "number",
+          format: (v) => (v != null ? `${v.toFixed(1)} ⭐` : ""),
+        },
+        {
+          title: "Status",
+          data: "status",
+          width: "100px",
+        },
+      ]
+
+      // Define theme presets
+      const themes = {
+        dark: {
+          rowEven: "#111827",
+          rowOdd: "#1f2937",
+          rowHover: "#374151",
+          rowSelected: "#1e3a5f",
+          borderLight: "#374151",
+          borderStrong: "#4b5563",
+          headerBackground: "#111827",
+          headerText: "#f9fafb",
+          cellText: "#f9fafb",
+          primary: "#60a5fa",
+          primaryHover: "#3b82f6",
+        },
+        ocean: {
+          rowEven: "#cffafe",
+          rowOdd: "#ecfeff",
+          rowHover: "#a5f3fc",
+          rowSelected: "#67e8f9",
+          borderLight: "#99f6e4",
+          borderStrong: "#5eead4",
+          headerBackground: "#06b6d4",
+          headerText: "#ffffff",
+          primary: "#0891b2",
+          primaryHover: "#0e7490",
+        },
+        sunset: {
+          rowEven: "#ffedd5",
+          rowOdd: "#fff7ed",
+          rowHover: "#fed7aa",
+          rowSelected: "#fde68a",
+          borderLight: "#fde047",
+          borderStrong: "#fbbf24",
+          headerBackground: "#f97316",
+          headerText: "#ffffff",
+          primary: "#ea580c",
+          primaryHover: "#c2410c",
+        },
+        forest: {
+          rowEven: "#dcfce7",
+          rowOdd: "#f0fdf4",
+          rowHover: "#bbf7d0",
+          rowSelected: "#86efac",
+          borderLight: "#4ade80",
+          borderStrong: "#22c55e",
+          headerBackground: "#16a34a",
+          headerText: "#ffffff",
+          primary: "#15803d",
+          primaryHover: "#166534",
+        },
+      }
+
+      // Create table with default theme
+      const table = new Table({
+        container: "#tableContainer",
+        columns: columns,
+        data: employeeData,
+        mode: "edit",
+        fixedFirstColumn: true,
+      })
+
+      // Store globally
+      window.table = table
+
+      // Button handlers
+      document.getElementById("applyDark").addEventListener("click", () => {
+        table.updateTheme(themes.dark)
+        console.log("✅ Applied Dark Theme")
+      })
+
+      document.getElementById("applyOcean").addEventListener("click", () => {
+        table.updateTheme(themes.ocean)
+        console.log("✅ Applied Ocean Theme")
+      })
+
+      document.getElementById("applySunset").addEventListener("click", () => {
+        table.updateTheme(themes.sunset)
+        console.log("✅ Applied Sunset Theme")
+      })
+
+      document.getElementById("applyForest").addEventListener("click", () => {
+        table.updateTheme(themes.forest)
+        console.log("✅ Applied Forest Theme")
+      })
+
+      document.getElementById("resetTheme").addEventListener("click", () => {
+        table.resetTheme()
+        console.log("✅ Reset to Default Theme")
+      })
+
+      // Theme card click handlers
+      document.querySelectorAll(".theme-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const themeName = card.getAttribute("data-theme")
+          table.updateTheme(themes[themeName])
+          console.log(`✅ Applied ${themeName} theme`)
+        })
+      })
+
+      console.log("✅ Theme Customization Example loaded successfully!")
+      console.log(
+        "💡 Try clicking on theme presets or buttons to change colors"
+      )
+      console.log("💡 You can also use table.updateTheme({...}) in the console")
+    </script>
+  </body>
+</html>
