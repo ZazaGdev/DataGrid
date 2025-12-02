@@ -360,19 +360,17 @@
         document.getElementById("addRowModal").classList.remove("active")
       }
 
-      document
-        .getElementById("deleteFirst")
-        .addEventListener("click", () => {
-          const data = table.getData()
-          if (data.length === 0) {
-            showStatus("No rows to delete")
-            return
-          }
+      document.getElementById("deleteFirst").addEventListener("click", () => {
+        const data = table.getData()
+        if (data.length === 0) {
+          showStatus("No rows to delete")
+          return
+        }
 
-          const firstRow = data[0]
-          table.deleteRow(firstRow.id)
-          showStatus(`Deleted employee: ${firstRow.name}`)
-        })
+        const firstRow = data[0]
+        table.deleteRow(firstRow.id)
+        showStatus(`Deleted employee: ${firstRow.name}`)
+      })
 
       document.getElementById("updateCell").addEventListener("click", () => {
         const data = table.getData()
