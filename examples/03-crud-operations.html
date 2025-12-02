@@ -129,21 +129,19 @@
       <h1>📊 CRUD Operations Example</h1>
       <p class="description">
         This example demonstrates Create, Read, Update, and Delete operations on
-        table rows, including batch updates, row selection, and dirty state
-        tracking.
+        table rows, including batch updates and dirty state tracking.
       </p>
 
       <div class="toolbar">
         <button class="btn btn-success" id="addRow">➕ Add New Row</button>
-        <button class="btn btn-danger" id="deleteSelected">
-          🗑️ Delete Selected
+        <button class="btn btn-danger" id="deleteFirst">
+          🗑️ Delete First Row
         </button>
         <button class="btn btn-primary" id="batchUpdate">
           ⚡ Batch Update
         </button>
         <button class="btn" id="updateCell">✏️ Update Single Cell</button>
         <button class="btn" id="getDirtyRows">📝 Get Modified Rows</button>
-        <button class="btn" id="clearSelection">Clear Selection</button>
       </div>
 
       <div id="tableContainer"></div>
@@ -155,8 +153,8 @@
           employee at the end.
         </p>
         <p>
-          • <strong>Delete Row:</strong> Select rows (click on row IDs) and
-          click "Delete Selected".
+          • <strong>Delete Row:</strong> Click "Delete First Row" to remove the
+          first row from the table.
         </p>
         <p>
           • <strong>Update Cell:</strong> Click "Update Single Cell" to modify a
@@ -169,10 +167,6 @@
         <p>
           • <strong>Dirty Tracking:</strong> Modified rows are tracked. Click
           "Get Modified Rows" to see changes.
-        </p>
-        <p>
-          • <strong>Row Selection:</strong> Click on any row to select it for
-          operations.
         </p>
       </div>
 
@@ -337,9 +331,6 @@
       // Store globally
       window.table = table
 
-      // Track selected rows
-      let selectedRowIds = new Set()
-
       // Button handlers
       document.getElementById("addRow").addEventListener("click", () => {
         document.getElementById("addRowModal").classList.add("active")
@@ -370,20 +361,17 @@
       }
 
       document
-        .getElementById("deleteSelected")
+        .getElementById("deleteFirst")
         .addEventListener("click", () => {
-          if (selectedRowIds.size === 0) {
-            showStatus("No rows selected. Click on row IDs to select rows.")
+          const data = table.getData()
+          if (data.length === 0) {
+            showStatus("No rows to delete")
             return
           }
 
-          const idsToDelete = Array.from(selectedRowIds)
-          idsToDelete.forEach((id) => {
-            table.deleteRow(id)
-          })
-
-          showStatus(`Deleted ${idsToDelete.length} row(s)`)
-          selectedRowIds.clear()
+          const firstRow = data[0]
+          table.deleteRow(firstRow.id)
+          showStatus(`Deleted employee: ${firstRow.name}`)
         })
 
       document.getElementById("updateCell").addEventListener("click", () => {
@@ -436,13 +424,6 @@
         }
       })
 
-      document
-        .getElementById("clearSelection")
-        .addEventListener("click", () => {
-          selectedRowIds.clear()
-          showStatus("Selection cleared")
-        })
-
       // Subscribe to row events
       table.on(Table.Events.ROW_ADD, (data) => {
         console.log("Row added:", data)
@@ -457,16 +438,7 @@
       })
 
       table.on(Table.Events.ROW_CLICK, (data) => {
-        const rowId = data.row.id
-
-        // Toggle selection
-        if (selectedRowIds.has(rowId)) {
-          selectedRowIds.delete(rowId)
-        } else {
-          selectedRowIds.add(rowId)
-        }
-
-        console.log("Row clicked, selected IDs:", Array.from(selectedRowIds))
+        console.log("Row clicked:", data.row)
       })
 
       // Utility function to display status

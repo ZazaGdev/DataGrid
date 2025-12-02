@@ -34,8 +34,7 @@ export class TableState {
       groupedData: null,
       collapsedGroups: new Set(),
 
-      // Selection state
-      selectedRows: new Set(),
+      // Focus state
       focusedCell: null,
 
       // Computed values cache

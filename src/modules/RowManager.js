@@ -1,7 +1,7 @@
 /**
  * RowManager - Handles row-related operations
  *
- * Manages row CRUD operations, selection, and row types.
+ * Manages row CRUD operations and row types.
  */
 
 import { TableEvents } from "../core/EventBus.js"
@@ -15,9 +15,6 @@ export class RowManager {
   constructor(state, eventBus) {
     this._state = state
     this._eventBus = eventBus
-
-    /** @type {Set<string>} Selected row IDs */
-    this._selectedRows = new Set()
 
     /** @type {Array<Function>} - Unsubscribe functions for cleanup */
     this._unsubscribers = []
@@ -209,104 +206,6 @@ export class RowManager {
   }
 
   /**
-   * Select a row
-   * @param {string} rowId - Row ID
-   * @param {boolean} [addToSelection=false] - Add to existing selection
-   */
-  selectRow(rowId, addToSelection = false) {
-    if (!addToSelection) {
-      this._selectedRows.clear()
-    }
-    this._selectedRows.add(rowId)
-
-    this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: "selectedRows",
-      value: Array.from(this._selectedRows),
-    })
-  }
-
-  /**
-   * Deselect a row
-   * @param {string} rowId - Row ID
-   */
-  deselectRow(rowId) {
-    this._selectedRows.delete(rowId)
-
-    this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: "selectedRows",
-      value: Array.from(this._selectedRows),
-    })
-  }
-
-  /**
-   * Toggle row selection
-   * @param {string} rowId - Row ID
-   */
-  toggleRowSelection(rowId) {
-    if (this._selectedRows.has(rowId)) {
-      this.deselectRow(rowId)
-    } else {
-      this.selectRow(rowId, true)
-    }
-  }
-
-  /**
-   * Select all rows
-   */
-  selectAllRows() {
-    const data = this._state.getData()
-    data.forEach((row) => {
-      if (row._type === "data") {
-        this._selectedRows.add(row._id)
-      }
-    })
-
-    this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: "selectedRows",
-      value: Array.from(this._selectedRows),
-    })
-  }
-
-  /**
-   * Clear selection
-   */
-  clearSelection() {
-    this._selectedRows.clear()
-
-    this._eventBus.emit(TableEvents.STATE_CHANGE, {
-      property: "selectedRows",
-      value: [],
-    })
-  }
-
-  /**
-   * Get selected rows
-   * @returns {Array<Object>}
-   */
-  getSelectedRows() {
-    return this._state
-      .getData()
-      .filter((row) => this._selectedRows.has(row._id))
-  }
-
-  /**
-   * Get selected row IDs
-   * @returns {Array<string>}
-   */
-  getSelectedRowIds() {
-    return Array.from(this._selectedRows)
-  }
-
-  /**
-   * Check if row is selected
-   * @param {string} rowId - Row ID
-   * @returns {boolean}
-   */
-  isRowSelected(rowId) {
-    return this._selectedRows.has(rowId)
-  }
-
-  /**
    * Get rows by type
    * @param {string} type - Row type ('data', 'subrow', 'total', etc.)
    * @returns {Array<Object>}
@@ -351,14 +250,7 @@ export class RowManager {
    * @private
    */
   _setupListeners() {
-    // Clear selection when data changes
-    this._unsubscribers.push(
-      this._eventBus.on(TableEvents.DATA_CHANGE, ({ source }) => {
-        if (source === "setData") {
-          this._selectedRows.clear()
-        }
-      })
-    )
+    // No event listeners needed currently
   }
 
   /**
@@ -368,7 +260,5 @@ export class RowManager {
     // Unsubscribe from all event listeners
     this._unsubscribers.forEach((unsubscribe) => unsubscribe())
     this._unsubscribers = []
-
-    this._selectedRows.clear()
   }
 }
