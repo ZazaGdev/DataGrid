@@ -165,12 +165,12 @@
 
 .et-cell {
   height: var(--et-row-height);
-  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
   vertical-align: middle;
   border-right: var(--et-border-width) solid var(--et-color-border);
   border-bottom: var(--et-border-width) solid var(--et-color-border);
   @include et-truncate;
   @include et-transition(background-color, box-shadow);
+  padding: 5px;
 
   &:last-child {
     border-right: none;
@@ -215,7 +215,6 @@
 
   // Cell type alignments
   &.et-cell-number {
-    text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
