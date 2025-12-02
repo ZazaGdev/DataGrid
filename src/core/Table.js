@@ -8,7 +8,6 @@
 import { EventBus, TableEvents } from "./EventBus.js"
 import { TableState } from "./TableState.js"
 import { TableRenderer } from "./TableRenderer.js"
-import { ColumnManager } from "../modules/ColumnManager.js"
 import { RowManager } from "../modules/RowManager.js"
 import { GroupManager } from "../modules/GroupManager.js"
 import { EditManager } from "../modules/EditManager.js"
@@ -202,7 +201,15 @@ export class Table {
    * @param {boolean} visible - Visibility state
    */
   setColumnVisibility(columnId, visible) {
-    this._columnManager.setVisibility(columnId, visible)
+    const columns = this._state.getColumns()
+    const updatedColumns = columns.map((col) => {
+      if (col._id === columnId || col.data === columnId) {
+        return { ...col, visible }
+      }
+      return col
+    })
+    this._state.setColumns(updatedColumns)
+    this._render()
   }
 
   // ============================================
@@ -363,7 +370,6 @@ export class Table {
     // Destroy modules
     this._renderer.destroy()
     this._themeManager.resetTheme()
-    this._columnManager.destroy()
     this._rowManager.destroy()
     this._groupManager.destroy()
     this._editManager.destroy()
@@ -411,7 +417,6 @@ export class Table {
     this._themeManager = new ThemeManager(this._container, this._config.theme)
 
     // Initialize feature modules
-    this._columnManager = new ColumnManager(this._state, this._eventBus)
     this._rowManager = new RowManager(this._state, this._eventBus)
     this._groupManager = new GroupManager(this._state, this._eventBus)
     this._editManager = new EditManager(
