@@ -50,6 +50,7 @@ export class TableState {
         enableGrouping: false,
         groupBy: null,
         enableSubRows: false,
+        enableRowTotals: false,
         ...initialState.config,
       },
     }
@@ -209,7 +210,25 @@ export class TableState {
    * @returns {Array<Object>}
    */
   getColumns() {
-    return [...this._state.columns]
+    const columns = [...this._state.columns]
+
+    // Append row total column if enabled
+    if (this._state.config.enableRowTotals) {
+      columns.push({
+        data: "_rowTotal",
+        title: "Total",
+        type: "number",
+        editable: false,
+        aggregate: "sum",
+        _id: "_rowTotal",
+        _index: columns.length,
+        _isRowTotal: true,
+        format: (value) =>
+          value !== null && value !== undefined ? value.toLocaleString() : "0",
+      })
+    }
+
+    return columns
   }
 
   /**
@@ -218,6 +237,21 @@ export class TableState {
    * @returns {Object|null}
    */
   getColumn(columnId) {
+    // Check for row total column
+    if (columnId === "_rowTotal" && this._state.config.enableRowTotals) {
+      return {
+        data: "_rowTotal",
+        title: "Total",
+        type: "number",
+        editable: false,
+        aggregate: "sum",
+        _id: "_rowTotal",
+        _isRowTotal: true,
+        format: (value) =>
+          value !== null && value !== undefined ? value.toLocaleString() : "0",
+      }
+    }
+
     return this._state.columns.find(
       (c) => c._id === columnId || c.data === columnId
     )

@@ -92,6 +92,13 @@
       background-color: var(--et-fixed-border-color);
     }
   }
+
+  // Row total column header
+  &.et-header-row-total {
+    background-color: var(--et-row-total-header-bg);
+    color: var(--et-row-total-text);
+    border-left: 2px solid var(--et-row-total-border-color);
+  }
 }
 
 .et-header-content {
@@ -210,6 +217,24 @@
 
     .et-row-selected & {
       background-color: var(--et-color-bg-selected);
+    }
+  }
+
+  // Row total column cell
+  &.et-cell-row-total {
+    background-color: var(--et-row-total-bg);
+    color: var(--et-row-total-text);
+    font-weight: var(--et-font-weight-medium);
+    border-left: 2px solid var(--et-row-total-border-color);
+
+    // Even rows
+    .et-row-data:nth-child(even) & {
+      background-color: var(--et-row-total-bg-alt);
+    }
+
+    // Hover state
+    .et-row:hover & {
+      background-color: var(--et-row-total-bg-alt);
     }
   }
 

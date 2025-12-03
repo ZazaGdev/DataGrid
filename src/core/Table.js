@@ -25,6 +25,7 @@ import { addClass, removeClass } from "../utils/dom.js"
  * @property {boolean} [enableGrouping=false] - Enable row grouping
  * @property {string|Function} [groupBy] - Group by column name or function
  * @property {boolean} [enableSubRows=false] - Enable sub-rows
+ * @property {boolean} [enableRowTotals=false] - Enable row totals column
  * @property {'view'|'edit'} [mode='view'] - Initial mode
  * @property {Function} [onRowClick] - Row click callback
  * @property {Function} [onRender] - Render complete callback
@@ -46,6 +47,7 @@ export class Table {
       fixedFirstColumn: false,
       enableGrouping: false,
       enableSubRows: false,
+      enableRowTotals: false,
       mode: "view",
       ...config,
     }
@@ -70,6 +72,7 @@ export class Table {
         enableGrouping: config.enableGrouping,
         groupBy: config.groupBy,
         enableSubRows: config.enableSubRows,
+        enableRowTotals: config.enableRowTotals,
       },
     })
 

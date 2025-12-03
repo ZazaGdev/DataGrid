@@ -61,6 +61,11 @@
   --et-shadow-fixed: 4px 0 8px -2px rgb(0 0 0 / 0.1);
   --et-fixed-border-color: var(--et-color-border-strong);
   --et-fixed-border-width: 2px;
+  --et-row-total-bg: #f8fafc;
+  --et-row-total-bg-alt: #f1f5f9;
+  --et-row-total-text: #475569;
+  --et-row-total-header-bg: #e2e8f0;
+  --et-row-total-border-color: #cbd5e1;
   --et-transition-fast: 150ms ease;
   --et-transition-base: 200ms ease;
   --et-transition-slow: 300ms ease;
@@ -169,6 +174,11 @@
   width: var(--et-fixed-border-width);
   background-color: var(--et-fixed-border-color);
 }
+.et-header-cell.et-header-row-total {
+  background-color: var(--et-row-total-header-bg);
+  color: var(--et-row-total-text);
+  border-left: 2px solid var(--et-row-total-border-color);
+}
 
 .et-header-content {
   display: flex;
@@ -262,6 +272,18 @@
 .et-row-selected .et-cell.et-cell-fixed {
   background-color: var(--et-color-bg-selected);
 }
+.et-cell.et-cell-row-total {
+  background-color: var(--et-row-total-bg);
+  color: var(--et-row-total-text);
+  font-weight: var(--et-font-weight-medium);
+  border-left: 2px solid var(--et-row-total-border-color);
+}
+.et-row-data:nth-child(even) .et-cell.et-cell-row-total {
+  background-color: var(--et-row-total-bg-alt);
+}
+.et-row:hover .et-cell.et-cell-row-total {
+  background-color: var(--et-row-total-bg-alt);
+}
 .et-cell.et-cell-number {
   font-variant-numeric: tabular-nums;
 }
@@ -310,9 +332,17 @@
 .et-row-group-header:hover .et-cell-group-header {
   background-color: var(--et-color-bg-hover);
 }
+.et-row-group-header:hover .et-cell-group-header.et-cell-row-total {
+  background-color: var(--et-row-total-bg-alt);
+}
 .et-row-group-header .et-cell-group-header {
   font-weight: var(--et-font-weight-medium);
   background-color: var(--et-color-bg-alt);
+}
+.et-row-group-header .et-cell-group-header.et-cell-row-total {
+  background-color: var(--et-row-total-header-bg);
+  color: var(--et-row-total-text);
+  border-left: 2px solid var(--et-row-total-border-color);
 }
 .et-row-group-header .et-cell-aggregate {
   color: var(--et-color-text);

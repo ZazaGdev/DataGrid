@@ -166,6 +166,23 @@ export class TableRenderer {
       )
     )
 
+    // Listen for row total changes (emitted by GroupManager after calculation)
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.ROW_TOTAL_CHANGE, ({ rowId, newValue }) => {
+        this.updateCell(rowId, "_rowTotal", newValue)
+      })
+    )
+
+    // Listen for group totals updates to re-render group headers
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.STATE_CHANGE, ({ property, groupId }) => {
+        if (property === "groupTotals") {
+          // Re-render group headers to show updated aggregates
+          this._updateGroupHeaders(groupId)
+        }
+      })
+    )
+
     this._unsubscribers.push(
       this._eventBus.on(TableEvents.MODE_CHANGE, () => {
         this.render()
@@ -266,6 +283,11 @@ export class TableRenderer {
       // Fixed first column
       if (index === 0 && config.fixedFirstColumn) {
         addClass(th, "et-cell-fixed")
+      }
+
+      // Row total column header
+      if (column._isRowTotal) {
+        addClass(th, "et-header-row-total")
       }
 
       // Header content
@@ -397,6 +419,11 @@ export class TableRenderer {
     // Fixed first column
     if (index === 0 && config.fixedFirstColumn) {
       addClass(td, "et-cell-fixed")
+    }
+
+    // Row total column
+    if (column._isRowTotal) {
+      addClass(td, "et-cell-row-total")
     }
 
     // Cell type classes
@@ -590,6 +617,11 @@ export class TableRenderer {
         addClass(td, "et-cell-fixed")
       }
 
+      // Row total column
+      if (column._isRowTotal) {
+        addClass(td, "et-cell-row-total")
+      }
+
       // First column: show toggle + group label
       if (index === 0) {
         const toggleContent = createElement("div", {
@@ -724,5 +756,42 @@ export class TableRenderer {
         this._toggleGroupVisibility(groupId, collapsed)
       })
     }
+  }
+
+  /**
+   * Update group header cells with new aggregate values
+   * @private
+   * @param {string} [groupId] - Specific group, or all if not provided
+   */
+  _updateGroupHeaders(groupId = null) {
+    const groupedData = this._state.getGroupedData()
+    if (!groupedData) return
+
+    const columns = this._state.getColumns()
+    const groupsToUpdate = groupId ? [groupId] : Object.keys(groupedData)
+
+    groupsToUpdate.forEach((gId) => {
+      const group = groupedData[gId]
+      if (!group) return
+
+      const headerRow = this._tbody.querySelector(
+        `.et-row-group-header[data-group="${gId}"]`
+      )
+      if (!headerRow) return
+
+      // Update each aggregate cell in the header
+      columns.forEach((column) => {
+        if (column.aggregate && group.totals[column.data] !== undefined) {
+          const cell = headerRow.querySelector(`[data-column="${column.data}"]`)
+          if (cell && !cell.querySelector(".et-group-header-content")) {
+            cell.textContent = this._formatDisplayValue(
+              group.totals[column.data],
+              column,
+              {}
+            )
+          }
+        }
+      })
+    })
   }
 }

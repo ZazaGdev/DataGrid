@@ -20,11 +20,22 @@
     .et-cell-group-header {
       background-color: var(--et-color-bg-hover);
     }
+
+    .et-cell-group-header.et-cell-row-total {
+      background-color: var(--et-row-total-bg-alt);
+    }
   }
 
   .et-cell-group-header {
     font-weight: var(--et-font-weight-medium);
     background-color: var(--et-color-bg-alt);
+
+    // Row total in group header
+    &.et-cell-row-total {
+      background-color: var(--et-row-total-header-bg);
+      color: var(--et-row-total-text);
+      border-left: 2px solid var(--et-row-total-border-color);
+    }
   }
 
   .et-cell-aggregate {

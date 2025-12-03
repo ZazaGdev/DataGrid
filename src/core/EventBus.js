@@ -147,6 +147,9 @@ export const TableEvents = {
   CELL_FOCUS: "cell:focus",
   CELL_BLUR: "cell:blur",
 
+  // Row total events
+  ROW_TOTAL_CHANGE: "rowTotal:change",
+
   // Group events
   GROUP_TOGGLE: "group:toggle",
   GROUP_EXPAND_ALL: "group:expandAll",

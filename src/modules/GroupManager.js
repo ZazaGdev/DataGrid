@@ -27,6 +27,75 @@ export class GroupManager {
     if (this._state.getConfig().enableGrouping) {
       this.recalculateTotals()
     }
+
+    // Calculate initial row totals if enabled
+    if (this._state.getConfig().enableRowTotals) {
+      this.recalculateRowTotals()
+    }
+  }
+
+  /**
+   * Calculate row total (sum of all numeric columns with aggregate) for a single row
+   * @param {Object} row - Row data
+   * @returns {number} Row total
+   */
+  calculateRowTotal(row) {
+    const columns = this._state.getColumns()
+    let total = 0
+
+    columns.forEach((column) => {
+      // Only sum columns that have aggregate defined (indicating they're numeric summable columns)
+      if (column.aggregate && column.data !== "_rowTotal") {
+        const value = row[column.data]
+        if (value !== null && value !== undefined && !isNaN(value)) {
+          total += Number(value)
+        }
+      }
+    })
+
+    return total
+  }
+
+  /**
+   * Recalculate row totals for all data rows
+   */
+  recalculateRowTotals() {
+    const config = this._state.getConfig()
+    if (!config.enableRowTotals) return
+
+    const data = this._state._state.data
+
+    data.forEach((row) => {
+      if (row._type === "data") {
+        row._rowTotal = this.calculateRowTotal(row)
+      }
+    })
+  }
+
+  /**
+   * Update row total for a specific row
+   * @param {string} rowId - Row identifier
+   */
+  updateRowTotal(rowId) {
+    const config = this._state.getConfig()
+    if (!config.enableRowTotals) return
+
+    const data = this._state._state.data
+    const row = data.find((r) => r._id === rowId)
+
+    if (row && row._type === "data") {
+      const oldTotal = row._rowTotal
+      row._rowTotal = this.calculateRowTotal(row)
+
+      // Emit event so TableRenderer can update the cell
+      if (oldTotal !== row._rowTotal) {
+        this._eventBus.emit(TableEvents.ROW_TOTAL_CHANGE, {
+          rowId,
+          oldValue: oldTotal,
+          newValue: row._rowTotal,
+        })
+      }
+    }
   }
 
   /**
@@ -75,6 +144,7 @@ export class GroupManager {
   recalculateTotals(groupId = null) {
     const groupedData = this._state.getGroupedData()
     const columns = this._state.getColumns()
+    const config = this._state.getConfig()
 
     if (!groupedData) return
 
@@ -87,7 +157,7 @@ export class GroupManager {
       const totals = {}
 
       columns.forEach((column) => {
-        if (column.aggregate) {
+        if (column.aggregate && column.data !== "_rowTotal") {
           const values = group.rows
             .map((row) => row[column.data])
             .filter((v) => v !== null && v !== undefined && !isNaN(v))
@@ -99,6 +169,21 @@ export class GroupManager {
           )
         }
       })
+
+      // Calculate row total for the group header (sum of all aggregated column totals)
+      if (config.enableRowTotals) {
+        let groupRowTotal = 0
+        columns.forEach((column) => {
+          if (
+            column.aggregate &&
+            column.data !== "_rowTotal" &&
+            totals[column.data] !== undefined
+          ) {
+            groupRowTotal += totals[column.data]
+          }
+        })
+        totals._rowTotal = groupRowTotal
+      }
 
       group.totals = totals
     })
@@ -293,11 +378,18 @@ export class GroupManager {
     this._unsubscribers.push(
       this._eventBus.on(TableEvents.CELL_CHANGE, ({ rowId, columnName }) => {
         const column = this._state.getColumn(columnName)
-        if (column && column.aggregate) {
+        const config = this._state.getConfig()
+
+        // Update row total for this row if enabled
+        if (config.enableRowTotals && column && column.aggregate) {
+          this.updateRowTotal(rowId)
+        }
+
+        // Update group totals if grouping is enabled
+        if (column && column.aggregate && config.enableGrouping) {
           // Find which group this row belongs to
           const row = this._state.getRow(rowId)
           if (row) {
-            const config = this._state.getConfig()
             const groupBy = config.groupBy
             const groupId =
               typeof groupBy === "function" ? groupBy(row) : row[groupBy]
@@ -310,7 +402,13 @@ export class GroupManager {
     // Recalculate all totals when data changes
     this._unsubscribers.push(
       this._eventBus.on(TableEvents.DATA_CHANGE, () => {
-        if (this._state.getConfig().enableGrouping) {
+        const config = this._state.getConfig()
+
+        if (config.enableRowTotals) {
+          this.recalculateRowTotals()
+        }
+
+        if (config.enableGrouping) {
           this.recalculateTotals()
         }
       })

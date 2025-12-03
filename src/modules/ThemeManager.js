@@ -47,6 +47,13 @@ export class ThemeManager {
       success: null, // Falls back to --et-color-success
       warning: null, // Falls back to --et-color-warning
       error: null, // Falls back to --et-color-error
+
+      // Row totals column colors
+      rowTotalBackground: null, // Falls back to --et-row-total-bg
+      rowTotalBackgroundAlt: null, // Falls back to --et-row-total-bg-alt
+      rowTotalText: null, // Falls back to --et-row-total-text
+      rowTotalHeaderBackground: null, // Falls back to --et-row-total-header-bg
+      rowTotalBorderColor: null, // Falls back to --et-row-total-border-color
     }
 
     this._theme = { ...this._defaultTheme, ...theme }
@@ -127,6 +134,32 @@ export class ThemeManager {
     if (this._theme.error) {
       style.setProperty("--et-color-error", this._theme.error)
     }
+
+    // Row totals column
+    if (this._theme.rowTotalBackground) {
+      style.setProperty("--et-row-total-bg", this._theme.rowTotalBackground)
+    }
+    if (this._theme.rowTotalBackgroundAlt) {
+      style.setProperty(
+        "--et-row-total-bg-alt",
+        this._theme.rowTotalBackgroundAlt
+      )
+    }
+    if (this._theme.rowTotalText) {
+      style.setProperty("--et-row-total-text", this._theme.rowTotalText)
+    }
+    if (this._theme.rowTotalHeaderBackground) {
+      style.setProperty(
+        "--et-row-total-header-bg",
+        this._theme.rowTotalHeaderBackground
+      )
+    }
+    if (this._theme.rowTotalBorderColor) {
+      style.setProperty(
+        "--et-row-total-border-color",
+        this._theme.rowTotalBorderColor
+      )
+    }
   }
 
   /**
@@ -164,6 +197,11 @@ export class ThemeManager {
       style.removeProperty("--et-color-success")
       style.removeProperty("--et-color-warning")
       style.removeProperty("--et-color-error")
+      style.removeProperty("--et-row-total-bg")
+      style.removeProperty("--et-row-total-bg-alt")
+      style.removeProperty("--et-row-total-text")
+      style.removeProperty("--et-row-total-header-bg")
+      style.removeProperty("--et-row-total-border-color")
     })
 
     this._theme = { ...this._defaultTheme }

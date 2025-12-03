@@ -75,9 +75,10 @@
       <h1>📊 Row Grouping & Aggregates Example</h1>
       <p class="description">
         This example demonstrates row grouping by department with aggregate
-        totals displayed directly in group headers. Child rows are indented
-        under their parent group. Groups can be expanded/collapsed individually
-        or all at once.
+        totals displayed directly in group headers. Each row includes a Total
+        column that sums all numeric values horizontally. Child rows are
+        indented under their parent group. Groups can be expanded/collapsed
+        individually or all at once.
       </p>
 
       <div class="toolbar">
@@ -281,8 +282,9 @@
         data: salesData,
         enableGrouping: true,
         groupBy: "department", // Group by department
+        enableRowTotals: true, // Enable row totals column
         fixedFirstColumn: true, // Sticky first column
-        mode: "view",
+        mode: "edit",
       })
 
       // Store globally for debugging
