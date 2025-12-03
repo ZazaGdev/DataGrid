@@ -89,11 +89,10 @@ const table = new Table({
 
 ### Utilities
 
-| Method               | Description     |
-| -------------------- | --------------- |
-| `render()`           | Force re-render |
-| `scrollToRow(rowId)` | Scroll to row   |
-| `destroy()`          | Cleanup         |
+| Method      | Description     |
+| ----------- | --------------- |
+| `render()`  | Force re-render |
+| `destroy()` | Cleanup         |
 
 ## Column Config
 
@@ -252,7 +251,6 @@ src/
 │   ├── RowManager.js
 │   ├── GroupManager.js
 │   ├── EditManager.js
-│   ├── ScrollManager.js
 │   ├── ExportManager.js
 │   └── ThemeManager.js
 ├── utils/

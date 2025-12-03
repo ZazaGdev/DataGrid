@@ -11,7 +11,6 @@ import { TableRenderer } from "./TableRenderer.js"
 import { RowManager } from "../modules/RowManager.js"
 import { GroupManager } from "../modules/GroupManager.js"
 import { EditManager } from "../modules/EditManager.js"
-import { ScrollManager } from "../modules/ScrollManager.js"
 import { ExportManager } from "../modules/ExportManager.js"
 import { ThemeManager } from "../modules/ThemeManager.js"
 import { addClass, removeClass } from "../utils/dom.js"
@@ -312,14 +311,6 @@ export class Table {
     this._render()
   }
 
-  /**
-   * Scroll to a specific row
-   * @param {string|number} rowId - Row identifier
-   */
-  scrollToRow(rowId) {
-    this._scrollManager.scrollToRow(rowId)
-  }
-
   // ============================================
   // Public API - Theme
   // ============================================
@@ -378,7 +369,6 @@ export class Table {
     this._rowManager.destroy()
     this._groupManager.destroy()
     this._editManager.destroy()
-    this._scrollManager.destroy()
     this._exportManager.destroy()
 
     // Destroy core
@@ -428,11 +418,6 @@ export class Table {
       this._state,
       this._eventBus,
       this._renderer
-    )
-    this._scrollManager = new ScrollManager(
-      this._container,
-      this._state,
-      this._eventBus
     )
     this._exportManager = new ExportManager(this._state, this._eventBus)
   }

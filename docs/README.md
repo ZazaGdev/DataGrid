@@ -104,7 +104,6 @@ npm install sass --save-dev
 | `RowManager` | `modules/RowManager.js` | Row CRUD operations |
 | `GroupManager` | `modules/GroupManager.js` | Row grouping |
 | `EditManager` | `modules/EditManager.js` | Edit mode & navigation |
-| `ScrollManager` | `modules/ScrollManager.js` | Scroll & fixed columns |
 | `ExportManager` | `modules/ExportManager.js` | CSV/Excel export |
 | `ThemeManager` | `modules/ThemeManager.js` | Runtime theming |
 
@@ -482,7 +481,6 @@ table.download("csv", "filename")
 
 ```javascript
 table.render() // Force re-render
-table.scrollToRow(rowId) // Scroll to row
 table.on(eventName, callback) // Subscribe to events
 table.off(eventName, callback) // Unsubscribe
 table.destroy() // Cleanup
@@ -734,7 +732,6 @@ editable-table/
 │   │   ├── RowManager.js     # Row CRUD
 │   │   ├── GroupManager.js   # Grouping
 │   │   ├── EditManager.js    # Edit mode
-│   │   ├── ScrollManager.js  # Scroll handling
 │   │   ├── ExportManager.js  # Export
 │   │   └── ThemeManager.js   # Runtime theming
 │   ├── utils/

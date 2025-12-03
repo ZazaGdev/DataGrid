@@ -566,10 +566,7 @@ export class TableState {
       })
     }
 
-    // Recompute group totals if grouping is enabled
-    if (this._state.config.enableGrouping) {
-      this._recomputeGroupTotals(rowId)
-    }
+    // Note: Group totals are recalculated by GroupManager which listens for CELL_CHANGE events
   }
 
   /**
@@ -577,43 +574,7 @@ export class TableState {
    * @private
    */
   _computeAllCascades() {
-    // Recompute all group totals
-    if (this._state.config.enableGrouping && this._state.groupedData) {
-      Object.keys(this._state.groupedData).forEach((groupId) => {
-        this._recomputeGroupTotals(null, groupId)
-      })
-    }
-  }
-
-  /**
-   * Recompute group totals after a change
-   * @private
-   */
-  _recomputeGroupTotals(rowId, groupId = null) {
-    if (!this._state.groupedData) return
-
-    // Find the group this row belongs to
-    let targetGroupId = groupId
-    if (!targetGroupId && rowId) {
-      const row = this._state.data.find((r) => r._id === rowId)
-      if (row) {
-        const { groupBy } = this._state.config
-        targetGroupId =
-          typeof groupBy === "function" ? groupBy(row) : row[groupBy]
-      }
-    }
-
-    if (!targetGroupId || !this._state.groupedData[targetGroupId]) return
-
-    const group = this._state.groupedData[targetGroupId]
-
-    // Recompute totals for columns that have aggregate functions
-    this._state.columns.forEach((column) => {
-      if (column.aggregate) {
-        const values = group.rows.map((r) => r[column.data])
-        group.totals[column.data] = column.aggregate(values, group.rows)
-      }
-    })
+    // Note: Group totals are recalculated by GroupManager which listens for DATA_CHANGE events
   }
 
   /**

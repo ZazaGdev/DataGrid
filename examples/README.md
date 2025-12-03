@@ -77,15 +77,10 @@ This directory contains comprehensive examples demonstrating all features and ca
 - Fixed first column (stays visible during horizontal scroll)
 - Info rows (expandable detail rows)
 - Keyboard navigation (arrow keys)
-- Programmatic scrolling
-- Scroll position tracking
-- Visible row detection
-
-**Features Demonstrated:**
+  **Features Demonstrated:**
 
 - `fixedFirstColumn: true`
 - `enableInfoRows: true`
-- `scrollToRow(rowId)`
 - `addRow(..., { type: 'infoRow' })`
 - Arrow key navigation in edit mode
 

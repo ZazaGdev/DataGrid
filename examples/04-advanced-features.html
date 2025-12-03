@@ -83,20 +83,12 @@
       <h1>📊 Advanced Features Example</h1>
       <p class="description">
         This example demonstrates advanced features: fixed first column, info
-        rows (expandable details), keyboard navigation, and scroll management
-        with programmatic scrolling.
+        rows (expandable details), and keyboard navigation.
       </p>
 
       <div class="toolbar">
         <button class="btn btn-primary" id="addInfoRow">
           ➕ Add Info Row to First
-        </button>
-        <button class="btn" id="scrollToRow">📍 Scroll to Row #5</button>
-        <button class="btn" id="scrollToTop">⬆️ Scroll to Top</button>
-        <button class="btn" id="scrollToBottom">⬇️ Scroll to Bottom</button>
-        <button class="btn" id="getVisibleRows">👁️ Get Visible Rows</button>
-        <button class="btn" id="getScrollPosition">
-          📏 Get Scroll Position
         </button>
       </div>
 
@@ -122,10 +114,6 @@
           • <strong>Tab Navigation:</strong> Press
           <span class="kbd">Tab</span> to move to next cell,
           <span class="kbd">Shift+Tab</span> for previous.
-        </p>
-        <p>
-          • <strong>Scroll Management:</strong> Use toolbar buttons to
-          programmatically control scrolling.
         </p>
         <p>
           • <strong>Enter Key:</strong> Press <span class="kbd">Enter</span> to
@@ -648,103 +636,6 @@
           "Info row added to first product with detailed specifications"
         )
       })
-
-      document.getElementById("scrollToRow").addEventListener("click", () => {
-        const data = table.getData()
-        if (data.length >= 5) {
-          table.scrollToRow(data[4].id) // Scroll to 5th row
-          showStatus("Scrolled to Row #5")
-        } else {
-          showStatus("Not enough rows to scroll to row #5")
-        }
-      })
-
-      document.getElementById("scrollToTop").addEventListener("click", () => {
-        // Access scroll manager through table instance
-        const container = document.getElementById("tableContainer")
-        const scrollable = container.querySelector(".et-table-wrapper")
-        if (scrollable) {
-          scrollable.scrollTo({ top: 0, behavior: "smooth" })
-          showStatus("Scrolled to top")
-        }
-      })
-
-      document
-        .getElementById("scrollToBottom")
-        .addEventListener("click", () => {
-          const container = document.getElementById("tableContainer")
-          const scrollable = container.querySelector(".et-table-wrapper")
-          if (scrollable) {
-            scrollable.scrollTo({
-              top: scrollable.scrollHeight,
-              behavior: "smooth",
-            })
-            showStatus("Scrolled to bottom")
-          }
-        })
-
-      document
-        .getElementById("getVisibleRows")
-        .addEventListener("click", () => {
-          // In a real implementation, this would use the ScrollManager
-          // For demo purposes, we'll estimate based on viewport
-          const container = document.getElementById("tableContainer")
-          const rows = container.querySelectorAll(".et-row-data")
-          const visibleRows = []
-
-          rows.forEach((row) => {
-            const rect = row.getBoundingClientRect()
-            const containerRect = container.getBoundingClientRect()
-
-            if (
-              rect.top >= containerRect.top &&
-              rect.bottom <= containerRect.bottom
-            ) {
-              const rowId = row.getAttribute("data-row-id")
-              if (rowId) visibleRows.push(rowId)
-            }
-          })
-
-          showStatus({
-            message: "Currently visible rows",
-            count: visibleRows.length,
-            rowIds: visibleRows,
-          })
-        })
-
-      document
-        .getElementById("getScrollPosition")
-        .addEventListener("click", () => {
-          const container = document.getElementById("tableContainer")
-          const scrollable = container.querySelector(".et-table-wrapper")
-
-          if (scrollable) {
-            showStatus({
-              scrollTop: scrollable.scrollTop,
-              scrollLeft: scrollable.scrollLeft,
-              scrollHeight: scrollable.scrollHeight,
-              scrollWidth: scrollable.scrollWidth,
-              clientHeight: scrollable.clientHeight,
-              clientWidth: scrollable.clientWidth,
-            })
-          }
-        })
-
-      // Subscribe to scroll events
-      const container = document.getElementById("tableContainer")
-      const scrollable = container.querySelector(".et-table-wrapper")
-      if (scrollable) {
-        let scrollTimeout
-        scrollable.addEventListener("scroll", () => {
-          clearTimeout(scrollTimeout)
-          scrollTimeout = setTimeout(() => {
-            console.log("Scroll position:", {
-              top: scrollable.scrollTop,
-              left: scrollable.scrollLeft,
-            })
-          }, 100)
-        })
-      }
 
       // Subscribe to keyboard events
       document.addEventListener("keydown", (e) => {

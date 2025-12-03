@@ -85,7 +85,6 @@ export class TableRenderer {
     const cell = this._cellElements.get(cellKey)
 
     if (cell) {
-      console.log(this._state)
       const column = this._state.getColumn(columnName)
       this._renderCellContent(cell, value, column, this._state.getRow(rowId))
     }
@@ -798,6 +797,9 @@ export class TableRenderer {
    * @param {string} [groupId] - Specific group, or all if not provided
    */
   _updateGroupHeaders(groupId = null) {
+    // Guard: ensure tbody exists before trying to update
+    if (!this._tbody) return
+
     const groupedData = this._state.getGroupedData()
     if (!groupedData) return
 
