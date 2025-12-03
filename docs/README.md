@@ -35,28 +35,28 @@ npm install sass --save-dev
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="path/to/editable-table.css">
-</head>
-<body>
-  <div id="my-table"></div>
-  
-  <script type="module">
-    import Table from './editable-table/src/index.js';
-    
-    const table = new Table({
-      container: '#my-table',
-      columns: [
-        { data: 'name', title: 'Name' },
-        { data: 'amount', title: 'Amount', type: 'number' }
-      ],
-      data: [
-        { name: 'Item 1', amount: 100 },
-        { name: 'Item 2', amount: 200 }
-      ]
-    });
-  </script>
-</body>
+  <head>
+    <link rel="stylesheet" href="path/to/editable-table.css" />
+  </head>
+  <body>
+    <div id="my-table"></div>
+
+    <script type="module">
+      import Table from "./editable-table/src/index.js"
+
+      const table = new Table({
+        container: "#my-table",
+        columns: [
+          { data: "name", title: "Name" },
+          { data: "amount", title: "Amount", type: "number" },
+        ],
+        data: [
+          { name: "Item 1", amount: 100 },
+          { name: "Item 2", amount: 200 },
+        ],
+      })
+    </script>
+  </body>
 </html>
 ```
 
@@ -90,12 +90,12 @@ npm install sass --save-dev
 
 ### Core Components
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| `Table` | `core/Table.js` | Main entry point, public API |
-| `EventBus` | `core/EventBus.js` | Decoupled event communication |
-| `TableState` | `core/TableState.js` | Centralized state management |
-| `TableRenderer` | `core/TableRenderer.js` | DOM rendering |
+| Component       | File                    | Purpose                       |
+| --------------- | ----------------------- | ----------------------------- |
+| `Table`         | `core/Table.js`         | Main entry point, public API  |
+| `EventBus`      | `core/EventBus.js`      | Decoupled event communication |
+| `TableState`    | `core/TableState.js`    | Centralized state management  |
+| `TableRenderer` | `core/TableRenderer.js` | DOM rendering                 |
 
 ### Modules
 
@@ -119,19 +119,19 @@ const table = new Table({
   // Required
   container: '#table-container',  // Element or selector
   columns: [...],                 // Column definitions
-  
+
   // Optional - Data
   data: [],                       // Initial data
-  
+
   // Optional - Features
   fixedFirstColumn: false,        // Sticky first column
   enableGrouping: false,          // Enable row grouping
   groupBy: 'category',            // Column name or function
   enableSubRows: false,           // Enable sub-rows
-  
+
   // Optional - Mode
   mode: 'view',                   // 'view' | 'edit'
-  
+
   // Optional - Callbacks
   onRowClick: (data) => {},       // Row click handler
   onRender: (info) => {},         // After render callback
@@ -152,46 +152,46 @@ const table = new Table({
   data: 'fieldName',           // Data field name (required)
   title: 'Display Title',      // Header title
   id: 'unique_id',             // Optional unique ID
-  
+
   // Display
   width: 150,                  // Width in px or string ('20%')
   visible: true,               // Column visibility
   align: 'left',               // 'left' | 'center' | 'right'
-  
+
   // Data Type
   type: 'text',                // 'text'|'number'|'currency'|'date'|'select'
-  
+
   // Number specific
   decimals: 2,                 // Decimal places
   min: 0,                      // Minimum value
   max: 100,                    // Maximum value
   step: 1,                     // Step increment
   currency: 'USD',             // Currency code
-  
+
   // Editing
   editable: true,              // Allow editing
   inputType: 'text',           // Input type override
   options: [],                 // For select type
-  
+
   // Formatting
   format: (value, row, col) => string,     // Display formatter
   exportFormat: (value, row, col) => any,  // Export formatter
   render: (value, row, col) => html|elem,  // Custom renderer
   defaultValue: '',            // Default for null/undefined
-  
+
   // Aggregation
   aggregate: 'sum',            // 'sum'|'avg'|'min'|'max'|'count' or function
   affectsColumns: ['total'],   // Columns affected by changes
-  
+
   // Cascade Updates
   cascade: ({ rowId, columnName, value, state, updateCell }) => {
     // Trigger updates to other cells
   },
-  
+
   // Validation
   required: false,             // Required field
   validator: (value, row, col) => true|string, // Validation function
-  
+
   // Events
   onChange: ({ value, rowId, row, column }) => {} // Cell change callback
 }
@@ -203,63 +203,63 @@ const table = new Table({
 const columns = [
   // Basic text column
   {
-    data: 'name',
-    title: 'Product Name',
-    width: 200
+    data: "name",
+    title: "Product Name",
+    width: 200,
   },
-  
+
   // Number with formatting
   {
-    data: 'price',
-    title: 'Price',
-    type: 'number',
+    data: "price",
+    title: "Price",
+    type: "number",
     decimals: 2,
-    align: 'right',
-    format: (val) => `$${val.toFixed(2)}`
+    align: "right",
+    format: (val) => `$${val.toFixed(2)}`,
   },
-  
+
   // Select dropdown
   {
-    data: 'status',
-    title: 'Status',
-    type: 'select',
+    data: "status",
+    title: "Status",
+    type: "select",
     options: [
-      { value: 'active', label: 'Active' },
-      { value: 'inactive', label: 'Inactive' }
-    ]
+      { value: "active", label: "Active" },
+      { value: "inactive", label: "Inactive" },
+    ],
   },
-  
+
   // Computed column with cascade
   {
-    data: 'total',
-    title: 'Total',
-    type: 'number',
+    data: "total",
+    title: "Total",
+    type: "number",
     editable: false,
-    aggregate: 'sum'
+    aggregate: "sum",
   },
-  
+
   // Custom render
   {
-    data: 'progress',
-    title: 'Progress',
+    data: "progress",
+    title: "Progress",
     render: (val) => `
       <div class="progress-bar">
         <div style="width: ${val}%"></div>
       </div>
-    `
+    `,
   },
-  
+
   // With validation
   {
-    data: 'email',
-    title: 'Email',
+    data: "email",
+    title: "Email",
     required: true,
     validator: (val) => {
-      if (!val.includes('@')) return 'Invalid email';
-      return true;
-    }
-  }
-];
+      if (!val.includes("@")) return "Invalid email"
+      return true
+    },
+  },
+]
 ```
 
 ---
@@ -303,13 +303,13 @@ const columns = [
 
 ```javascript
 const data = [
-  { id: 1, name: 'Annual Budget', amount: 12000 },
-  { _type: 'subrow', label: 'Q1 2025', amount: 3000 },
-  { _type: 'subrow', label: 'Q2 2025', amount: 3000 },
-  { _type: 'subrow', label: 'Q3 2025', amount: 3000 },
-  { _type: 'subrow', label: 'Q4 2025', amount: 3000 },
-  { id: 2, name: 'Marketing', amount: 5000 }
-];
+  { id: 1, name: "Annual Budget", amount: 12000 },
+  { _type: "subrow", label: "Q1 2025", amount: 3000 },
+  { _type: "subrow", label: "Q2 2025", amount: 3000 },
+  { _type: "subrow", label: "Q3 2025", amount: 3000 },
+  { _type: "subrow", label: "Q4 2025", amount: 3000 },
+  { id: 2, name: "Marketing", amount: 5000 },
+]
 ```
 
 ---
@@ -336,39 +336,39 @@ const table = new Table({
 
 ```javascript
 const table = new Table({
-  container: '#table',
+  container: "#table",
   enableGrouping: true,
-  groupBy: 'category', // Column name
+  groupBy: "category", // Column name
   columns: [
-    { data: 'name', title: 'Name' },
-    { data: 'category', title: 'Category' },
-    { data: 'amount', title: 'Amount', aggregate: 'sum' }
+    { data: "name", title: "Name" },
+    { data: "category", title: "Category" },
+    { data: "amount", title: "Amount", aggregate: "sum" },
   ],
   data: [
-    { name: 'Item 1', category: 'Electronics', amount: 100 },
-    { name: 'Item 2', category: 'Electronics', amount: 200 },
-    { name: 'Item 3', category: 'Furniture', amount: 300 }
-  ]
-});
+    { name: "Item 1", category: "Electronics", amount: 100 },
+    { name: "Item 2", category: "Electronics", amount: 200 },
+    { name: "Item 3", category: "Furniture", amount: 300 },
+  ],
+})
 
 // Toggle group
-table.toggleGroup('Electronics');
+table.toggleGroup("Electronics")
 
 // Expand/collapse all
-table.expandAllGroups();
-table.collapseAllGroups();
+table.expandAllGroups()
+table.collapseAllGroups()
 ```
 
 ### 3. View/Edit Mode
 
 ```javascript
 // Switch modes
-table.setMode('edit');
-table.setMode('view');
-table.toggleMode();
+table.setMode("edit")
+table.setMode("view")
+table.toggleMode()
 
 // Check mode
-const isEdit = table.getMode() === 'edit';
+const isEdit = table.getMode() === "edit"
 ```
 
 ### 4. Callbacks
@@ -377,41 +377,41 @@ const isEdit = table.getMode() === 'edit';
 const table = new Table({
   // ...
   onRowClick: ({ rowId, row, event }) => {
-    console.log('Row clicked:', row);
+    console.log("Row clicked:", row)
   },
-  
+
   onRender: ({ rowCount, columnCount }) => {
-    console.log('Table rendered');
+    console.log("Table rendered")
   },
-  
+
   onChange: ({ data, source, updatedRows }) => {
-    console.log('Table data changed');
+    console.log("Table data changed")
   },
-  
+
   onRowChange: ({ rowId, columnName, row, dirtyColumns }) => {
-    console.log(`Row ${rowId} changed:`, row);
-    console.log('Column:', columnName);
-  }
-});
+    console.log(`Row ${rowId} changed:`, row)
+    console.log("Column:", columnName)
+  },
+})
 ```
 
 ### 5. Export
 
 ```javascript
 // Export to CSV
-const csvString = table.exportCSV();
+const csvString = table.exportCSV()
 
 // Export with options
 const csvString = table.exportCSV({
-  delimiter: ',',
+  delimiter: ",",
   includeHeaders: true,
   includeHidden: false,
-  filter: row => row.status === 'active'
-});
+  filter: (row) => row.status === "active",
+})
 
 // Download files
-table.download('csv', 'my-table');
-table.download('excel', 'my-table');
+table.download("csv", "my-table")
+table.download("excel", "my-table")
 ```
 
 ---
@@ -424,68 +424,68 @@ table.download('excel', 'my-table');
 
 ```javascript
 // Get/Set data
-table.getData();                          // Get all data
-table.setData(newData);                   // Replace all data
-table.getRow(rowId);                      // Get single row
+table.getData() // Get all data
+table.setData(newData) // Replace all data
+table.getRow(rowId) // Get single row
 
 // Update cells
-table.updateCell(rowId, columnName, value);
+table.updateCell(rowId, columnName, value)
 table.batchUpdate([
-  { rowId: '1', columnName: 'amount', value: 100 },
-  { rowId: '2', columnName: 'amount', value: 200 }
-]);
+  { rowId: "1", columnName: "amount", value: 100 },
+  { rowId: "2", columnName: "amount", value: 200 },
+])
 
 // Row operations
-table.addRow({ name: 'New', amount: 0 });
-table.addRow(data, { afterRowId: 'row_1' });
-table.deleteRow(rowId);
+table.addRow({ name: "New", amount: 0 })
+table.addRow(data, { afterRowId: "row_1" })
+table.deleteRow(rowId)
 
 // Dirty state
-table.getDirtyRows();                     // Get modified rows
-table.clearDirty();                       // Mark as saved
-table.revertChanges();                    // Undo all changes
+table.getDirtyRows() // Get modified rows
+table.clearDirty() // Mark as saved
+table.revertChanges() // Undo all changes
 ```
 
 #### Column Methods
 
 ```javascript
-table.getColumns();
-table.setColumns(newColumns);
-table.setColumnVisibility('colId', false);
+table.getColumns()
+table.setColumns(newColumns)
+table.setColumnVisibility("colId", false)
 ```
 
 #### Mode Methods
 
 ```javascript
-table.getMode();
-table.setMode('edit');
-table.toggleMode();
+table.getMode()
+table.setMode("edit")
+table.toggleMode()
 ```
 
 #### Group Methods
 
 ```javascript
-table.toggleGroup(groupId);
-table.expandAllGroups();
-table.collapseAllGroups();
+table.toggleGroup(groupId)
+table.expandAllGroups()
+table.collapseAllGroups()
 ```
 
 #### Export Methods
 
 ```javascript
-table.exportCSV(options);
-table.exportExcel(options);
-table.download('csv', 'filename');
+table.exportCSV(options)
+table.exportExcel(options)
+table.download("csv", "filename")
 ```
 
 #### Utility Methods
 
 ```javascript
-table.render();                           // Force re-render
-table.scrollToRow(rowId);                 // Scroll to row
-table.on(eventName, callback);            // Subscribe to events
-table.off(eventName, callback);           // Unsubscribe
-table.destroy();                          // Cleanup
+table.render() // Force re-render
+table.scrollToRow(rowId) // Scroll to row
+table.on(eventName, callback) // Subscribe to events
+table.off(eventName, callback) // Unsubscribe
+table.destroy() // Cleanup
 ```
 
 ---
@@ -495,52 +495,55 @@ table.destroy();                          // Cleanup
 ### Available Events
 
 ```javascript
-import { TableEvents } from './editable-table/src/core/EventBus.js';
+import { TableEvents } from "./editable-table/src/core/EventBus.js"
 
 // Subscribe to events
-table.on(TableEvents.CELL_CHANGE, ({ rowId, columnName, oldValue, newValue, row }) => {
-  console.log('Cell changed');
-});
+table.on(
+  TableEvents.CELL_CHANGE,
+  ({ rowId, columnName, oldValue, newValue, row }) => {
+    console.log("Cell changed")
+  }
+)
 
 table.on(TableEvents.ROW_CHANGE, ({ rowId, columnName, row, dirtyColumns }) => {
-  console.log('Row changed');
-});
+  console.log("Row changed")
+})
 
 table.on(TableEvents.ROW_CLICK, ({ rowId, row, event }) => {
-  console.log('Row clicked');
-});
+  console.log("Row clicked")
+})
 
 table.on(TableEvents.GROUP_TOGGLE, ({ groupId, collapsed }) => {
-  console.log('Group toggled');
-});
+  console.log("Group toggled")
+})
 
 table.on(TableEvents.MODE_CHANGE, ({ oldMode, newMode }) => {
-  console.log('Mode changed');
-});
+  console.log("Mode changed")
+})
 
 table.on(TableEvents.AFTER_RENDER, ({ rowCount, columnCount }) => {
-  console.log('Render complete');
-});
+  console.log("Render complete")
+})
 ```
 
 ### Event Types
 
-| Event | Data | Description |
-|-------|------|-------------|
-| `STATE_CHANGE` | `{ property, value }` | State property changed |
-| `DATA_CHANGE` | `{ data, source }` | Data array changed |
-| `ROW_CLICK` | `{ rowId, row, event }` | Row clicked |
-| `ROW_CHANGE` | `{ rowId, columnName, row }` | Row data changed |
-| `ROW_ADD` | `{ row, index }` | Row added |
-| `ROW_DELETE` | `{ rowId, row }` | Row deleted |
-| `CELL_CHANGE` | `{ rowId, columnName, oldValue, newValue }` | Cell changed |
-| `CELL_FOCUS` | `{ rowId, columnName }` | Cell focused |
-| `CELL_BLUR` | `{ rowId, columnName }` | Cell blurred |
-| `GROUP_TOGGLE` | `{ groupId, collapsed }` | Group toggled |
-| `MODE_CHANGE` | `{ oldMode, newMode }` | Mode changed |
-| `BEFORE_RENDER` | `{}` | Before render |
-| `RENDER` | `{}` | During render |
-| `AFTER_RENDER` | `{ rowCount, columnCount }` | After render |
+| Event           | Data                                        | Description            |
+| --------------- | ------------------------------------------- | ---------------------- |
+| `STATE_CHANGE`  | `{ property, value }`                       | State property changed |
+| `DATA_CHANGE`   | `{ data, source }`                          | Data array changed     |
+| `ROW_CLICK`     | `{ rowId, row, event }`                     | Row clicked            |
+| `ROW_CHANGE`    | `{ rowId, columnName, row }`                | Row data changed       |
+| `ROW_ADD`       | `{ row, index }`                            | Row added              |
+| `ROW_DELETE`    | `{ rowId, row }`                            | Row deleted            |
+| `CELL_CHANGE`   | `{ rowId, columnName, oldValue, newValue }` | Cell changed           |
+| `CELL_FOCUS`    | `{ rowId, columnName }`                     | Cell focused           |
+| `CELL_BLUR`     | `{ rowId, columnName }`                     | Cell blurred           |
+| `GROUP_TOGGLE`  | `{ groupId, collapsed }`                    | Group toggled          |
+| `MODE_CHANGE`   | `{ oldMode, newMode }`                      | Mode changed           |
+| `BEFORE_RENDER` | `{}`                                        | Before render          |
+| `RENDER`        | `{}`                                        | During render          |
+| `AFTER_RENDER`  | `{ rowCount, columnCount }`                 | After render           |
 
 ---
 
@@ -558,12 +561,12 @@ Override these variables to customize the theme:
   --et-color-bg-alt: #f9fafb;
   --et-color-border: #e5e7eb;
   --et-color-text: #111827;
-  
+
   /* Spacing */
   --et-cell-padding-x: 0.75rem;
   --et-cell-padding-y: 0.5rem;
   --et-row-height: 2.5rem;
-  
+
   /* Typography */
   --et-font-family: -apple-system, sans-serif;
   --et-font-size-base: 0.875rem;
@@ -603,18 +606,18 @@ Override these variables to customize the theme:
 
 ```javascript
 // ❌ Avoid: Multiple individual updates
-data.forEach(item => {
-  table.updateCell(item.id, 'amount', item.newAmount);
-});
+data.forEach((item) => {
+  table.updateCell(item.id, "amount", item.newAmount)
+})
 
 // ✅ Better: Batch updates
 table.batchUpdate(
-  data.map(item => ({
+  data.map((item) => ({
     rowId: item.id,
-    columnName: 'amount',
-    value: item.newAmount
+    columnName: "amount",
+    value: item.newAmount,
   }))
-);
+)
 ```
 
 ### Cascade Updates
@@ -638,9 +641,9 @@ The EventBus automatically batches events during bulk operations:
 
 ```javascript
 // Internal batching prevents excessive re-renders
-eventBus.startBatch();
+eventBus.startBatch()
 // ... many updates
-eventBus.endBatch(); // Single consolidated update
+eventBus.endBatch() // Single consolidated update
 ```
 
 ---
@@ -651,66 +654,67 @@ eventBus.endBatch(); // Single consolidated update
 
 ```javascript
 const budgetTable = new Table({
-  container: '#budget-table',
+  container: "#budget-table",
   fixedFirstColumn: true,
   enableGrouping: true,
-  groupBy: 'department',
-  mode: 'view',
+  groupBy: "department",
+  mode: "view",
   columns: [
-    { data: 'item', title: 'Budget Item', width: 250 },
-    { data: 'department', title: 'Department', visible: false },
-    { data: 'jan', title: 'Jan', type: 'currency', aggregate: 'sum' },
-    { data: 'feb', title: 'Feb', type: 'currency', aggregate: 'sum' },
-    { data: 'mar', title: 'Mar', type: 'currency', aggregate: 'sum' },
-    { 
-      data: 'q1Total', 
-      title: 'Q1 Total', 
-      type: 'currency',
+    { data: "item", title: "Budget Item", width: 250 },
+    { data: "department", title: "Department", visible: false },
+    { data: "jan", title: "Jan", type: "currency", aggregate: "sum" },
+    { data: "feb", title: "Feb", type: "currency", aggregate: "sum" },
+    { data: "mar", title: "Mar", type: "currency", aggregate: "sum" },
+    {
+      data: "q1Total",
+      title: "Q1 Total",
+      type: "currency",
       editable: false,
-      aggregate: 'sum'
-    }
+      aggregate: "sum",
+    },
   ],
   data: budgetData,
   onRowChange: ({ row, columnName }) => {
-    if (['jan', 'feb', 'mar'].includes(columnName)) {
+    if (["jan", "feb", "mar"].includes(columnName)) {
       // Recalculate Q1 total
-      const q1Total = (row.jan || 0) + (row.feb || 0) + (row.mar || 0);
-      budgetTable.updateCell(row._id, 'q1Total', q1Total);
+      const q1Total = (row.jan || 0) + (row.feb || 0) + (row.mar || 0)
+      budgetTable.updateCell(row._id, "q1Total", q1Total)
     }
-  }
-});
+  },
+})
 
 // Add toolbar buttons
-document.getElementById('edit-btn').onclick = () => budgetTable.toggleMode();
-document.getElementById('export-btn').onclick = () => budgetTable.download('excel', 'budget');
+document.getElementById("edit-btn").onclick = () => budgetTable.toggleMode()
+document.getElementById("export-btn").onclick = () =>
+  budgetTable.download("excel", "budget")
 ```
 
 ### Data Entry Form Table
 
 ```javascript
 const formTable = new Table({
-  container: '#form-table',
-  mode: 'edit',
+  container: "#form-table",
+  mode: "edit",
   columns: [
-    { data: 'field', title: 'Field', editable: false },
-    { 
-      data: 'value', 
-      title: 'Value',
+    { data: "field", title: "Field", editable: false },
+    {
+      data: "value",
+      title: "Value",
       render: (val, row) => {
         // Custom rendering based on field type
-        if (row.type === 'date') {
-          return `<input type="date" value="${val}">`;
+        if (row.type === "date") {
+          return `<input type="date" value="${val}">`
         }
-        return val;
-      }
+        return val
+      },
     },
-    { data: 'required', title: 'Required', type: 'checkbox' }
+    { data: "required", title: "Required", type: "checkbox" },
   ],
   onChange: (data) => {
     // Auto-save on change
-    saveToServer(data);
-  }
-});
+    saveToServer(data)
+  },
+})
 ```
 
 ---
