@@ -345,6 +345,14 @@ export class TableState {
   }
 
   /**
+   * Get ungrouped rows (rows without a group value)
+   * @returns {Array}
+   */
+  getUngroupedRows() {
+    return this._state.ungroupedRows || []
+  }
+
+  /**
    * Expand all groups
    */
   expandAllGroups() {
@@ -461,11 +469,19 @@ export class TableState {
     }
 
     const groups = {}
+    const ungroupedRows = []
+
     this._state.data.forEach((row) => {
       if (row._type !== "data") return
 
       const groupKey =
         typeof groupBy === "function" ? groupBy(row) : row[groupBy]
+
+      // Handle rows without a group value
+      if (groupKey === null || groupKey === undefined || groupKey === "") {
+        ungroupedRows.push(row)
+        return
+      }
 
       if (!groups[groupKey]) {
         groups[groupKey] = {
@@ -478,7 +494,9 @@ export class TableState {
       groups[groupKey].rows.push(row)
     })
 
+    // Store ungrouped rows separately
     this._state.groupedData = groups
+    this._state.ungroupedRows = ungroupedRows
   }
 
   /**

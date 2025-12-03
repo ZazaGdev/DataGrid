@@ -281,6 +281,43 @@
           travel: 2300,
           equipment: 880,
         },
+        // Ungrouped rows - no department assigned
+        {
+          id: 14,
+          employee: "New Hire #1",
+          department: null, // No department yet
+          sales: 15000,
+          commission: 1500,
+          bonus: 500,
+          expenses: 1200,
+          training: 800,
+          travel: 500,
+          equipment: 400,
+        },
+        {
+          id: 15,
+          employee: "Contractor A",
+          department: "", // Empty department
+          sales: 35000,
+          commission: 3500,
+          bonus: 0,
+          expenses: 2500,
+          training: 0,
+          travel: 1800,
+          equipment: 600,
+        },
+        {
+          id: 16,
+          employee: "Intern B",
+          // department field missing entirely
+          sales: 8000,
+          commission: 800,
+          bonus: 200,
+          expenses: 500,
+          training: 1500,
+          travel: 200,
+          equipment: 150,
+        },
       ]
 
       // Column definitions with aggregates
@@ -300,6 +337,7 @@
           title: "Department",
           data: "department",
           width: "140px",
+          visible: false, // Hidden since we're grouping by this
         },
         {
           title: "Sales",

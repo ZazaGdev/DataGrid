@@ -455,6 +455,13 @@
   width: 2px;
   background-color: transparent;
 }
+.et-row-ungrouped td:first-child {
+  padding-left: var(--et-cell-padding-x);
+}
+.et-row-ungrouped {
+  border-left: 3px solid var(--et-color-text-light);
+}
+
 .et-row.et-row-collapsing {
   animation: et-collapse 200ms ease-out forwards;
 }
@@ -589,7 +596,7 @@
   opacity: 1;
 }
 
-.et-container.et-mode-edit .et-cell:not(.et-cell-fixed) {
+.et-container.et-mode-edit tr:not(.et-row-group-header) td.et-cell:not(.et-cell-fixed) {
   cursor: text;
 }
 .et-container.et-mode-edit .et-cell[data-editable=false] {

@@ -195,6 +195,20 @@
 }
 
 // ============================================
+// Ungrouped Rows
+// ============================================
+
+.et-row-ungrouped {
+  // Ungrouped rows appear without indentation
+  td:first-child {
+    padding-left: var(--et-cell-padding-x);
+  }
+
+  // Optional: subtle visual indicator for ungrouped rows
+  border-left: 3px solid var(--et-color-text-light);
+}
+
+// ============================================
 // Collapse/Expand Animation
 // ============================================
 

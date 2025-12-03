@@ -132,7 +132,7 @@
 
 .et-container.et-mode-edit {
   // Highlight editable cells
-  .et-cell:not(.et-cell-fixed) {
+  tr:not(.et-row-group-header) td.et-cell:not(.et-cell-fixed) {
     cursor: text;
   }
 

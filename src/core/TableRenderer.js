@@ -333,12 +333,14 @@ export class TableRenderer {
    */
   _renderGroupedBody() {
     const groupedData = this._state.getGroupedData()
+    const ungroupedRows = this._state.getUngroupedRows()
     const columns = this._state.getColumns()
 
     this._tbody.innerHTML = ""
     this._rowElements.clear()
     this._cellElements.clear()
 
+    // Render grouped rows first
     Object.entries(groupedData).forEach(([groupId, group]) => {
       // Group header row (includes aggregate values)
       const groupHeader = this._createGroupHeaderRow(groupId, group, columns)
@@ -354,6 +356,15 @@ export class TableRenderer {
         this._tbody.appendChild(rowElement)
       })
     })
+
+    // Render ungrouped rows at the end (rows without a group value)
+    if (ungroupedRows.length > 0) {
+      ungroupedRows.forEach((row) => {
+        const rowElement = this._createRowElement(row, columns, null)
+        addClass(rowElement, "et-row-ungrouped")
+        this._tbody.appendChild(rowElement)
+      })
+    }
   }
 
   /**
