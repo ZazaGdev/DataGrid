@@ -214,6 +214,12 @@ export class TableState {
 
     // Append row total column if enabled
     if (this._state.config.enableRowTotals) {
+      // Default format: $X,XXX
+      const defaultFormat = (value) =>
+        value !== null && value !== undefined
+          ? `$${Number(value).toLocaleString()}`
+          : "$0"
+
       columns.push({
         data: "_rowTotal",
         title: "Total",
@@ -223,8 +229,7 @@ export class TableState {
         _id: "_rowTotal",
         _index: columns.length,
         _isRowTotal: true,
-        format: (value) =>
-          value !== null && value !== undefined ? value.toLocaleString() : "0",
+        format: this._state.config.rowTotalsFormat || defaultFormat,
       })
     }
 
@@ -239,6 +244,12 @@ export class TableState {
   getColumn(columnId) {
     // Check for row total column
     if (columnId === "_rowTotal" && this._state.config.enableRowTotals) {
+      // Default format: $X,XXX
+      const defaultFormat = (value) =>
+        value !== null && value !== undefined
+          ? `$${Number(value).toLocaleString()}`
+          : "$0"
+
       return {
         data: "_rowTotal",
         title: "Total",
@@ -247,8 +258,7 @@ export class TableState {
         aggregate: "sum",
         _id: "_rowTotal",
         _isRowTotal: true,
-        format: (value) =>
-          value !== null && value !== undefined ? value.toLocaleString() : "0",
+        format: this._state.config.rowTotalsFormat || defaultFormat,
       }
     }
 

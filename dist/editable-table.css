@@ -127,7 +127,8 @@
 }
 
 .et-table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;
@@ -325,6 +326,15 @@
   background-color: var(--et-color-bg-alt);
   border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
   cursor: pointer;
+}
+.et-row-group-header .et-cell-group-header {
+  cursor: pointer;
+}
+.et-row-group-header .et-cell-group-header input,
+.et-row-group-header .et-cell-group-header select,
+.et-row-group-header .et-cell-group-header .et-cell-input {
+  cursor: pointer;
+  pointer-events: none;
 }
 .et-row-group-header:hover {
   background-color: var(--et-color-bg-hover);

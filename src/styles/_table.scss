@@ -37,7 +37,8 @@
 // ============================================
 
 .et-table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;

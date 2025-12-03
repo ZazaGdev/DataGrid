@@ -14,6 +14,19 @@
   border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
   cursor: pointer;
 
+  // Ensure all cells and their contents in group header use pointer cursor
+  .et-cell-group-header {
+    cursor: pointer;
+
+    // Override input cursor in group headers
+    input,
+    select,
+    .et-cell-input {
+      cursor: pointer;
+      pointer-events: none;
+    }
+  }
+
   &:hover {
     background-color: var(--et-color-bg-hover);
 

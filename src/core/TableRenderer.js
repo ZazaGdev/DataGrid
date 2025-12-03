@@ -271,17 +271,18 @@ export class TableRenderer {
 
     const headerRow = createElement("tr", { class: "et-header-row" })
 
-    columns.forEach((column, index) => {
+    let visibleIndex = 0
+    columns.forEach((column) => {
       if (column.visible === false) return
 
       const th = createElement("th", {
         class: "et-header-cell",
         "data-column": column.data,
-        "data-column-index": index,
+        "data-column-index": visibleIndex,
       })
 
       // Fixed first column
-      if (index === 0 && config.fixedFirstColumn) {
+      if (visibleIndex === 0 && config.fixedFirstColumn) {
         addClass(th, "et-cell-fixed")
       }
 
@@ -302,6 +303,7 @@ export class TableRenderer {
       }
 
       headerRow.appendChild(th)
+      visibleIndex++
     })
 
     this._thead.appendChild(headerRow)
@@ -390,14 +392,16 @@ export class TableRenderer {
     })
 
     // Create cells
-    columns.forEach((column, index) => {
+    let visibleIndex = 0
+    columns.forEach((column) => {
       if (column.visible === false) return
 
-      const td = this._createCellElement(row, column, index, config)
+      const td = this._createCellElement(row, column, visibleIndex, config)
       tr.appendChild(td)
 
       // Store reference
       this._cellElements.set(`${row._id}:${column.data}`, td)
+      visibleIndex++
     })
 
     // Store reference

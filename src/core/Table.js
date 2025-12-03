@@ -26,6 +26,7 @@ import { addClass, removeClass } from "../utils/dom.js"
  * @property {string|Function} [groupBy] - Group by column name or function
  * @property {boolean} [enableSubRows=false] - Enable sub-rows
  * @property {boolean} [enableRowTotals=false] - Enable row totals column
+ * @property {Function} [rowTotalsFormat] - Format function for row totals column
  * @property {'view'|'edit'} [mode='view'] - Initial mode
  * @property {Function} [onRowClick] - Row click callback
  * @property {Function} [onRender] - Render complete callback
@@ -73,6 +74,7 @@ export class Table {
         groupBy: config.groupBy,
         enableSubRows: config.enableSubRows,
         enableRowTotals: config.enableRowTotals,
+        rowTotalsFormat: config.rowTotalsFormat,
       },
     })
 
