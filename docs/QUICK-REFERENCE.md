@@ -249,12 +249,12 @@ src/
 │   ├── TableRenderer.js  # DOM rendering
 │   └── EventBus.js       # Events
 ├── modules/
-│   ├── ColumnManager.js
 │   ├── RowManager.js
 │   ├── GroupManager.js
 │   ├── EditManager.js
 │   ├── ScrollManager.js
-│   └── ExportManager.js
+│   ├── ExportManager.js
+│   └── ThemeManager.js
 ├── utils/
 │   ├── dom.js
 │   ├── helpers.js

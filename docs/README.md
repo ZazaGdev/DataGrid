@@ -78,11 +78,11 @@ npm install sass --save-dev
 ├─────────────────────────────────────────────────────────┤
 │                      Modules                            │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │ Column   │ │  Row     │ │  Group   │ │  Edit    │  │
+│  │  Row     │ │  Group   │ │  Edit    │ │  Scroll  │  │
 │  │ Manager  │ │ Manager  │ │ Manager  │ │ Manager  │  │
 │  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
 │  ┌──────────┐ ┌──────────┐                             │
-│  │ Scroll   │ │ Export   │                             │
+│  │ Export   │ │  Theme   │                             │
 │  │ Manager  │ │ Manager  │                             │
 │  └──────────┘ └──────────┘                             │
 └─────────────────────────────────────────────────────────┘
@@ -100,13 +100,13 @@ npm install sass --save-dev
 ### Modules
 
 | Module | File | Purpose |
-|--------|------|---------|
-| `ColumnManager` | `modules/ColumnManager.js` | Column operations |
+|--------|------|---------||
 | `RowManager` | `modules/RowManager.js` | Row CRUD operations |
 | `GroupManager` | `modules/GroupManager.js` | Row grouping |
 | `EditManager` | `modules/EditManager.js` | Edit mode & navigation |
 | `ScrollManager` | `modules/ScrollManager.js` | Scroll & fixed columns |
 | `ExportManager` | `modules/ExportManager.js` | CSV/Excel export |
+| `ThemeManager` | `modules/ThemeManager.js` | Runtime theming |
 
 ---
 
@@ -727,12 +727,12 @@ editable-table/
 │   │   ├── TableRenderer.js  # DOM rendering
 │   │   └── EventBus.js       # Event system
 │   ├── modules/
-│   │   ├── ColumnManager.js  # Column operations
 │   │   ├── RowManager.js     # Row CRUD
 │   │   ├── GroupManager.js   # Grouping
 │   │   ├── EditManager.js    # Edit mode
 │   │   ├── ScrollManager.js  # Scroll handling
-│   │   └── ExportManager.js  # Export
+│   │   ├── ExportManager.js  # Export
+│   │   └── ThemeManager.js   # Runtime theming
 │   ├── utils/
 │   │   ├── dom.js            # DOM utilities
 │   │   ├── helpers.js        # General helpers
