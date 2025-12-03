@@ -334,13 +334,23 @@ export class TableRenderer {
   _renderGroupedBody() {
     const groupedData = this._state.getGroupedData()
     const ungroupedRows = this._state.getUngroupedRows()
+    const infoRows = this._state.getInfoRows()
     const columns = this._state.getColumns()
 
     this._tbody.innerHTML = ""
     this._rowElements.clear()
     this._cellElements.clear()
 
-    // Render grouped rows first
+    // Render info rows first (at the top, not part of any group)
+    if (infoRows && infoRows.length > 0) {
+      infoRows.forEach((row) => {
+        const rowElement = this._createRowElement(row, columns, null)
+        addClass(rowElement, "et-row-info")
+        this._tbody.appendChild(rowElement)
+      })
+    }
+
+    // Render grouped rows
     Object.entries(groupedData).forEach(([groupId, group]) => {
       // Group header row (includes aggregate values)
       const groupHeader = this._createGroupHeaderRow(groupId, group, columns)
@@ -373,10 +383,10 @@ export class TableRenderer {
    */
   _createRowElement(row, columns, groupId = null) {
     const config = this._state.getConfig()
-    const isSubRow = row._type === "subrow"
+    const isInfoRow = row._type === "infoRow"
 
     const tr = createElement("tr", {
-      class: `et-row ${isSubRow ? "et-row-subrow" : "et-row-data"}`,
+      class: `et-row ${isInfoRow ? "et-row-info-row" : "et-row-data"}`,
       "data-row-id": row._id,
       "data-row-index": row._index,
     })
@@ -463,7 +473,11 @@ export class TableRenderer {
    */
   _renderCellContent(cell, value, column, row) {
     const isEditMode = this._state.isEditMode()
-    const isEditable = column.editable !== false && row._type !== "subrow"
+    // Check column, row type, and row-level editable override
+    const isEditable =
+      column.editable !== false &&
+      row._type !== "infoRow" &&
+      row._editable !== false
 
     cell.innerHTML = ""
 
@@ -576,6 +590,11 @@ export class TableRenderer {
   _formatDisplayValue(value, column, row) {
     if (value === null || value === undefined) {
       return column.defaultValue ?? ""
+    }
+
+    // Info rows display values as-is without column formatting
+    if (row._type === "infoRow") {
+      return String(value)
     }
 
     if (column.format) {

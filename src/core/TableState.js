@@ -49,7 +49,7 @@ export class TableState {
         fixedFirstColumn: false,
         enableGrouping: false,
         groupBy: null,
-        enableSubRows: false,
+        enableInfoRows: false,
         enableRowTotals: false,
         ...initialState.config,
       },
@@ -353,6 +353,14 @@ export class TableState {
   }
 
   /**
+   * Get info rows (informational header rows)
+   * @returns {Array}
+   */
+  getInfoRows() {
+    return this._state.infoRows || []
+  }
+
+  /**
    * Expand all groups
    */
   expandAllGroups() {
@@ -453,7 +461,7 @@ export class TableState {
       ...row,
       _id: row._id || row.id || generateId(),
       _index: index,
-      _type: row._type || "data", // 'data' | 'subrow' | 'group-header' | 'total'
+      _type: row._type || "data", // 'data' | 'infoRow' | 'group-header' | 'total'
     }))
   }
 
@@ -470,8 +478,16 @@ export class TableState {
 
     const groups = {}
     const ungroupedRows = []
+    const infoRows = []
 
     this._state.data.forEach((row) => {
+      // Info rows are rendered separately at the top
+      if (row._type === "infoRow") {
+        infoRows.push(row)
+        return
+      }
+
+      // Only include data rows in groups
       if (row._type !== "data") return
 
       const groupKey =
@@ -494,9 +510,10 @@ export class TableState {
       groups[groupKey].rows.push(row)
     })
 
-    // Store ungrouped rows separately
+    // Store ungrouped rows and info rows separately
     this._state.groupedData = groups
     this._state.ungroupedRows = ungroupedRows
+    this._state.infoRows = infoRows
   }
 
   /**

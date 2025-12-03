@@ -90,15 +90,15 @@ export class RowManager {
   }
 
   /**
-   * Add a sub-row (informational row)
+   * Add an info row (informational row)
    * @param {string} parentRowId - Parent row ID
-   * @param {Object} subRowData - Sub-row data
-   * @returns {Object} Added sub-row
+   * @param {Object} infoRowData - Info row data
+   * @returns {Object} Added info row
    */
-  addSubRow(parentRowId, subRowData) {
-    return this.addRow(subRowData, {
+  addInfoRow(parentRowId, infoRowData) {
+    return this.addRow(infoRowData, {
       afterRowId: parentRowId,
-      type: "subrow",
+      type: "infoRow",
     })
   }
 
@@ -207,7 +207,7 @@ export class RowManager {
 
   /**
    * Get rows by type
-   * @param {string} type - Row type ('data', 'subrow', 'total', etc.)
+   * @param {string} type - Row type ('data', 'infoRow', 'total', etc.)
    * @returns {Array<Object>}
    */
   getRowsByType(type) {
@@ -215,7 +215,7 @@ export class RowManager {
   }
 
   /**
-   * Get data rows only (excludes sub-rows, totals, etc.)
+   * Get data rows only (excludes info rows, totals, etc.)
    * @returns {Array<Object>}
    */
   getDataRows() {
@@ -223,26 +223,26 @@ export class RowManager {
   }
 
   /**
-   * Get sub-rows for a parent row
+   * Get info rows for a parent row
    * @param {string} parentRowId - Parent row ID
    * @returns {Array<Object>}
    */
-  getSubRows(parentRowId) {
+  getInfoRows(parentRowId) {
     const data = this._state.getData()
     const parentIndex = data.findIndex((r) => r._id === parentRowId)
 
     if (parentIndex === -1) return []
 
-    const subRows = []
+    const infoRows = []
     for (let i = parentIndex + 1; i < data.length; i++) {
-      if (data[i]._type === "subrow") {
-        subRows.push(data[i])
+      if (data[i]._type === "infoRow") {
+        infoRows.push(data[i])
       } else {
-        break // Sub-rows are contiguous after parent
+        break // Info rows are contiguous after parent
       }
     }
 
-    return subRows
+    return infoRows
   }
 
   /**

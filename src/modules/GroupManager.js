@@ -156,16 +156,19 @@ export class GroupManager {
       const group = groupedData[gId]
       const totals = {}
 
+      // Filter to only data rows (exclude infoRows and other special types)
+      const dataRows = group.rows.filter((row) => row._type === "data")
+
       columns.forEach((column) => {
         if (column.aggregate && column.data !== "_rowTotal") {
-          const values = group.rows
+          const values = dataRows
             .map((row) => row[column.data])
             .filter((v) => v !== null && v !== undefined && !isNaN(v))
 
           totals[column.data] = this._calculateAggregate(
             column.aggregate,
             values,
-            group.rows
+            dataRows
           )
         }
       })

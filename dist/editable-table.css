@@ -203,7 +203,7 @@
   background-color: var(--et-color-bg-hover);
 }
 .et-row.et-row-data {
-  cursor: pointer;
+  cursor: default;
 }
 .et-row.et-row-data:nth-child(even) {
   background-color: var(--et-color-bg-alt);
@@ -519,6 +519,7 @@
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: text;
   transition-property: background-color, box-shadow;
   transition-duration: var(--et-transition-base);
   transition-timing-function: ease;
@@ -699,22 +700,22 @@
  * }
  */
 /**
- * Sub-rows Styles
- * Styles for informational sub-rows (e.g., Sep 2025, Oct 2025)
+ * Info Rows Styles
+ * Styles for informational rows (e.g., header info rows, period labels)
  */
-.et-row-subrow {
+.et-row-info-row {
   background-color: var(--et-color-bg);
   font-size: var(--et-font-size-sm);
   color: var(--et-color-text-muted);
   cursor: default;
 }
-.et-row-subrow:hover {
+.et-row-info-row:hover {
   background-color: var(--et-color-bg);
 }
-.et-row-subrow .et-cell:first-child {
+.et-row-info-row .et-cell:first-child {
   padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
 }
-.et-row-subrow .et-cell:first-child::before {
+.et-row-info-row .et-cell:first-child::before {
   content: "";
   display: inline-block;
   width: 8px;
@@ -724,51 +725,51 @@
   border-bottom: 1px solid var(--et-color-border-strong);
   vertical-align: middle;
 }
-.et-row-subrow .et-cell {
+.et-row-info-row .et-cell {
   background-color: var(--et-color-bg);
 }
-.et-row-subrow .et-cell.et-cell-fixed {
+.et-row-info-row .et-cell.et-cell-fixed {
   background-color: var(--et-color-bg);
 }
 
-.et-row-data + .et-row-subrow {
+.et-row-data + .et-row-info-row {
   border-top: 1px dashed var(--et-color-border);
 }
 
-.et-row-subrow + .et-row-data {
+.et-row-info-row + .et-row-data {
   border-top: 1px solid var(--et-color-border-strong);
 }
 
-.et-row-subrow.et-subrow-info {
+.et-row-info-row.et-info-row-info {
   background-color: #fafbfc;
 }
-.et-row-subrow.et-subrow-info .et-cell {
+.et-row-info-row.et-info-row-info .et-cell {
   background-color: inherit;
   font-style: italic;
 }
 
-.et-row-subrow.et-subrow-detail {
+.et-row-info-row.et-info-row-detail {
   background-color: var(--et-color-bg-alt);
 }
-.et-row-subrow.et-subrow-detail .et-cell {
+.et-row-info-row.et-info-row-detail .et-cell {
   background-color: inherit;
 }
 
-.et-row-subrow.et-subrow-summary {
+.et-row-info-row.et-info-row-summary {
   background-color: var(--et-color-bg-alt);
   font-weight: var(--et-font-weight-medium);
 }
-.et-row-subrow.et-subrow-summary .et-cell {
+.et-row-info-row.et-info-row-summary .et-cell {
   background-color: inherit;
   border-top: 1px solid var(--et-color-border-strong);
 }
 
-.et-row-data.et-has-subrows .et-cell:first-child {
+.et-row-data.et-has-info-rows .et-cell:first-child {
   position: relative;
   padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
 }
 
-.et-subrow-toggle {
+.et-info-row-toggle {
   position: absolute;
   left: var(--et-cell-padding-x);
   top: 50%;
@@ -786,38 +787,38 @@
   transition-duration: var(--et-transition-base);
   transition-timing-function: ease;
 }
-.et-subrow-toggle:hover {
+.et-info-row-toggle:hover {
   color: var(--et-color-primary);
   background-color: var(--et-color-primary-light);
 }
-.et-subrow-toggle.et-expanded {
+.et-info-row-toggle.et-expanded {
   transform: translateY(-50%) rotate(90deg);
 }
 
-.et-subrows-collapsed .et-row-subrow {
+.et-info-rows-collapsed .et-row-info-row {
   display: none;
 }
 
-.et-row-subrow.et-subrow-hidden {
+.et-row-info-row.et-info-row-hidden {
   display: none;
 }
 
-.et-row-subrow[data-level="1"] .et-cell:first-child {
+.et-row-info-row[data-level="1"] .et-cell:first-child {
   padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
 }
 
-.et-row-subrow[data-level="2"] .et-cell:first-child {
+.et-row-info-row[data-level="2"] .et-cell:first-child {
   padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 2);
 }
 
-.et-row-subrow[data-level="3"] .et-cell:first-child {
+.et-row-info-row[data-level="3"] .et-cell:first-child {
   padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 3);
 }
 
-.et-row-subrow.et-subrow-timeline .et-cell:first-child {
+.et-row-info-row.et-info-row-timeline .et-cell:first-child {
   position: relative;
 }
-.et-row-subrow.et-subrow-timeline .et-cell:first-child::before {
+.et-row-info-row.et-info-row-timeline .et-cell:first-child::before {
   content: "";
   position: absolute;
   left: calc(var(--et-cell-padding-x) + 0.5rem);
@@ -826,7 +827,7 @@
   width: 1px;
   background-color: var(--et-color-border-strong);
 }
-.et-row-subrow.et-subrow-timeline .et-cell:first-child::after {
+.et-row-info-row.et-info-row-timeline .et-cell:first-child::after {
   content: "";
   position: absolute;
   left: calc(var(--et-cell-padding-x) + 0.25rem);
@@ -838,11 +839,29 @@
   border: 1px solid var(--et-color-border-strong);
   border-radius: 50%;
 }
-.et-row-subrow.et-subrow-timeline:first-of-type .et-cell:first-child::before {
+.et-row-info-row.et-info-row-timeline:first-of-type .et-cell:first-child::before {
   top: 50%;
 }
-.et-row-subrow.et-subrow-timeline:last-of-type .et-cell:first-child::before, .et-row-subrow.et-subrow-timeline:has(+ .et-row-data) .et-cell:first-child::before {
+.et-row-info-row.et-info-row-timeline:last-of-type .et-cell:first-child::before, .et-row-info-row.et-info-row-timeline:has(+ .et-row-data) .et-cell:first-child::before {
   bottom: 50%;
+}
+
+.et-row-info {
+  background-color: var(--et-color-bg-alt);
+  font-size: var(--et-font-size-sm);
+  font-weight: var(--et-font-weight-medium);
+  color: var(--et-color-text-muted);
+  cursor: default;
+}
+.et-row-info:hover {
+  background-color: var(--et-color-bg-alt);
+}
+.et-row-info .et-cell {
+  background-color: var(--et-color-bg-alt);
+  border-bottom: 1px solid var(--et-color-border-strong);
+}
+.et-row-info .et-cell.et-cell-fixed {
+  background-color: var(--et-color-bg-alt);
 }
 
 .et-text-left {
@@ -941,7 +960,7 @@
   }
   .et-group-toggle-icon,
   .et-edit-trigger,
-  .et-subrow-toggle {
+  .et-info-row-toggle {
     display: none;
   }
   .et-row-hidden {

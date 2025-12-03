@@ -2,20 +2,20 @@
  * Data Utilities - Functions for data transformation and manipulation
  */
 
-import { sum, average, min, max, toNumber, groupBy } from './helpers.js';
+import { sum, average, min, max, toNumber, groupBy } from "./helpers.js"
 
 /**
  * Aggregate functions registry
  */
 export const AggregateTypes = {
-  SUM: 'sum',
-  AVG: 'average',
-  MIN: 'min',
-  MAX: 'max',
-  COUNT: 'count',
-  FIRST: 'first',
-  LAST: 'last'
-};
+  SUM: "sum",
+  AVG: "average",
+  MIN: "min",
+  MAX: "max",
+  COUNT: "count",
+  FIRST: "first",
+  LAST: "last",
+}
 
 /**
  * Built-in aggregate functions
@@ -27,8 +27,8 @@ export const aggregates = {
   [AggregateTypes.MAX]: (values) => max(values),
   [AggregateTypes.COUNT]: (values) => values.length,
   [AggregateTypes.FIRST]: (values) => values[0],
-  [AggregateTypes.LAST]: (values) => values[values.length - 1]
-};
+  [AggregateTypes.LAST]: (values) => values[values.length - 1],
+}
 
 /**
  * Get aggregate function by type
@@ -36,10 +36,10 @@ export const aggregates = {
  * @returns {Function}
  */
 export function getAggregateFunction(type) {
-  if (typeof type === 'function') {
-    return type;
+  if (typeof type === "function") {
+    return type
   }
-  return aggregates[type] || aggregates[AggregateTypes.SUM];
+  return aggregates[type] || aggregates[AggregateTypes.SUM]
 }
 
 /**
@@ -49,27 +49,29 @@ export function getAggregateFunction(type) {
  * @returns {Object} - Groups with totals
  */
 export function calculateGroupTotals(groupedData, columns) {
-  const result = {};
-  
+  const result = {}
+
   Object.entries(groupedData).forEach(([groupKey, rows]) => {
-    const totals = {};
-    
-    columns.forEach(column => {
+    const totals = {}
+
+    columns.forEach((column) => {
       if (column.aggregate) {
-        const values = rows.map(row => row[column.data]).filter(v => v !== null && v !== undefined);
-        const aggregateFn = getAggregateFunction(column.aggregate);
-        totals[column.data] = aggregateFn(values, rows);
+        const values = rows
+          .map((row) => row[column.data])
+          .filter((v) => v !== null && v !== undefined)
+        const aggregateFn = getAggregateFunction(column.aggregate)
+        totals[column.data] = aggregateFn(values, rows)
       }
-    });
-    
+    })
+
     result[groupKey] = {
       rows,
       totals,
-      count: rows.length
-    };
-  });
-  
-  return result;
+      count: rows.length,
+    }
+  })
+
+  return result
 }
 
 /**
@@ -79,21 +81,21 @@ export function calculateGroupTotals(groupedData, columns) {
  * @returns {Object} - Grand totals object
  */
 export function calculateGrandTotals(data, columns) {
-  const totals = {};
-  
-  columns.forEach(column => {
+  const totals = {}
+
+  columns.forEach((column) => {
     if (column.aggregate) {
       const values = data
-        .filter(row => row._type === 'data')
-        .map(row => row[column.data])
-        .filter(v => v !== null && v !== undefined);
-      
-      const aggregateFn = getAggregateFunction(column.aggregate);
-      totals[column.data] = aggregateFn(values, data);
+        .filter((row) => row._type === "data")
+        .map((row) => row[column.data])
+        .filter((v) => v !== null && v !== undefined)
+
+      const aggregateFn = getAggregateFunction(column.aggregate)
+      totals[column.data] = aggregateFn(values, data)
     }
-  });
-  
-  return totals;
+  })
+
+  return totals
 }
 
 /**
@@ -104,17 +106,17 @@ export function calculateGrandTotals(data, columns) {
  * @returns {Array<Object>} - Data with cumulative values
  */
 export function calculateCumulative(data, columnName, targetColumn = null) {
-  const target = targetColumn || `${columnName}_cumulative`;
-  let cumulative = 0;
-  
-  return data.map(row => {
-    if (row._type !== 'data') {
-      return { ...row, [target]: null };
+  const target = targetColumn || `${columnName}_cumulative`
+  let cumulative = 0
+
+  return data.map((row) => {
+    if (row._type !== "data") {
+      return { ...row, [target]: null }
     }
-    
-    cumulative += toNumber(row[columnName]);
-    return { ...row, [target]: cumulative };
-  });
+
+    cumulative += toNumber(row[columnName])
+    return { ...row, [target]: cumulative }
+  })
 }
 
 /**
@@ -125,17 +127,19 @@ export function calculateCumulative(data, columnName, targetColumn = null) {
  * @returns {Array<Object>} - Data with percentage values
  */
 export function calculatePercentage(data, columnName, targetColumn = null) {
-  const target = targetColumn || `${columnName}_percentage`;
-  const total = sum(data.filter(r => r._type === 'data').map(r => toNumber(r[columnName])));
-  
-  return data.map(row => {
-    if (row._type !== 'data' || total === 0) {
-      return { ...row, [target]: null };
+  const target = targetColumn || `${columnName}_percentage`
+  const total = sum(
+    data.filter((r) => r._type === "data").map((r) => toNumber(r[columnName]))
+  )
+
+  return data.map((row) => {
+    if (row._type !== "data" || total === 0) {
+      return { ...row, [target]: null }
     }
-    
-    const value = toNumber(row[columnName]);
-    return { ...row, [target]: (value / total) * 100 };
-  });
+
+    const value = toNumber(row[columnName])
+    return { ...row, [target]: (value / total) * 100 }
+  })
 }
 
 /**
@@ -145,29 +149,32 @@ export function calculatePercentage(data, columnName, targetColumn = null) {
  * @returns {Array<Object>}
  */
 export function filterData(data, criteria) {
-  if (typeof criteria === 'function') {
-    return data.filter(criteria);
+  if (typeof criteria === "function") {
+    return data.filter(criteria)
   }
-  
-  return data.filter(row => {
+
+  return data.filter((row) => {
     return Object.entries(criteria).every(([key, value]) => {
-      if (value === null || value === undefined) return true;
-      
-      if (typeof value === 'object' && value !== null) {
+      if (value === null || value === undefined) return true
+
+      if (typeof value === "object" && value !== null) {
         // Handle comparison operators
-        if ('$gt' in value) return row[key] > value.$gt;
-        if ('$gte' in value) return row[key] >= value.$gte;
-        if ('$lt' in value) return row[key] < value.$lt;
-        if ('$lte' in value) return row[key] <= value.$lte;
-        if ('$ne' in value) return row[key] !== value.$ne;
-        if ('$in' in value) return value.$in.includes(row[key]);
-        if ('$nin' in value) return !value.$nin.includes(row[key]);
-        if ('$contains' in value) return String(row[key]).toLowerCase().includes(value.$contains.toLowerCase());
+        if ("$gt" in value) return row[key] > value.$gt
+        if ("$gte" in value) return row[key] >= value.$gte
+        if ("$lt" in value) return row[key] < value.$lt
+        if ("$lte" in value) return row[key] <= value.$lte
+        if ("$ne" in value) return row[key] !== value.$ne
+        if ("$in" in value) return value.$in.includes(row[key])
+        if ("$nin" in value) return !value.$nin.includes(row[key])
+        if ("$contains" in value)
+          return String(row[key])
+            .toLowerCase()
+            .includes(value.$contains.toLowerCase())
       }
-      
-      return row[key] === value;
-    });
-  });
+
+      return row[key] === value
+    })
+  })
 }
 
 /**
@@ -176,28 +183,28 @@ export function filterData(data, criteria) {
  * @param {string} [childrenKey='children'] - Key containing child rows
  * @returns {Array<Object>} - Flat array
  */
-export function flattenData(data, childrenKey = 'children') {
-  const result = [];
-  
+export function flattenData(data, childrenKey = "children") {
+  const result = []
+
   const flatten = (rows, level = 0, parentId = null) => {
-    rows.forEach(row => {
-      const { [childrenKey]: children, ...rowData } = row;
-      
+    rows.forEach((row) => {
+      const { [childrenKey]: children, ...rowData } = row
+
       result.push({
         ...rowData,
         _level: level,
         _parentId: parentId,
-        _hasChildren: children && children.length > 0
-      });
-      
+        _hasChildren: children && children.length > 0,
+      })
+
       if (children && children.length > 0) {
-        flatten(children, level + 1, row._id || row.id);
+        flatten(children, level + 1, row._id || row.id)
       }
-    });
-  };
-  
-  flatten(data);
-  return result;
+    })
+  }
+
+  flatten(data)
+  return result
 }
 
 /**
@@ -206,28 +213,28 @@ export function flattenData(data, childrenKey = 'children') {
  * @param {string} [parentKey='parentId'] - Parent ID key
  * @returns {Array<Object>} - Tree structure
  */
-export function buildTree(data, parentKey = 'parentId') {
-  const map = new Map();
-  const roots = [];
-  
+export function buildTree(data, parentKey = "parentId") {
+  const map = new Map()
+  const roots = []
+
   // Create map of all items
-  data.forEach(item => {
-    map.set(item._id || item.id, { ...item, children: [] });
-  });
-  
+  data.forEach((item) => {
+    map.set(item._id || item.id, { ...item, children: [] })
+  })
+
   // Build tree
-  data.forEach(item => {
-    const node = map.get(item._id || item.id);
-    const parentId = item[parentKey];
-    
+  data.forEach((item) => {
+    const node = map.get(item._id || item.id)
+    const parentId = item[parentKey]
+
     if (parentId && map.has(parentId)) {
-      map.get(parentId).children.push(node);
+      map.get(parentId).children.push(node)
     } else {
-      roots.push(node);
+      roots.push(node)
     }
-  });
-  
-  return roots;
+  })
+
+  return roots
 }
 
 /**
@@ -241,30 +248,36 @@ export function transformForExport(data, columns, options = {}) {
   const {
     includeHidden = false,
     formatValues = true,
-    excludeTypes = ['subrow']
-  } = options;
-  
-  const visibleColumns = columns.filter(col => includeHidden || col.visible !== false);
-  
+    excludeTypes = ["infoRow"],
+  } = options
+
+  const visibleColumns = columns.filter(
+    (col) => includeHidden || col.visible !== false
+  )
+
   return data
-    .filter(row => !excludeTypes.includes(row._type))
-    .map(row => {
-      const transformed = {};
-      
-      visibleColumns.forEach(column => {
-        let value = row[column.data];
-        
+    .filter((row) => !excludeTypes.includes(row._type))
+    .map((row) => {
+      const transformed = {}
+
+      visibleColumns.forEach((column) => {
+        let value = row[column.data]
+
         if (formatValues && column.format) {
-          value = column.format(value, row, column);
-        } else if (formatValues && column.type === 'number' && column.decimals !== undefined) {
-          value = toNumber(value).toFixed(column.decimals);
+          value = column.format(value, row, column)
+        } else if (
+          formatValues &&
+          column.type === "number" &&
+          column.decimals !== undefined
+        ) {
+          value = toNumber(value).toFixed(column.decimals)
         }
-        
-        transformed[column.title || column.data] = value;
-      });
-      
-      return transformed;
-    });
+
+        transformed[column.title || column.data] = value
+      })
+
+      return transformed
+    })
 }
 
 /**
@@ -274,69 +287,88 @@ export function transformForExport(data, columns, options = {}) {
  * @returns {{valid: boolean, errors: Array<Object>}}
  */
 export function validateData(data, columns) {
-  const errors = [];
-  
+  const errors = []
+
   data.forEach((row, rowIndex) => {
-    columns.forEach(column => {
-      if (column.required && (row[column.data] === null || row[column.data] === undefined || row[column.data] === '')) {
+    columns.forEach((column) => {
+      if (
+        column.required &&
+        (row[column.data] === null ||
+          row[column.data] === undefined ||
+          row[column.data] === "")
+      ) {
         errors.push({
           rowIndex,
           rowId: row._id,
           column: column.data,
-          type: 'required',
-          message: `${column.title || column.data} is required`
-        });
+          type: "required",
+          message: `${column.title || column.data} is required`,
+        })
       }
-      
-      if (column.validator && row[column.data] !== null && row[column.data] !== undefined) {
-        const validationResult = column.validator(row[column.data], row, column);
+
+      if (
+        column.validator &&
+        row[column.data] !== null &&
+        row[column.data] !== undefined
+      ) {
+        const validationResult = column.validator(row[column.data], row, column)
         if (validationResult !== true) {
           errors.push({
             rowIndex,
             rowId: row._id,
             column: column.data,
-            type: 'validation',
-            message: validationResult || `Invalid value for ${column.title || column.data}`
-          });
+            type: "validation",
+            message:
+              validationResult ||
+              `Invalid value for ${column.title || column.data}`,
+          })
         }
       }
-      
-      if (column.type === 'number' && row[column.data] !== null && row[column.data] !== undefined) {
-        const numValue = toNumber(row[column.data], NaN);
+
+      if (
+        column.type === "number" &&
+        row[column.data] !== null &&
+        row[column.data] !== undefined
+      ) {
+        const numValue = toNumber(row[column.data], NaN)
         if (isNaN(numValue)) {
           errors.push({
             rowIndex,
             rowId: row._id,
             column: column.data,
-            type: 'type',
-            message: `${column.title || column.data} must be a number`
-          });
+            type: "type",
+            message: `${column.title || column.data} must be a number`,
+          })
         } else {
           if (column.min !== undefined && numValue < column.min) {
             errors.push({
               rowIndex,
               rowId: row._id,
               column: column.data,
-              type: 'range',
-              message: `${column.title || column.data} must be at least ${column.min}`
-            });
+              type: "range",
+              message: `${column.title || column.data} must be at least ${
+                column.min
+              }`,
+            })
           }
           if (column.max !== undefined && numValue > column.max) {
             errors.push({
               rowIndex,
               rowId: row._id,
               column: column.data,
-              type: 'range',
-              message: `${column.title || column.data} must be at most ${column.max}`
-            });
+              type: "range",
+              message: `${column.title || column.data} must be at most ${
+                column.max
+              }`,
+            })
           }
         }
       }
-    });
-  });
-  
+    })
+  })
+
   return {
     valid: errors.length === 0,
-    errors
-  };
+    errors,
+  }
 }

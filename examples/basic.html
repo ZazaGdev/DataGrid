@@ -263,18 +263,18 @@
         border-top: 1px solid var(--et-color-border-strong);
       }
 
-      /* Sub-row styles */
-      .et-row-subrow {
+      /* Info row styles */
+      .et-row-info-row {
         font-size: 0.8125rem;
         color: var(--et-color-text-muted);
         cursor: default;
       }
 
-      .et-row-subrow:hover {
+      .et-row-info-row:hover {
         background-color: var(--et-color-bg);
       }
 
-      .et-row-subrow .et-cell:first-child {
+      .et-row-info-row .et-cell:first-child {
         padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
       }
 
@@ -426,7 +426,7 @@
           const groupBy = this.config.groupBy
 
           this.data.forEach((row) => {
-            if (row._type === "subrow") return
+            if (row._type === "infoRow") return
             const key = row[groupBy]
             if (!groups[key]) groups[key] = []
             groups[key].push(row)
@@ -462,14 +462,14 @@
               if (isCollapsed) tr.classList.add("et-row-hidden")
               tbody.appendChild(tr)
 
-              // Add sub-rows if present
-              const subRows = this.data.filter(
-                (r) => r._type === "subrow" && r._parentId === row.id
+              // Add info rows if present
+              const infoRows = this.data.filter(
+                (r) => r._type === "infoRow" && r._parentId === row.id
               )
-              subRows.forEach((subRow) => {
-                const subTr = this.createRow(subRow, index, groupKey, true)
-                if (isCollapsed) subTr.classList.add("et-row-hidden")
-                tbody.appendChild(subTr)
+              infoRows.forEach((infoRow) => {
+                const infoTr = this.createRow(infoRow, index, groupKey, true)
+                if (isCollapsed) infoTr.classList.add("et-row-hidden")
+                tbody.appendChild(infoTr)
               })
             })
 
@@ -500,10 +500,12 @@
           })
         }
 
-        createRow(row, index, groupKey = null, isSubRow = false) {
+        createRow(row, index, groupKey = null, isInfoRow = false) {
           const tr = document.createElement("tr")
           tr.className = `et-row ${
-            isSubRow || row._type === "subrow" ? "et-row-subrow" : "et-row-data"
+            isInfoRow || row._type === "infoRow"
+              ? "et-row-info-row"
+              : "et-row-data"
           }`
           tr.dataset.rowId = row.id || row._id || index
           if (groupKey) tr.dataset.group = groupKey
@@ -526,8 +528,8 @@
             if (
               this.mode === "edit" &&
               col.editable !== false &&
-              !isSubRow &&
-              row._type !== "subrow"
+              !isInfoRow &&
+              row._type !== "infoRow"
             ) {
               const input = document.createElement("input")
               input.className = "et-cell-input"
@@ -568,7 +570,7 @@
             tr.appendChild(td)
           })
 
-          if (!isSubRow && row._type !== "subrow") {
+          if (!isInfoRow && row._type !== "infoRow") {
             tr.addEventListener("click", (e) => {
               if (!e.target.classList.contains("et-cell-input")) {
                 if (this.callbacks.onRowClick) {
@@ -602,7 +604,7 @@
         collapseAllGroups() {
           const groupBy = this.config.groupBy
           this.data.forEach((row) => {
-            if (row._type !== "subrow" && row[groupBy]) {
+            if (row._type !== "infoRow" && row[groupBy]) {
               this.collapsedGroups.add(row[groupBy])
             }
           })
@@ -648,7 +650,7 @@
         exportCSV() {
           const headers = this.columns.map((c) => c.title || c.data).join(",")
           const rows = this.data
-            .filter((r) => r._type !== "subrow")
+            .filter((r) => r._type !== "infoRow")
             .map((row) =>
               this.columns
                 .map((col) => {
@@ -680,7 +682,7 @@
         log.textContent = `[${time}] ${message}\n` + log.textContent
       }
 
-      // Sample data with groups and sub-rows
+      // Sample data with groups and info rows
       const sampleData = [
         {
           id: 1,
@@ -691,8 +693,8 @@
           mar: 6000,
         },
         {
-          id: "sub1",
-          _type: "subrow",
+          id: "info1",
+          _type: "infoRow",
           _parentId: 1,
           name: "Social Media",
           jan: 2000,
@@ -700,8 +702,8 @@
           mar: 2500,
         },
         {
-          id: "sub2",
-          _type: "subrow",
+          id: "info2",
+          _type: "infoRow",
           _parentId: 1,
           name: "Content",
           jan: 3000,

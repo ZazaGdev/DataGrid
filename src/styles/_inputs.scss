@@ -19,6 +19,7 @@
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: text; // Only editable inputs show text cursor
   @include et-transition(background-color, box-shadow);
 
   // Match row background colors

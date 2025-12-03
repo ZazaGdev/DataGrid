@@ -66,7 +66,7 @@ export class ExportManager {
 
     // Data rows
     data.forEach((row) => {
-      if (row._type !== "data" && row._type !== "subrow") return
+      if (row._type !== "data" && row._type !== "infoRow") return
 
       const csvRow = columns.map((col) => {
         let value = row[col.data]
@@ -136,7 +136,7 @@ export class ExportManager {
 
     // Data rows
     data.forEach((row) => {
-      if (row._type !== "data" && row._type !== "subrow") return
+      if (row._type !== "data" && row._type !== "infoRow") return
 
       const excelRow = columns.map((col) => {
         let value = row[col.data]

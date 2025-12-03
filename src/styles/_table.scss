@@ -130,7 +130,7 @@
 
   // Data row
   &.et-row-data {
-    cursor: pointer;
+    cursor: default;
 
     &:nth-child(even) {
       background-color: var(--et-color-bg-alt);

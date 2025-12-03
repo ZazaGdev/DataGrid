@@ -24,7 +24,7 @@ import { addClass, removeClass } from "../utils/dom.js"
  * @property {boolean} [fixedFirstColumn=false] - Enable fixed first column
  * @property {boolean} [enableGrouping=false] - Enable row grouping
  * @property {string|Function} [groupBy] - Group by column name or function
- * @property {boolean} [enableSubRows=false] - Enable sub-rows
+ * @property {boolean} [enableInfoRows=false] - Enable info rows
  * @property {boolean} [enableRowTotals=false] - Enable row totals column
  * @property {Function} [rowTotalsFormat] - Format function for row totals column
  * @property {'view'|'edit'} [mode='view'] - Initial mode
@@ -47,7 +47,7 @@ export class Table {
     this._config = {
       fixedFirstColumn: false,
       enableGrouping: false,
-      enableSubRows: false,
+      enableInfoRows: false,
       enableRowTotals: false,
       mode: "view",
       ...config,
@@ -72,7 +72,7 @@ export class Table {
         fixedFirstColumn: config.fixedFirstColumn,
         enableGrouping: config.enableGrouping,
         groupBy: config.groupBy,
-        enableSubRows: config.enableSubRows,
+        enableInfoRows: config.enableInfoRows,
         enableRowTotals: config.enableRowTotals,
         rowTotalsFormat: config.rowTotalsFormat,
       },

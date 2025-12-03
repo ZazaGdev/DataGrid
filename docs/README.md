@@ -127,7 +127,7 @@ const table = new Table({
   fixedFirstColumn: false,        // Sticky first column
   enableGrouping: false,          // Enable row grouping
   groupBy: 'category',            // Column name or function
-  enableSubRows: false,           // Enable sub-rows
+  enableInfoRows: false,          // Enable info rows
 
   // Optional - Mode
   mode: 'view',                   // 'view' | 'edit'
@@ -278,9 +278,9 @@ const columns = [
   amount: 100
 }
 
-// Sub-row (informational)
+// Info row (informational)
 {
-  _type: 'subrow',
+  _type: 'infoRow',
   _parentId: 'parent_row_id',
   label: 'Sep 2025',
   value: 50
@@ -299,15 +299,15 @@ const columns = [
 }
 ```
 
-### Data with Sub-rows Example
+### Data with Info Rows Example
 
 ```javascript
 const data = [
   { id: 1, name: "Annual Budget", amount: 12000 },
-  { _type: "subrow", label: "Q1 2025", amount: 3000 },
-  { _type: "subrow", label: "Q2 2025", amount: 3000 },
-  { _type: "subrow", label: "Q3 2025", amount: 3000 },
-  { _type: "subrow", label: "Q4 2025", amount: 3000 },
+  { _type: "infoRow", label: "Q1 2025", amount: 3000 },
+  { _type: "infoRow", label: "Q2 2025", amount: 3000 },
+  { _type: "infoRow", label: "Q3 2025", amount: 3000 },
+  { _type: "infoRow", label: "Q4 2025", amount: 3000 },
   { id: 2, name: "Marketing", amount: 5000 },
 ]
 ```
@@ -747,7 +747,7 @@ editable-table/
 │       ├── _table.scss       # Base styles
 │       ├── _groups.scss      # Group styles
 │       ├── _inputs.scss      # Edit mode styles
-│       └── _subrows.scss     # Sub-row styles
+│       └── _inforows.scss    # Info row styles
 ├── docs/
 │   └── README.md             # This file
 └── examples/

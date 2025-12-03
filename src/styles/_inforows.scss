@@ -1,15 +1,15 @@
 /**
- * Sub-rows Styles
- * Styles for informational sub-rows (e.g., Sep 2025, Oct 2025)
+ * Info Rows Styles
+ * Styles for informational rows (e.g., header info rows, period labels)
  */
 
 @use "variables" as *;
 
 // ============================================
-// Sub-row Base
+// Info Row Base
 // ============================================
 
-.et-row-subrow {
+.et-row-info-row {
   background-color: var(--et-color-bg);
   font-size: var(--et-font-size-sm);
   color: var(--et-color-text-muted);
@@ -19,7 +19,7 @@
     background-color: var(--et-color-bg); // No hover effect
   }
 
-  // Indent sub-row content
+  // Indent info-row content
   .et-cell:first-child {
     padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
 
@@ -35,7 +35,7 @@
     }
   }
 
-  // Sub-row cells are typically read-only
+  // Info-row cells are typically read-only
   .et-cell {
     background-color: var(--et-color-bg);
 
@@ -46,28 +46,28 @@
 }
 
 // ============================================
-// Sub-row Indicator (visual connector)
+// Info Row Indicator (visual connector)
 // ============================================
 
-.et-row-data + .et-row-subrow {
+.et-row-data + .et-row-info-row {
   border-top: 1px dashed var(--et-color-border);
 }
 
-.et-row-subrow + .et-row-subrow {
-  // Consecutive sub-rows
+.et-row-info-row + .et-row-info-row {
+  // Consecutive info-rows
 }
 
-.et-row-subrow + .et-row-data {
-  // Sub-row followed by data row
+.et-row-info-row + .et-row-data {
+  // Info-row followed by data row
   border-top: 1px solid var(--et-color-border-strong);
 }
 
 // ============================================
-// Sub-row Types
+// Info Row Types
 // ============================================
 
-// Informational sub-row (dates, periods, etc.)
-.et-row-subrow.et-subrow-info {
+// Informational info-row (dates, periods, etc.)
+.et-row-info-row.et-info-row-info {
   background-color: #fafbfc;
 
   .et-cell {
@@ -76,8 +76,8 @@
   }
 }
 
-// Detail sub-row (additional data)
-.et-row-subrow.et-subrow-detail {
+// Detail info-row (additional data)
+.et-row-info-row.et-info-row-detail {
   background-color: var(--et-color-bg-alt);
 
   .et-cell {
@@ -85,8 +85,8 @@
   }
 }
 
-// Summary sub-row (subtotals)
-.et-row-subrow.et-subrow-summary {
+// Summary info-row (subtotals)
+.et-row-info-row.et-info-row-summary {
   background-color: var(--et-color-bg-alt);
   font-weight: var(--et-font-weight-medium);
 
@@ -97,17 +97,17 @@
 }
 
 // ============================================
-// Expandable Sub-rows
+// Expandable Info Rows
 // ============================================
 
-.et-row-data.et-has-subrows {
+.et-row-data.et-has-info-rows {
   .et-cell:first-child {
     position: relative;
     padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
   }
 }
 
-.et-subrow-toggle {
+.et-info-row-toggle {
   position: absolute;
   left: var(--et-cell-padding-x);
   top: 50%;
@@ -134,46 +134,46 @@
 }
 
 // ============================================
-// Sub-row Visibility
+// Info Row Visibility
 // ============================================
 
-.et-subrows-collapsed {
-  .et-row-subrow {
+.et-info-rows-collapsed {
+  .et-row-info-row {
     display: none;
   }
 }
 
-.et-row-subrow.et-subrow-hidden {
+.et-row-info-row.et-info-row-hidden {
   display: none;
 }
 
 // ============================================
-// Sub-row Nesting Levels
+// Info Row Nesting Levels
 // ============================================
 
-.et-row-subrow[data-level="1"] {
+.et-row-info-row[data-level="1"] {
   .et-cell:first-child {
     padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
   }
 }
 
-.et-row-subrow[data-level="2"] {
+.et-row-info-row[data-level="2"] {
   .et-cell:first-child {
     padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 2);
   }
 }
 
-.et-row-subrow[data-level="3"] {
+.et-row-info-row[data-level="3"] {
   .et-cell:first-child {
     padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 3);
   }
 }
 
 // ============================================
-// Sub-row with Timeline (for date-based sub-rows)
+// Info Row with Timeline (for date-based info-rows)
 // ============================================
 
-.et-row-subrow.et-subrow-timeline {
+.et-row-info-row.et-info-row-timeline {
   .et-cell:first-child {
     position: relative;
 
@@ -201,14 +201,40 @@
     }
   }
 
-  // First timeline sub-row
+  // First timeline info-row
   &:first-of-type .et-cell:first-child::before {
     top: 50%;
   }
 
-  // Last timeline sub-row
+  // Last timeline info-row
   &:last-of-type .et-cell:first-child::before,
   &:has(+ .et-row-data) .et-cell:first-child::before {
     bottom: 50%;
+  }
+}
+
+// ============================================
+// Info Row (informational header row at top of tbody)
+// This is the primary info row class used for header information
+// ============================================
+
+.et-row-info {
+  background-color: var(--et-color-bg-alt);
+  font-size: var(--et-font-size-sm);
+  font-weight: var(--et-font-weight-medium);
+  color: var(--et-color-text-muted);
+  cursor: default;
+
+  &:hover {
+    background-color: var(--et-color-bg-alt); // No hover effect
+  }
+
+  .et-cell {
+    background-color: var(--et-color-bg-alt);
+    border-bottom: 1px solid var(--et-color-border-strong);
+
+    &.et-cell-fixed {
+      background-color: var(--et-color-bg-alt);
+    }
   }
 }

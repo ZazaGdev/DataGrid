@@ -82,14 +82,14 @@
     <div class="container">
       <h1>📊 Advanced Features Example</h1>
       <p class="description">
-        This example demonstrates advanced features: fixed first column,
-        sub-rows (expandable details), keyboard navigation, and scroll
-        management with programmatic scrolling.
+        This example demonstrates advanced features: fixed first column, info
+        rows (expandable details), keyboard navigation, and scroll management
+        with programmatic scrolling.
       </p>
 
       <div class="toolbar">
-        <button class="btn btn-primary" id="addSubRow">
-          ➕ Add Sub-row to First
+        <button class="btn btn-primary" id="addInfoRow">
+          ➕ Add Info Row to First
         </button>
         <button class="btn" id="scrollToRow">📍 Scroll to Row #5</button>
         <button class="btn" id="scrollToTop">⬆️ Scroll to Top</button>
@@ -109,7 +109,7 @@
           when scrolling horizontally.
         </p>
         <p>
-          • <strong>Sub-rows:</strong> Click "Add Sub-row" to add expandable
+          • <strong>Info Rows:</strong> Click "Add Info Row" to add expandable
           detail rows beneath main rows.
         </p>
         <p>
@@ -611,20 +611,20 @@
         data: productData,
         mode: "edit",
         fixedFirstColumn: true, // Enable fixed first column
-        enableSubRows: true, // Enable sub-rows
+        enableInfoRows: true, // Enable info rows
       })
 
       // Store globally
       window.table = table
 
       // Button handlers
-      document.getElementById("addSubRow").addEventListener("click", () => {
+      document.getElementById("addInfoRow").addEventListener("click", () => {
         const data = table.getData()
         if (data.length === 0) return
 
         const firstRow = data[0]
 
-        // Add a sub-row with additional details
+        // Add an info row with additional details
         table.addRow(
           {
             id: "detail",
@@ -640,12 +640,12 @@
           },
           {
             afterRowId: firstRow.id,
-            type: "subrow",
+            type: "infoRow",
           }
         )
 
         showStatus(
-          "Sub-row added to first product with detailed specifications"
+          "Info row added to first product with detailed specifications"
         )
       })
 

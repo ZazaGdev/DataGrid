@@ -75,7 +75,7 @@ This directory contains comprehensive examples demonstrating all features and ca
 **Advanced Features**
 
 - Fixed first column (stays visible during horizontal scroll)
-- Sub-rows (expandable detail rows)
+- Info rows (expandable detail rows)
 - Keyboard navigation (arrow keys)
 - Programmatic scrolling
 - Scroll position tracking
@@ -84,9 +84,9 @@ This directory contains comprehensive examples demonstrating all features and ca
 **Features Demonstrated:**
 
 - `fixedFirstColumn: true`
-- `enableSubRows: true`
+- `enableInfoRows: true`
 - `scrollToRow(rowId)`
-- `addRow(..., { type: 'subrow' })`
+- `addRow(..., { type: 'infoRow' })`
 - Arrow key navigation in edit mode
 
 ---
@@ -333,7 +333,7 @@ See: `05-export.html`
   fixedFirstColumn: boolean,           // Default: false
   enableGrouping: boolean,             // Default: false
   groupBy: string | Function,          // Required if enableGrouping
-  enableSubRows: boolean,              // Default: false
+  enableInfoRows: boolean,             // Default: false
   onRowClick: Function,                // Optional callback
   onRender: Function,                  // Optional callback
   onChange: Function,                  // Optional callback

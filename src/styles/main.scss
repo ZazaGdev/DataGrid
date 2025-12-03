@@ -19,7 +19,7 @@
 // Features
 @use "groups";
 @use "inputs";
-@use "subrows";
+@use "inforows";
 
 // ============================================
 // Utility Classes
@@ -132,7 +132,7 @@
   // Hide interactive elements
   .et-group-toggle-icon,
   .et-edit-trigger,
-  .et-subrow-toggle {
+  .et-info-row-toggle {
     display: none;
   }
 

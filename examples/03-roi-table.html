@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataGrid - ROI Calculator Table</title>
+    <link rel="stylesheet" href="../dist/editable-table.css" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 2rem;
+        background: #f3f4f6;
+        margin: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 150ms ease;
+      }
+      .btn:hover {
+        background: #f9fafb;
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .info-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+      }
+      .info-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #111827;
+      }
+      .info-box p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      select {
+        padding: 0.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+      label {
+        font-size: 0.875rem;
+        color: #374151;
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>💰 ROI Calculator Table</h1>
+      <p class="description">
+        This example demonstrates an ROI (Return on Investment) calculator table
+        with Benefits and Costs groups. Each row represents a benefit or cost
+        item across multiple time periods. The table includes automatic totals
+        and calculated metrics like Cash Flow and Cumulative Cash Flow.
+      </p>
+
+      <div class="toolbar">
+        <label for="periodType">Period Type:</label>
+        <select id="periodType">
+          <option value="year">Years</option>
+          <option value="month">Months</option>
+        </select>
+        <label for="periodCount" style="margin-left: 1rem">Periods:</label>
+        <select id="periodCount">
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+          <option value="6">6</option>
+        </select>
+        <button
+          class="btn btn-primary"
+          id="recalculate"
+          style="margin-left: 1rem"
+        >
+          Recalculate Metrics
+        </button>
+        <button class="btn btn-primary" id="expandAll">Expand All</button>
+        <button class="btn btn-primary" id="collapseAll">Collapse All</button>
+      </div>
+
+      <div id="tableContainer"></div>
+
+      <div class="info-box">
+        <h3>💡 How It Works</h3>
+        <p>
+          • <strong>Benefits (Green):</strong> Revenue and savings items that
+          contribute positively to ROI.
+        </p>
+        <p>
+          • <strong>Costs (Red):</strong> Expenses and investments that are
+          subtracted from benefits.
+        </p>
+        <p>
+          • <strong>Total Column:</strong> Automatically sums all period values
+          for each row.
+        </p>
+        <p>
+          • <strong>Calculated Rows:</strong> Cash Flow, Cumulative Cash Flow,
+          and Discounted Cash Flow are calculated from the data.
+        </p>
+        <p>
+          • <strong>Edit Mode:</strong> Click on any value to edit it. Changes
+          automatically recalculate totals.
+        </p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { Table } from "../src/index.js"
+
+      // Configuration
+      let periodType = "year"
+      let periodCount = 5
+      let discountRate = 0.06 // 6% discount rate for DCF
+
+      // Generate period columns dynamically
+      function generateColumns() {
+        const baseYear = 2025
+        const columns = [
+          {
+            title: "Name",
+            data: "name",
+            width: "180px",
+          },
+        ]
+
+        // Add period columns
+        for (let i = 1; i <= periodCount; i++) {
+          const periodLabel = periodType === "year" ? `Year ${i}` : `Month ${i}`
+          const subLabel =
+            periodType === "year" ? `${baseYear + i - 1}` : `${i}/${baseYear}`
+
+          columns.push({
+            title: periodLabel,
+            data: `period${i}`,
+            width: "120px",
+            type: "number",
+            aggregate: "sum",
+            format: (value) =>
+              value !== null && value !== undefined
+                ? `$${Number(value).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`
+                : "$0.00",
+          })
+        }
+
+        return columns
+      }
+
+      // Generate ROI data
+      function generateData() {
+        const data = []
+
+        // Info row header - shows period labels (2025, 2026, etc.)
+        // This row appears at the top of tbody, not inside any group
+        data.push({
+          name: "",
+          _type: "infoRow",
+          ...generatePeriodSubheaders(),
+        })
+
+        data.push({
+          name: "Labor Cost Savings",
+          group: "Benefits",
+          period1: 5000,
+          period2: 5000,
+          period3: 5000,
+          period4: 5000,
+          period5: 5000,
+          period6: 5000,
+        })
+
+        data.push({
+          name: "Error & Rework Cost Reduction",
+          group: "Benefits",
+          period1: 6000,
+          period2: 6000,
+          period3: 6000,
+          period4: 6000,
+          period5: 6000,
+          period6: 6000,
+        })
+
+        data.push({
+          name: "Operational Cost Reduction",
+          group: "Benefits",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Productivity Gains",
+          group: "Benefits",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Faster Time-to-Market",
+          group: "Benefits",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        // Costs Group - no info row header for this group
+        data.push({
+          name: "Software Licensing",
+          group: "Costs",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Implementation Services",
+          group: "Costs",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Training & Change Management",
+          group: "Costs",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Infrastructure & Hardware",
+          group: "Costs",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        data.push({
+          name: "Ongoing Maintenance",
+          group: "Costs",
+          period1: 0,
+          period2: 0,
+          period3: 0,
+          period4: 0,
+          period5: 0,
+          period6: 0,
+        })
+
+        return data
+      }
+
+      // Generate period subheaders (year numbers)
+      function generatePeriodSubheaders() {
+        const baseYear = 2025
+        const subheaders = {}
+        for (let i = 1; i <= periodCount; i++) {
+          subheaders[`period${i}`] =
+            periodType === "year" ? baseYear + i - 1 : `${i}/${baseYear}`
+        }
+        console.log(subheaders)
+        return subheaders
+      }
+
+      // Calculate metrics (ungrouped rows)
+      function calculateMetrics(tableData) {
+        const metrics = []
+        const benefitsData = tableData.filter(
+          (r) => r.group === "Benefits" && r._type !== "infoRow"
+        )
+        const costsData = tableData.filter(
+          (r) => r.group === "Costs" && r._type !== "infoRow"
+        )
+
+        // Cash Flow = Total Benefits - Total Costs per period
+        const cashFlow = { name: "CASH FLOW", group: null, _editable: false }
+        let cashFlowTotal = 0
+        for (let i = 1; i <= periodCount; i++) {
+          const benefitSum = benefitsData.reduce(
+            (sum, r) => sum + (Number(r[`period${i}`]) || 0),
+            0
+          )
+          const costSum = costsData.reduce(
+            (sum, r) => sum + (Number(r[`period${i}`]) || 0),
+            0
+          )
+          cashFlow[`period${i}`] = benefitSum - costSum
+          cashFlowTotal += cashFlow[`period${i}`]
+        }
+        cashFlow._rowTotal = cashFlowTotal
+        metrics.push(cashFlow)
+
+        // Cumulative Cash Flow
+        const cumulativeCashFlow = {
+          name: "CUMULATIVE CASH FLOW",
+          group: null,
+          _editable: false,
+        }
+        let cumulative = 0
+        let cumulativeTotal = 0
+        for (let i = 1; i <= periodCount; i++) {
+          cumulative += cashFlow[`period${i}`]
+          cumulativeCashFlow[`period${i}`] = cumulative
+        }
+        cumulativeCashFlow._rowTotal = cumulative // Last cumulative value
+        metrics.push(cumulativeCashFlow)
+
+        // Discounted Cash Flow (DCF)
+        const discountedCashFlow = {
+          name: "DISCOUNTED CASH FLOW",
+          group: null,
+          _editable: false,
+        }
+        let dcfTotal = 0
+        for (let i = 1; i <= periodCount; i++) {
+          const discountFactor = Math.pow(1 + discountRate, i)
+          discountedCashFlow[`period${i}`] =
+            cashFlow[`period${i}`] / discountFactor
+          dcfTotal += discountedCashFlow[`period${i}`]
+        }
+        discountedCashFlow._rowTotal = dcfTotal
+        metrics.push(discountedCashFlow)
+
+        // Cumulative Discounted Cash Flow
+        const cumulativeDCF = {
+          name: "CUMULATIVE DISCOUNTED CASH FLOW",
+          group: null,
+          _editable: false,
+        }
+        let cumulativeDcf = 0
+        for (let i = 1; i <= periodCount; i++) {
+          cumulativeDcf += discountedCashFlow[`period${i}`]
+          cumulativeDCF[`period${i}`] = cumulativeDcf
+        }
+        cumulativeDCF._rowTotal = cumulativeDcf
+        metrics.push(cumulativeDCF)
+
+        return metrics
+      }
+
+      // Create and render table
+      let table = null
+
+      function createTable() {
+        if (table) {
+          table.destroy()
+        }
+
+        const columns = generateColumns()
+        const baseData = generateData()
+        const metrics = calculateMetrics(baseData)
+
+        // Combine all data
+        const allData = [...baseData, ...metrics]
+
+        table = new Table({
+          container: "#tableContainer",
+          columns: columns,
+          data: allData,
+          enableGrouping: true,
+          groupBy: "group",
+          enableRowTotals: true,
+          rowTotalsFormat: (value) =>
+            value !== null && value !== undefined
+              ? `$${Number(value).toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`
+              : "$0.00",
+          fixedFirstColumn: true,
+          mode: "edit",
+          theme: {
+            // Customize colors for ROI table
+          },
+        })
+
+        // Store globally for debugging
+        window.table = table
+
+        // Subscribe to cell changes to recalculate metrics
+        table.on(Table.Events.CELL_CHANGE, () => {
+          recalculateMetrics()
+        })
+      }
+
+      // Recalculate metrics when data changes
+      function recalculateMetrics() {
+        const tableData = table.getData()
+
+        // Filter out old metrics and recalculate
+        const baseData = tableData.filter(
+          (r) => r.group === "Benefits" || r.group === "Costs"
+        )
+        const newMetrics = calculateMetrics(baseData)
+
+        // Update metric rows in place
+        const metricNames = [
+          "CASH FLOW",
+          "CUMULATIVE CASH FLOW",
+          "DISCOUNTED CASH FLOW",
+          "CUMULATIVE DISCOUNTED CASH FLOW",
+        ]
+
+        newMetrics.forEach((metric, index) => {
+          const existingRow = tableData.find((r) => r.name === metric.name)
+          if (existingRow) {
+            for (let i = 1; i <= periodCount; i++) {
+              table.updateCell(
+                existingRow._id,
+                `period${i}`,
+                metric[`period${i}`]
+              )
+            }
+          }
+        })
+      }
+
+      // Initialize
+      createTable()
+
+      // Event handlers
+      document.getElementById("periodType").addEventListener("change", (e) => {
+        periodType = e.target.value
+        createTable()
+      })
+
+      document.getElementById("periodCount").addEventListener("change", (e) => {
+        periodCount = parseInt(e.target.value)
+        createTable()
+      })
+
+      document.getElementById("recalculate").addEventListener("click", () => {
+        recalculateMetrics()
+      })
+
+      document.getElementById("expandAll").addEventListener("click", () => {
+        table.expandAllGroups()
+      })
+
+      document.getElementById("collapseAll").addEventListener("click", () => {
+        table.collapseAllGroups()
+      })
+
+      console.log("✅ ROI Calculator loaded successfully!")
+    </script>
+  </body>
+</html>

@@ -141,8 +141,8 @@ const table = new Table({
   _type: "data"
 } // Normal data row
 {
-  _type: "subrow"
-} // Informational sub-row
+  _type: "infoRow"
+} // Informational info row
 {
   _type: "group-header"
 } // Auto-generated group header
@@ -265,5 +265,5 @@ src/
     ├── _table.scss
     ├── _groups.scss
     ├── _inputs.scss
-    └── _subrows.scss
+    └── _inforows.scss
 ```
