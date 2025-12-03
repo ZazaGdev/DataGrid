@@ -22,27 +22,11 @@ export class GroupManager {
 
     // Setup event listeners
     this._setupListeners()
-  }
 
-  /**
-   * Enable grouping with a specific column/function
-   * @param {string|Function} groupBy - Column name or grouping function
-   */
-  enableGrouping(groupBy) {
-    this._state.setConfig({
-      enableGrouping: true,
-      groupBy,
-    })
-  }
-
-  /**
-   * Disable grouping
-   */
-  disableGrouping() {
-    this._state.setConfig({
-      enableGrouping: false,
-      groupBy: null,
-    })
+    // Calculate initial totals if grouping is enabled
+    if (this._state.getConfig().enableGrouping) {
+      this.recalculateTotals()
+    }
   }
 
   /**
@@ -106,7 +90,7 @@ export class GroupManager {
         if (column.aggregate) {
           const values = group.rows
             .map((row) => row[column.data])
-            .filter((v) => v !== null && v !== undefined)
+            .filter((v) => v !== null && v !== undefined && !isNaN(v))
 
           totals[column.data] = this._calculateAggregate(
             column.aggregate,
@@ -319,6 +303,15 @@ export class GroupManager {
               typeof groupBy === "function" ? groupBy(row) : row[groupBy]
             this.recalculateTotals(groupId)
           }
+        }
+      })
+    )
+
+    // Recalculate all totals when data changes
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.DATA_CHANGE, () => {
+        if (this._state.getConfig().enableGrouping) {
+          this.recalculateTotals()
         }
       })
     )

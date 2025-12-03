@@ -72,11 +72,12 @@
   </head>
   <body>
     <div class="container">
-      <h1>📊 Row Grouping & Totals Example</h1>
+      <h1>📊 Row Grouping & Aggregates Example</h1>
       <p class="description">
         This example demonstrates row grouping by department with aggregate
-        totals (sum, average, count). Groups can be expanded/collapsed
-        individually or all at once.
+        totals displayed directly in group headers. Child rows are indented
+        under their parent group. Groups can be expanded/collapsed individually
+        or all at once.
       </p>
 
       <div class="toolbar">
@@ -88,7 +89,6 @@
         </button>
         <button class="btn" id="getGroupInfo">Get Group Information</button>
         <button class="btn" id="getGrandTotals">Get Grand Totals</button>
-        <button class="btn" id="toggleGrouping">Disable Grouping</button>
       </div>
 
       <div id="tableContainer"></div>
@@ -97,11 +97,11 @@
         <h3>💡 How to Use</h3>
         <p>
           • <strong>Group Headers:</strong> Click on group headers to
-          expand/collapse individual groups.
+          expand/collapse. Aggregates (sums) display directly in the header row.
         </p>
         <p>
-          • <strong>Group Totals:</strong> Each group shows aggregate totals
-          (sum for salary, count for employees).
+          • <strong>Nested Rows:</strong> Child rows are indented under their
+          parent group for visual hierarchy.
         </p>
         <p>
           • <strong>Expand/Collapse All:</strong> Use the toolbar buttons to
@@ -110,10 +110,6 @@
         <p>
           • <strong>Grand Totals:</strong> Click "Get Grand Totals" to see
           totals across all groups.
-        </p>
-        <p>
-          • <strong>Toggle Grouping:</strong> Enable/disable grouping to see the
-          difference in data presentation.
         </p>
       </div>
 
@@ -276,18 +272,6 @@
           aggregate: "sum", // Sum all bonuses
           format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
         },
-        {
-          title: "Total Comp",
-          data: "totalComp",
-          width: "140px",
-          type: "number",
-          aggregate: "sum",
-          format: (value) => (value ? `$${value.toLocaleString()}` : "$0"),
-          // Computed column
-          compute: (row) => {
-            return (row.sales || 0) + (row.commission || 0) + (row.bonus || 0)
-          },
-        },
       ]
 
       // Create table with grouping enabled
@@ -297,14 +281,12 @@
         data: salesData,
         enableGrouping: true,
         groupBy: "department", // Group by department
+        fixedFirstColumn: true, // Sticky first column
         mode: "view",
       })
 
       // Store globally for debugging
       window.table = table
-
-      // Track grouping state
-      let groupingEnabled = true
 
       // Button handlers
       document.getElementById("expandAll").addEventListener("click", () => {
@@ -365,41 +347,6 @@
               grandTotal: `$${totals.grandTotal.toLocaleString()}`,
             },
           })
-        })
-
-      document
-        .getElementById("toggleGrouping")
-        .addEventListener("click", () => {
-          const btn = document.getElementById("toggleGrouping")
-
-          if (groupingEnabled) {
-            // Disable grouping - recreate table
-            const newTable = new Table({
-              container: "#tableContainer",
-              columns: columns,
-              data: salesData,
-              enableGrouping: false,
-              mode: "view",
-            })
-            window.table = newTable
-            btn.textContent = "Enable Grouping"
-            showStatus("Grouping disabled - showing flat table")
-          } else {
-            // Enable grouping - recreate table
-            const newTable = new Table({
-              container: "#tableContainer",
-              columns: columns,
-              data: salesData,
-              enableGrouping: true,
-              groupBy: "department",
-              mode: "view",
-            })
-            window.table = newTable
-            btn.textContent = "Disable Grouping"
-            showStatus("Grouping enabled - grouped by department")
-          }
-
-          groupingEnabled = !groupingEnabled
         })
 
       // Subscribe to group toggle events

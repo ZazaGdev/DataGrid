@@ -316,7 +316,7 @@ export class TableRenderer {
     this._cellElements.clear()
 
     Object.entries(groupedData).forEach(([groupId, group]) => {
-      // Group header row
+      // Group header row (includes aggregate values)
       const groupHeader = this._createGroupHeaderRow(groupId, group, columns)
       this._tbody.appendChild(groupHeader)
 
@@ -329,15 +329,6 @@ export class TableRenderer {
         }
         this._tbody.appendChild(rowElement)
       })
-
-      // Group totals row (if configured)
-      if (Object.keys(group.totals).length > 0) {
-        const totalsRow = this._createTotalsRow(group.totals, columns, groupId)
-        if (isCollapsed) {
-          addClass(totalsRow, "et-row-hidden")
-        }
-        this._tbody.appendChild(totalsRow)
-      }
     })
   }
 
@@ -576,47 +567,74 @@ export class TableRenderer {
    * @private
    */
   _createGroupHeaderRow(groupId, group, columns) {
+    const config = this._state.getConfig()
+    const isCollapsed = this._state.isGroupCollapsed(groupId)
+    const visibleColumns = columns.filter((c) => c.visible !== false)
+
     const tr = createElement("tr", {
       class: "et-row et-row-group-header",
       "data-group": groupId,
     })
 
-    const isCollapsed = this._state.isGroupCollapsed(groupId)
+    // Use pre-calculated totals from GroupManager
+    const aggregates = group.totals || {}
 
-    // Toggle cell
-    const toggleCell = createElement("td", {
-      class: "et-cell et-cell-group-toggle",
-      colspan: columns.filter((c) => c.visible !== false).length,
+    visibleColumns.forEach((column, index) => {
+      const td = createElement("td", {
+        class: "et-cell et-cell-group-header",
+        "data-column": column.data,
+      })
+
+      // Fixed first column
+      if (index === 0 && config.fixedFirstColumn) {
+        addClass(td, "et-cell-fixed")
+      }
+
+      // First column: show toggle + group label
+      if (index === 0) {
+        const toggleContent = createElement("div", {
+          class: "et-group-header-content",
+        })
+
+        const toggleIcon = createElement("span", {
+          class: `et-group-toggle-icon ${
+            isCollapsed ? "et-collapsed" : "et-expanded"
+          }`,
+        })
+        toggleIcon.innerHTML = isCollapsed ? "▶" : "▼"
+
+        const groupLabel = createElement("span", { class: "et-group-label" })
+        groupLabel.textContent = group.label || groupId
+
+        const groupCount = createElement("span", { class: "et-group-count" })
+        groupCount.textContent = `(${group.rows.length})`
+
+        toggleContent.appendChild(toggleIcon)
+        toggleContent.appendChild(groupLabel)
+        toggleContent.appendChild(groupCount)
+        td.appendChild(toggleContent)
+      } else if (column.aggregate && aggregates[column.data] !== undefined) {
+        // Show aggregate value from GroupManager
+        td.textContent = this._formatDisplayValue(
+          aggregates[column.data],
+          column,
+          {}
+        )
+        addClass(td, "et-cell-aggregate")
+      }
+
+      // Alignment
+      if (column.align) {
+        td.style.textAlign = column.align
+      }
+
+      tr.appendChild(td)
     })
 
-    const toggleContent = createElement("div", {
-      class: "et-group-header-content",
-    })
-
-    const toggleIcon = createElement("span", {
-      class: `et-group-toggle-icon ${
-        isCollapsed ? "et-collapsed" : "et-expanded"
-      }`,
-    })
-    toggleIcon.innerHTML = isCollapsed ? "▶" : "▼"
-
-    const groupLabel = createElement("span", { class: "et-group-label" })
-    groupLabel.textContent = group.label || groupId
-
-    const groupCount = createElement("span", { class: "et-group-count" })
-    groupCount.textContent = `(${group.rows.length})`
-
-    toggleContent.appendChild(toggleIcon)
-    toggleContent.appendChild(groupLabel)
-    toggleContent.appendChild(groupCount)
-    toggleCell.appendChild(toggleContent)
-
-    // Click handler
-    toggleCell.addEventListener("click", () => {
+    // Click handler for toggle
+    tr.addEventListener("click", () => {
       this._state.toggleGroup(groupId)
     })
-
-    tr.appendChild(toggleCell)
 
     return tr
   }

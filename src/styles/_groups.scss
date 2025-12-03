@@ -16,6 +16,19 @@
 
   &:hover {
     background-color: var(--et-color-bg-hover);
+
+    .et-cell-group-header {
+      background-color: var(--et-color-bg-hover);
+    }
+  }
+
+  .et-cell-group-header {
+    font-weight: var(--et-font-weight-medium);
+    background-color: var(--et-color-bg-alt);
+  }
+
+  .et-cell-aggregate {
+    color: var(--et-color-text);
   }
 }
 
@@ -128,9 +141,14 @@
 // ============================================
 
 .et-container.et-grouped {
-  // Add subtle left border to indicate grouping
+  // Indent child rows under group headers
   .et-row-data {
     position: relative;
+
+    // Indent the first cell content
+    td:first-child {
+      padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
+    }
 
     &::after {
       content: "";
