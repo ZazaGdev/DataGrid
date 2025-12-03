@@ -165,6 +165,13 @@ export class TableRenderer {
       )
     )
 
+    // Listen for data changes (row add/delete) to re-render
+    this._unsubscribers.push(
+      this._eventBus.on(TableEvents.DATA_CHANGE, () => {
+        this.render()
+      })
+    )
+
     // Listen for row total changes (emitted by GroupManager after calculation)
     this._unsubscribers.push(
       this._eventBus.on(TableEvents.ROW_TOTAL_CHANGE, ({ rowId, newValue }) => {

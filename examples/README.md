@@ -70,23 +70,7 @@ This directory contains comprehensive examples demonstrating all features and ca
 
 ---
 
-### [04-advanced-features.html](04-advanced-features.html)
-
-**Advanced Features**
-
-- Fixed first column (stays visible during horizontal scroll)
-- Info rows (expandable detail rows)
-- Keyboard navigation (arrow keys)
-  **Features Demonstrated:**
-
-- `fixedFirstColumn: true`
-- `enableInfoRows: true`
-- `addRow(..., { type: 'infoRow' })`
-- Arrow key navigation in edit mode
-
----
-
-### [05-export.html](05-export.html)
+### [04-export.html](04-export.html)
 
 **Data Export (CSV & Excel)**
 
@@ -107,7 +91,7 @@ This directory contains comprehensive examples demonstrating all features and ca
 
 ---
 
-### [06-event-system.html](06-event-system.html)
+### [05-event-system.html](05-event-system.html)
 
 **Comprehensive Event System**
 
@@ -142,31 +126,26 @@ This directory contains comprehensive examples demonstrating all features and ca
 - `CELL_FOCUS` - Cell received focus
 - `CELL_BLUR` - Cell lost focus
 - `GROUP_TOGGLE` - Group expanded/collapsed
-- `SCROLL` - Scroll position changed
 - `EXPORT_START` - Export started
 - `EXPORT_COMPLETE` - Export completed
 
 ---
 
-### [07-column-management.html](07-column-management.html)
+### [06-theme-customization.html](06-theme-customization.html)
 
-**Column Management & Formatting**
+**Theme Customization**
 
-- Show/hide individual columns
-- Show/hide all columns
-- Get visible/hidden columns
-- Custom number formatters (currency, percent)
-- Date formatters
-- Dynamic column configuration updates
+- Runtime theme updates
+- CSS variable customization
+- Custom color schemes
+- Reset to default theme
 
 **Features Demonstrated:**
 
-- `setColumnVisibility(columnId, visible)`
-- `getColumns()`
-- `setColumns(columns)`
-- Column formatters: `format: (value, row, col) => string`
-- Export formatters: `exportFormat: (value, row, col) => any`
-- Column types: `type: 'text' | 'number' | 'date'`
+- `updateTheme(theme)`
+- `resetTheme()`
+- `getTheme()`
+- CSS variables for colors, spacing, fonts
 
 ---
 
@@ -277,7 +256,7 @@ unsubscribe()
 
 ### Real-time Data Dashboard
 
-See: `01-basic-usage.html`, `06-event-system.html`
+See: `01-basic-usage.html`, `05-event-system.html`
 
 - Display live data
 - Track changes in real-time
@@ -301,15 +280,15 @@ See: `03-crud-operations.html`
 
 ### Product Catalogs
 
-See: `04-advanced-features.html`, `07-column-management.html`
+See: `06-theme-customization.html`
 
-- Show/hide details
-- Fixed product name column
-- Custom price formatting
+- Custom styling
+- Theme customization
+- Brand colors
 
 ### Export Reports
 
-See: `05-export.html`
+See: `04-export.html`
 
 - Export to CSV for spreadsheets
 - Export to Excel

@@ -390,7 +390,7 @@
         const data = table.getData()
         if (data.length > 0) {
           const firstRow = data[0]
-          table.updateCell(firstRow.id, "salary", firstRow.salary + 1000)
+          table.updateCell(firstRow._id, "salary", firstRow.salary + 1000)
         }
       })
 
@@ -407,7 +407,7 @@
         const data = table.getData()
         if (data.length > 0) {
           const lastRow = data[data.length - 1]
-          table.deleteRow(lastRow.id)
+          table.deleteRow(lastRow._id)
         }
       })
 
