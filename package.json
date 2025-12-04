@@ -1,14 +1,17 @@
 {
-  "name": "editable-table",
+  "name": "datagrid",
   "version": "1.0.0",
   "description": "A modular, high-performance inline editing table library built with Vanilla JS and SCSS",
-  "main": "src/index.js",
+  "main": "dist/datagrid.umd.js",
+  "module": "dist/datagrid.esm.js",
   "type": "module",
   "scripts": {
-    "build:css": "sass src/styles/main.scss dist/editable-table.css",
-    "build:css:min": "sass src/styles/main.scss dist/editable-table.min.css --style=compressed",
-    "watch:css": "sass --watch src/styles/main.scss dist/editable-table.css",
-    "build": "npm run build:css && npm run build:css:min",
+    "build:css": "sass src/styles/main.scss dist/datagrid.css",
+    "build:css:min": "sass src/styles/main.scss dist/datagrid.min.css --style=compressed",
+    "build:js": "rollup -c",
+    "build": "npm run build:js && npm run build:css && npm run build:css:min",
+    "watch:css": "sass --watch src/styles/main.scss dist/datagrid.css",
+    "watch:js": "rollup -c -w",
     "dev": "npm run watch:css"
   },
   "keywords": [
@@ -17,21 +20,29 @@
     "inline-editing",
     "data-table",
     "vanilla-js",
-    "scss"
+    "datagrid"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.9.0",
     "sass": "^1.69.0"
   },
   "files": [
-    "src/",
     "dist/",
+    "src/",
     "docs/"
   ],
   "exports": {
-    ".": "./src/index.js",
-    "./css": "./dist/editable-table.css",
-    "./css/min": "./dist/editable-table.min.css"
-  }
+    ".": {
+      "import": "./dist/datagrid.esm.js",
+      "require": "./dist/datagrid.umd.js"
+    },
+    "./css": "./dist/datagrid.css",
+    "./css/min": "./dist/datagrid.min.css"
+  },
+  "unpkg": "dist/datagrid.umd.min.js",
+  "jsdelivr": "dist/datagrid.umd.min.js"
 }
