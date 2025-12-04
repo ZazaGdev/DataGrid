@@ -9,131 +9,131 @@
 // Group Header Row
 // ============================================
 
-.et-row-group-header {
-  background-color: var(--et-color-bg-alt);
-  border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
+.dg-row-group-header {
+  background-color: var(--dg-color-bg-alt);
+  border-bottom: var(--dg-border-width) solid var(--dg-color-border-strong);
   cursor: pointer;
 
   // Ensure all cells and their contents in group header use pointer cursor
-  .et-cell-group-header {
+  .dg-cell-group-header {
     cursor: pointer;
 
     // Override input cursor in group headers
     input,
     select,
-    .et-cell-input {
+    .dg-cell-input {
       cursor: pointer;
       pointer-events: none;
     }
   }
 
   &:hover {
-    background-color: var(--et-color-bg-hover);
+    background-color: var(--dg-color-bg-hover);
 
-    .et-cell-group-header {
-      background-color: var(--et-color-bg-hover);
+    .dg-cell-group-header {
+      background-color: var(--dg-color-bg-hover);
     }
 
-    .et-cell-group-header.et-cell-row-total {
-      background-color: var(--et-row-total-bg-alt);
+    .dg-cell-group-header.dg-cell-row-total {
+      background-color: var(--dg-row-total-bg-alt);
     }
   }
 
-  .et-cell-group-header {
-    font-weight: var(--et-font-weight-medium);
-    background-color: var(--et-color-bg-alt);
+  .dg-cell-group-header {
+    font-weight: var(--dg-font-weight-medium);
+    background-color: var(--dg-color-bg-alt);
 
     // Row total in group header
-    &.et-cell-row-total {
-      background-color: var(--et-row-total-header-bg);
-      color: var(--et-row-total-text);
-      border-left: 2px solid var(--et-row-total-border-color);
+    &.dg-cell-row-total {
+      background-color: var(--dg-row-total-header-bg);
+      color: var(--dg-row-total-text);
+      border-left: 2px solid var(--dg-row-total-border-color);
     }
   }
 
-  .et-cell-aggregate {
-    color: var(--et-color-text);
+  .dg-cell-aggregate {
+    color: var(--dg-color-text);
   }
 }
 
-.et-cell-group-toggle {
-  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
-  font-weight: var(--et-font-weight-medium);
+.dg-cell-group-toggle {
+  padding: var(--dg-cell-padding-y) var(--dg-cell-padding-x);
+  font-weight: var(--dg-font-weight-medium);
 }
 
-.et-group-header-content {
+.dg-group-header-content {
   display: flex;
   align-items: center;
-  gap: var(--et-spacing-sm);
+  gap: var(--dg-spacing-sm);
 }
 
-.et-group-toggle-icon {
+.dg-group-toggle-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 1.25rem;
   height: 1.25rem;
-  font-size: var(--et-font-size-sm);
-  color: var(--et-color-text-muted);
-  @include et-transition(transform, color);
+  font-size: var(--dg-font-size-sm);
+  color: var(--dg-color-text-muted);
+  @include dg-transition(transform, color);
 
-  &.et-expanded {
-    color: var(--et-color-text);
+  &.dg-expanded {
+    color: var(--dg-color-text);
   }
 
-  &.et-collapsed {
-    color: var(--et-color-text-muted);
+  &.dg-collapsed {
+    color: var(--dg-color-text-muted);
   }
 
   &:hover {
-    color: var(--et-color-primary);
+    color: var(--dg-color-primary);
   }
 }
 
-.et-group-label {
-  font-weight: var(--et-font-weight-medium);
-  color: var(--et-color-text);
+.dg-group-label {
+  font-weight: var(--dg-font-weight-medium);
+  color: var(--dg-color-text);
 }
 
-.et-group-count {
-  font-size: var(--et-font-size-sm);
-  font-weight: var(--et-font-weight-normal);
-  color: var(--et-color-text-muted);
+.dg-group-count {
+  font-size: var(--dg-font-size-sm);
+  font-weight: var(--dg-font-weight-normal);
+  color: var(--dg-color-text-muted);
 }
 
 // ============================================
 // Totals Row
 // ============================================
 
-.et-row-totals {
-  background-color: var(--et-color-bg-alt);
-  border-top: var(--et-border-width) solid var(--et-color-border-strong);
-  font-weight: var(--et-font-weight-medium);
+.dg-row-totals {
+  background-color: var(--dg-color-bg-alt);
+  border-top: var(--dg-border-width) solid var(--dg-color-border-strong);
+  font-weight: var(--dg-font-weight-medium);
 
   &:hover {
-    background-color: var(--et-color-bg-alt); // No hover effect for totals
+    background-color: var(--dg-color-bg-alt); // No hover effect for totals
   }
 }
 
-.et-cell-total {
-  color: var(--et-color-text);
-  background-color: var(--et-color-bg-alt);
+.dg-cell-total {
+  color: var(--dg-color-text);
+  background-color: var(--dg-color-bg-alt);
 }
 
 // ============================================
 // Grand Totals Row
 // ============================================
 
-.et-row-grand-total {
+.dg-row-grand-total {
   background-color: #e0e7ff; // Slightly highlighted
-  border-top: 2px solid var(--et-color-primary);
-  font-weight: var(--et-font-weight-bold);
+  border-top: 2px solid var(--dg-color-primary);
+  font-weight: var(--dg-font-weight-bold);
 
   &:hover {
     background-color: #e0e7ff;
   }
 
-  .et-cell {
+  .dg-cell {
     background-color: inherit;
   }
 }
@@ -142,21 +142,21 @@
 // Group Indentation (for nested groups)
 // ============================================
 
-.et-group-level-1 {
-  .et-group-header-content {
-    padding-left: var(--et-spacing-lg);
+.dg-group-level-1 {
+  .dg-group-header-content {
+    padding-left: var(--dg-spacing-lg);
   }
 }
 
-.et-group-level-2 {
-  .et-group-header-content {
-    padding-left: calc(var(--et-spacing-lg) * 2);
+.dg-group-level-2 {
+  .dg-group-header-content {
+    padding-left: calc(var(--dg-spacing-lg) * 2);
   }
 }
 
-.et-group-level-3 {
-  .et-group-header-content {
-    padding-left: calc(var(--et-spacing-lg) * 3);
+.dg-group-level-3 {
+  .dg-group-header-content {
+    padding-left: calc(var(--dg-spacing-lg) * 3);
   }
 }
 
@@ -164,14 +164,14 @@
 // Grouped Container Modifier
 // ============================================
 
-.et-container.et-grouped {
+.dg-container.dg-grouped {
   // Indent child rows under group headers
-  .et-row-data {
+  .dg-row-data {
     position: relative;
 
     // Indent the first cell content
     td:first-child {
-      padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
+      padding-left: calc(var(--dg-cell-padding-x) + 1.5rem);
     }
 
     &::after {
@@ -186,9 +186,9 @@
   }
 
   // Alternating group colors (optional)
-  .et-row-group-header:nth-of-type(odd)
-    ~ .et-row-data:not(
-      .et-row-group-header ~ .et-row-group-header ~ .et-row-data
+  .dg-row-group-header:nth-of-type(odd)
+    ~ .dg-row-data:not(
+      .dg-row-group-header ~ .dg-row-group-header ~ .dg-row-data
     ) {
     // Can add subtle background differentiation here
   }
@@ -198,34 +198,34 @@
 // Ungrouped Rows
 // ============================================
 
-.et-row-ungrouped {
+.dg-row-ungrouped {
   // Ungrouped rows appear without indentation
   td:first-child {
-    padding-left: var(--et-cell-padding-x);
+    padding-left: var(--dg-cell-padding-x);
   }
 
   // Optional: subtle visual indicator for ungrouped rows
-  border-left: 3px solid var(--et-color-text-light);
+  border-left: 3px solid var(--dg-color-text-light);
 }
 
 // ============================================
 // Collapse/Expand Animation
 // ============================================
 
-.et-row {
-  &.et-row-collapsing {
-    animation: et-collapse $et-animation-duration ease-out forwards;
+.dg-row {
+  &.dg-row-collapsing {
+    animation: dg-collapse $dg-animation-duration ease-out forwards;
   }
 
-  &.et-row-expanding {
-    animation: et-expand $et-animation-duration ease-out forwards;
+  &.dg-row-expanding {
+    animation: dg-expand $dg-animation-duration ease-out forwards;
   }
 }
 
-@keyframes et-collapse {
+@keyframes dg-collapse {
   from {
     opacity: 1;
-    max-height: var(--et-row-height);
+    max-height: var(--dg-row-height);
   }
   to {
     opacity: 0;
@@ -236,13 +236,13 @@
   }
 }
 
-@keyframes et-expand {
+@keyframes dg-expand {
   from {
     opacity: 0;
     max-height: 0;
   }
   to {
     opacity: 1;
-    max-height: var(--et-row-height);
+    max-height: var(--dg-row-height);
   }
 }

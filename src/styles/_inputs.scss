@@ -9,41 +9,41 @@
 // Base Input
 // ============================================
 
-.et-cell-input {
+.dg-cell-input {
   width: 100%;
   height: 100%;
-  min-height: calc(var(--et-row-height) - 2px);
+  min-height: calc(var(--dg-row-height) - 2px);
   font-family: inherit;
   font-size: inherit;
-  color: var(--et-color-text);
+  color: var(--dg-color-text);
   background-color: transparent;
   border: none;
   outline: none;
   cursor: text; // Only editable inputs show text cursor
-  @include et-transition(background-color, box-shadow);
+  @include dg-transition(background-color, box-shadow);
 
   // Match row background colors
-  .et-row-data:nth-child(odd) & {
-    background-color: var(--et-color-bg);
+  .dg-row-data:nth-child(odd) & {
+    background-color: var(--dg-color-bg);
   }
 
-  .et-row-data:nth-child(even) & {
-    background-color: var(--et-color-bg-alt);
+  .dg-row-data:nth-child(even) & {
+    background-color: var(--dg-color-bg-alt);
   }
 
   &:focus {
-    background-color: var(--et-color-bg);
-    box-shadow: inset 0 0 0 2px var(--et-color-primary);
+    background-color: var(--dg-color-bg);
+    box-shadow: inset 0 0 0 2px var(--dg-color-primary);
   }
 
   &:disabled {
-    background-color: var(--et-color-bg-alt);
-    color: var(--et-color-text-muted);
+    background-color: var(--dg-color-bg-alt);
+    color: var(--dg-color-text-muted);
     cursor: not-allowed;
   }
 
   &::placeholder {
-    color: var(--et-color-text-light);
+    color: var(--dg-color-text-light);
   }
 
   // Number inputs - right aligned
@@ -65,20 +65,20 @@
 // Select Input
 // ============================================
 
-.et-cell-select {
+.dg-cell-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right var(--et-cell-padding-x) center;
-  padding-right: calc(var(--et-cell-padding-x) * 2 + 12px);
+  background-position: right var(--dg-cell-padding-x) center;
+  padding-right: calc(var(--dg-cell-padding-x) * 2 + 12px);
   cursor: pointer;
 
   &:focus {
-    background-color: var(--et-color-bg);
+    background-color: var(--dg-color-bg);
   }
 
   option {
-    padding: var(--et-spacing-sm);
+    padding: var(--dg-spacing-sm);
   }
 }
 
@@ -86,10 +86,10 @@
 // Textarea
 // ============================================
 
-.et-cell-textarea {
+.dg-cell-textarea {
   resize: none;
-  min-height: calc(var(--et-row-height) * 2);
-  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
+  min-height: calc(var(--dg-row-height) * 2);
+  padding: var(--dg-cell-padding-y) var(--dg-cell-padding-x);
   line-height: 1.4;
 }
 
@@ -97,7 +97,7 @@
 // Checkbox Input
 // ============================================
 
-.et-cell-checkbox {
+.dg-cell-checkbox {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,7 +108,7 @@
     height: 1rem;
     margin: 0;
     cursor: pointer;
-    accent-color: var(--et-color-primary);
+    accent-color: var(--dg-color-primary);
   }
 }
 
@@ -116,7 +116,7 @@
 // Date Input
 // ============================================
 
-.et-cell-date {
+.dg-cell-date {
   &::-webkit-calendar-picker-indicator {
     cursor: pointer;
     opacity: 0.6;
@@ -131,17 +131,17 @@
 // Edit Mode Container Styles
 // ============================================
 
-.et-container.et-mode-edit {
+.dg-container.dg-mode-edit {
   // Highlight editable cells
-  tr:not(.et-row-group-header) td.et-cell:not(.et-cell-fixed) {
+  tr:not(.dg-row-group-header) td.dg-cell:not(.dg-cell-fixed) {
     cursor: text;
   }
 
   // Non-editable cells in edit mode
-  .et-cell[data-editable="false"] {
+  .dg-cell[data-editable="false"] {
     cursor: default;
-    background-color: var(--et-color-bg-alt);
-    color: var(--et-color-text-muted);
+    background-color: var(--dg-color-bg-alt);
+    color: var(--dg-color-text-muted);
   }
 }
 
@@ -149,26 +149,26 @@
 // Validation States
 // ============================================
 
-.et-cell-input {
-  &.et-input-valid {
+.dg-cell-input {
+  &.dg-input-valid {
     &:focus {
-      box-shadow: inset 0 0 0 2px var(--et-color-success);
+      box-shadow: inset 0 0 0 2px var(--dg-color-success);
     }
   }
 
-  &.et-input-invalid {
+  &.dg-input-invalid {
     background-color: #fef2f2;
 
     &:focus {
-      box-shadow: inset 0 0 0 2px var(--et-color-error);
+      box-shadow: inset 0 0 0 2px var(--dg-color-error);
     }
   }
 
-  &.et-input-warning {
+  &.dg-input-warning {
     background-color: #fffbeb;
 
     &:focus {
-      box-shadow: inset 0 0 0 2px var(--et-color-warning);
+      box-shadow: inset 0 0 0 2px var(--dg-color-warning);
     }
   }
 }
@@ -177,25 +177,25 @@
 // Cell Validation Message
 // ============================================
 
-.et-cell-validation {
+.dg-cell-validation {
   position: absolute;
   bottom: 100%;
   left: 0;
   right: 0;
-  padding: var(--et-spacing-xs) var(--et-spacing-sm);
-  font-size: var(--et-font-size-sm);
-  background-color: var(--et-color-error);
+  padding: var(--dg-spacing-xs) var(--dg-spacing-sm);
+  font-size: var(--dg-font-size-sm);
+  background-color: var(--dg-color-error);
   color: white;
-  border-radius: var(--et-border-radius) var(--et-border-radius) 0 0;
-  z-index: var(--et-z-dropdown);
+  border-radius: var(--dg-border-radius) var(--dg-border-radius) 0 0;
+  z-index: var(--dg-z-dropdown);
 
   &::after {
     content: "";
     position: absolute;
     top: 100%;
-    left: var(--et-spacing-md);
+    left: var(--dg-spacing-md);
     border: 4px solid transparent;
-    border-top-color: var(--et-color-error);
+    border-top-color: var(--dg-color-error);
   }
 }
 
@@ -203,23 +203,23 @@
 // Inline Edit Trigger (for view mode)
 // ============================================
 
-.et-edit-trigger {
+.dg-edit-trigger {
   display: none;
   position: absolute;
-  right: var(--et-spacing-xs);
+  right: var(--dg-spacing-xs);
   top: 50%;
   transform: translateY(-50%);
-  padding: var(--et-spacing-xs);
-  color: var(--et-color-text-light);
+  padding: var(--dg-spacing-xs);
+  color: var(--dg-color-text-light);
   cursor: pointer;
-  @include et-transition(color, opacity);
+  @include dg-transition(color, opacity);
 
   &:hover {
-    color: var(--et-color-primary);
+    color: var(--dg-color-primary);
   }
 }
 
-.et-cell:hover .et-edit-trigger {
+.dg-cell:hover .dg-edit-trigger {
   display: block;
 }
 
@@ -227,25 +227,25 @@
 // Loading State
 // ============================================
 
-.et-cell-loading {
+.dg-cell-loading {
   position: relative;
 
   &::after {
     content: "";
     position: absolute;
     top: 50%;
-    right: var(--et-cell-padding-x);
+    right: var(--dg-cell-padding-x);
     width: 14px;
     height: 14px;
     margin-top: -7px;
-    border: 2px solid var(--et-color-border);
-    border-top-color: var(--et-color-primary);
+    border: 2px solid var(--dg-color-border);
+    border-top-color: var(--dg-color-primary);
     border-radius: 50%;
-    animation: et-spin 0.6s linear infinite;
+    animation: dg-spin 0.6s linear infinite;
   }
 }
 
-@keyframes et-spin {
+@keyframes dg-spin {
   to {
     transform: rotate(360deg);
   }

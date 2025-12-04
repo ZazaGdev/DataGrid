@@ -9,38 +9,38 @@
 // Info Row Base
 // ============================================
 
-.et-row-info-row {
-  background-color: var(--et-color-bg);
-  font-size: var(--et-font-size-sm);
-  color: var(--et-color-text-muted);
+.dg-row-info-row {
+  background-color: var(--dg-color-bg);
+  font-size: var(--dg-font-size-sm);
+  color: var(--dg-color-text-muted);
   cursor: default;
 
   &:hover {
-    background-color: var(--et-color-bg); // No hover effect
+    background-color: var(--dg-color-bg); // No hover effect
   }
 
   // Indent info-row content
-  .et-cell:first-child {
-    padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
+  .dg-cell:first-child {
+    padding-left: calc(var(--dg-cell-padding-x) + var(--dg-spacing-lg));
 
     &::before {
       content: "";
       display: inline-block;
       width: 8px;
       height: 8px;
-      margin-right: var(--et-spacing-sm);
-      border-left: 1px solid var(--et-color-border-strong);
-      border-bottom: 1px solid var(--et-color-border-strong);
+      margin-right: var(--dg-spacing-sm);
+      border-left: 1px solid var(--dg-color-border-strong);
+      border-bottom: 1px solid var(--dg-color-border-strong);
       vertical-align: middle;
     }
   }
 
   // Info-row cells are typically read-only
-  .et-cell {
-    background-color: var(--et-color-bg);
+  .dg-cell {
+    background-color: var(--dg-color-bg);
 
-    &.et-cell-fixed {
-      background-color: var(--et-color-bg);
+    &.dg-cell-fixed {
+      background-color: var(--dg-color-bg);
     }
   }
 }
@@ -49,17 +49,17 @@
 // Info Row Indicator (visual connector)
 // ============================================
 
-.et-row-data + .et-row-info-row {
-  border-top: 1px dashed var(--et-color-border);
+.dg-row-data + .dg-row-info-row {
+  border-top: 1px dashed var(--dg-color-border);
 }
 
-.et-row-info-row + .et-row-info-row {
+.dg-row-info-row + .dg-row-info-row {
   // Consecutive info-rows
 }
 
-.et-row-info-row + .et-row-data {
+.dg-row-info-row + .dg-row-data {
   // Info-row followed by data row
-  border-top: 1px solid var(--et-color-border-strong);
+  border-top: 1px solid var(--dg-color-border-strong);
 }
 
 // ============================================
@@ -67,32 +67,32 @@
 // ============================================
 
 // Informational info-row (dates, periods, etc.)
-.et-row-info-row.et-info-row-info {
+.dg-row-info-row.dg-info-row-info {
   background-color: #fafbfc;
 
-  .et-cell {
+  .dg-cell {
     background-color: inherit;
     font-style: italic;
   }
 }
 
 // Detail info-row (additional data)
-.et-row-info-row.et-info-row-detail {
-  background-color: var(--et-color-bg-alt);
+.dg-row-info-row.dg-info-row-detail {
+  background-color: var(--dg-color-bg-alt);
 
-  .et-cell {
+  .dg-cell {
     background-color: inherit;
   }
 }
 
 // Summary info-row (subtotals)
-.et-row-info-row.et-info-row-summary {
-  background-color: var(--et-color-bg-alt);
-  font-weight: var(--et-font-weight-medium);
+.dg-row-info-row.dg-info-row-summary {
+  background-color: var(--dg-color-bg-alt);
+  font-weight: var(--dg-font-weight-medium);
 
-  .et-cell {
+  .dg-cell {
     background-color: inherit;
-    border-top: 1px solid var(--et-color-border-strong);
+    border-top: 1px solid var(--dg-color-border-strong);
   }
 }
 
@@ -100,16 +100,16 @@
 // Expandable Info Rows
 // ============================================
 
-.et-row-data.et-has-info-rows {
-  .et-cell:first-child {
+.dg-row-data.dg-has-info-rows {
+  .dg-cell:first-child {
     position: relative;
-    padding-left: calc(var(--et-cell-padding-x) + 1.5rem);
+    padding-left: calc(var(--dg-cell-padding-x) + 1.5rem);
   }
 }
 
-.et-info-row-toggle {
+.dg-info-row-toggle {
   position: absolute;
-  left: var(--et-cell-padding-x);
+  left: var(--dg-cell-padding-x);
   top: 50%;
   transform: translateY(-50%);
   width: 1.25rem;
@@ -118,17 +118,17 @@
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  color: var(--et-color-text-muted);
+  color: var(--dg-color-text-muted);
   cursor: pointer;
-  border-radius: var(--et-border-radius);
-  @include et-transition(color, background-color);
+  border-radius: var(--dg-border-radius);
+  @include dg-transition(color, background-color);
 
   &:hover {
-    color: var(--et-color-primary);
-    background-color: var(--et-color-primary-light);
+    color: var(--dg-color-primary);
+    background-color: var(--dg-color-primary-light);
   }
 
-  &.et-expanded {
+  &.dg-expanded {
     transform: translateY(-50%) rotate(90deg);
   }
 }
@@ -137,13 +137,13 @@
 // Info Row Visibility
 // ============================================
 
-.et-info-rows-collapsed {
-  .et-row-info-row {
+.dg-info-rows-collapsed {
+  .dg-row-info-row {
     display: none;
   }
 }
 
-.et-row-info-row.et-info-row-hidden {
+.dg-row-info-row.dg-info-row-hidden {
   display: none;
 }
 
@@ -151,21 +151,21 @@
 // Info Row Nesting Levels
 // ============================================
 
-.et-row-info-row[data-level="1"] {
-  .et-cell:first-child {
-    padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg));
+.dg-row-info-row[data-level="1"] {
+  .dg-cell:first-child {
+    padding-left: calc(var(--dg-cell-padding-x) + var(--dg-spacing-lg));
   }
 }
 
-.et-row-info-row[data-level="2"] {
-  .et-cell:first-child {
-    padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 2);
+.dg-row-info-row[data-level="2"] {
+  .dg-cell:first-child {
+    padding-left: calc(var(--dg-cell-padding-x) + var(--dg-spacing-lg) * 2);
   }
 }
 
-.et-row-info-row[data-level="3"] {
-  .et-cell:first-child {
-    padding-left: calc(var(--et-cell-padding-x) + var(--et-spacing-lg) * 3);
+.dg-row-info-row[data-level="3"] {
+  .dg-cell:first-child {
+    padding-left: calc(var(--dg-cell-padding-x) + var(--dg-spacing-lg) * 3);
   }
 }
 
@@ -173,42 +173,42 @@
 // Info Row with Timeline (for date-based info-rows)
 // ============================================
 
-.et-row-info-row.et-info-row-timeline {
-  .et-cell:first-child {
+.dg-row-info-row.dg-info-row-timeline {
+  .dg-cell:first-child {
     position: relative;
 
     &::before {
       content: "";
       position: absolute;
-      left: calc(var(--et-cell-padding-x) + 0.5rem);
+      left: calc(var(--dg-cell-padding-x) + 0.5rem);
       top: 0;
       bottom: 0;
       width: 1px;
-      background-color: var(--et-color-border-strong);
+      background-color: var(--dg-color-border-strong);
     }
 
     &::after {
       content: "";
       position: absolute;
-      left: calc(var(--et-cell-padding-x) + 0.25rem);
+      left: calc(var(--dg-cell-padding-x) + 0.25rem);
       top: 50%;
       transform: translateY(-50%);
       width: 6px;
       height: 6px;
-      background-color: var(--et-color-bg);
-      border: 1px solid var(--et-color-border-strong);
+      background-color: var(--dg-color-bg);
+      border: 1px solid var(--dg-color-border-strong);
       border-radius: 50%;
     }
   }
 
   // First timeline info-row
-  &:first-of-type .et-cell:first-child::before {
+  &:first-of-type .dg-cell:first-child::before {
     top: 50%;
   }
 
   // Last timeline info-row
-  &:last-of-type .et-cell:first-child::before,
-  &:has(+ .et-row-data) .et-cell:first-child::before {
+  &:last-of-type .dg-cell:first-child::before,
+  &:has(+ .dg-row-data) .dg-cell:first-child::before {
     bottom: 50%;
   }
 }
@@ -218,23 +218,23 @@
 // This is the primary info row class used for header information
 // ============================================
 
-.et-row-info {
-  background-color: var(--et-color-bg-alt);
-  font-size: var(--et-font-size-sm);
-  font-weight: var(--et-font-weight-medium);
-  color: var(--et-color-text-muted);
+.dg-row-info {
+  background-color: var(--dg-color-bg-alt);
+  font-size: var(--dg-font-size-sm);
+  font-weight: var(--dg-font-weight-medium);
+  color: var(--dg-color-text-muted);
   cursor: default;
 
   &:hover {
-    background-color: var(--et-color-bg-alt); // No hover effect
+    background-color: var(--dg-color-bg-alt); // No hover effect
   }
 
-  .et-cell {
-    background-color: var(--et-color-bg-alt);
-    border-bottom: 1px solid var(--et-color-border-strong);
+  .dg-cell {
+    background-color: var(--dg-color-bg-alt);
+    border-bottom: 1px solid var(--dg-color-border-strong);
 
-    &.et-cell-fixed {
-      background-color: var(--et-color-bg-alt);
+    &.dg-cell-fixed {
+      background-color: var(--dg-color-bg-alt);
     }
   }
 }

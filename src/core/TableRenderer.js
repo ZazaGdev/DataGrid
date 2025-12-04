@@ -219,19 +219,19 @@ export class TableRenderer {
    * @private
    */
   _createStructure() {
-    addClass(this._container, "et-container")
+    addClass(this._container, "dg-container")
 
     // Create wrapper for scroll handling
-    this._tableWrapper = createElement("div", { class: "et-table-wrapper" })
+    this._tableWrapper = createElement("div", { class: "dg-table-wrapper" })
 
     // Create table
-    this._table = createElement("table", { class: "et-table" })
+    this._table = createElement("table", { class: "dg-table" })
 
     // Create header
-    this._thead = createElement("thead", { class: "et-thead" })
+    this._thead = createElement("thead", { class: "dg-thead" })
 
     // Create body
-    this._tbody = createElement("tbody", { class: "et-tbody" })
+    this._tbody = createElement("tbody", { class: "dg-tbody" })
 
     // Assemble
     this._table.appendChild(this._thead)
@@ -248,20 +248,20 @@ export class TableRenderer {
     const mode = this._state.getMode()
 
     // Mode classes
-    removeClass(this._container, "et-mode-view", "et-mode-edit")
-    addClass(this._container, `et-mode-${mode}`)
+    removeClass(this._container, "dg-mode-view", "dg-mode-edit")
+    addClass(this._container, `dg-mode-${mode}`)
 
     // Feature classes
     if (config.fixedFirstColumn) {
-      addClass(this._container, "et-fixed-first-column")
+      addClass(this._container, "dg-fixed-first-column")
     } else {
-      removeClass(this._container, "et-fixed-first-column")
+      removeClass(this._container, "dg-fixed-first-column")
     }
 
     if (config.enableGrouping) {
-      addClass(this._container, "et-grouped")
+      addClass(this._container, "dg-grouped")
     } else {
-      removeClass(this._container, "et-grouped")
+      removeClass(this._container, "dg-grouped")
     }
   }
 
@@ -275,30 +275,30 @@ export class TableRenderer {
 
     this._thead.innerHTML = ""
 
-    const headerRow = createElement("tr", { class: "et-header-row" })
+    const headerRow = createElement("tr", { class: "dg-header-row" })
 
     let visibleIndex = 0
     columns.forEach((column) => {
       if (column.visible === false) return
 
       const th = createElement("th", {
-        class: "et-header-cell",
+        class: "dg-header-cell",
         "data-column": column.data,
         "data-column-index": visibleIndex,
       })
 
       // Fixed first column
       if (visibleIndex === 0 && config.fixedFirstColumn) {
-        addClass(th, "et-cell-fixed")
+        addClass(th, "dg-cell-fixed")
       }
 
       // Row total column header
       if (column._isRowTotal) {
-        addClass(th, "et-header-row-total")
+        addClass(th, "dg-header-row-total")
       }
 
       // Header content
-      const headerContent = createElement("div", { class: "et-header-content" })
+      const headerContent = createElement("div", { class: "dg-header-content" })
       headerContent.textContent = column.title || column.data
       th.appendChild(headerContent)
 
@@ -351,7 +351,7 @@ export class TableRenderer {
     if (infoRows && infoRows.length > 0) {
       infoRows.forEach((row) => {
         const rowElement = this._createRowElement(row, columns, null)
-        addClass(rowElement, "et-row-info")
+        addClass(rowElement, "dg-row-info")
         this._tbody.appendChild(rowElement)
       })
     }
@@ -367,7 +367,7 @@ export class TableRenderer {
       group.rows.forEach((row) => {
         const rowElement = this._createRowElement(row, columns, groupId)
         if (isCollapsed) {
-          addClass(rowElement, "et-row-hidden")
+          addClass(rowElement, "dg-row-hidden")
         }
         this._tbody.appendChild(rowElement)
       })
@@ -377,7 +377,7 @@ export class TableRenderer {
     if (ungroupedRows.length > 0) {
       ungroupedRows.forEach((row) => {
         const rowElement = this._createRowElement(row, columns, null)
-        addClass(rowElement, "et-row-ungrouped")
+        addClass(rowElement, "dg-row-ungrouped")
         this._tbody.appendChild(rowElement)
       })
     }
@@ -392,7 +392,7 @@ export class TableRenderer {
     const isInfoRow = row._type === "infoRow"
 
     const tr = createElement("tr", {
-      class: `et-row ${isInfoRow ? "et-row-info-row" : "et-row-data"}`,
+      class: `dg-row ${isInfoRow ? "dg-row-info-row" : "dg-row-data"}`,
       "data-row-id": row._id,
       "data-row-index": row._index,
     })
@@ -403,12 +403,12 @@ export class TableRenderer {
 
     // Mark dirty rows
     if (this._state.isRowDirty(row._id)) {
-      addClass(tr, "et-row-dirty")
+      addClass(tr, "dg-row-dirty")
     }
 
     // Row click handler
     tr.addEventListener("click", (e) => {
-      if (!e.target.closest(".et-cell-input")) {
+      if (!e.target.closest(".dg-cell-input")) {
         this._eventBus.emit(TableEvents.ROW_CLICK, {
           rowId: row._id,
           rowIndex: row._index,
@@ -443,23 +443,23 @@ export class TableRenderer {
    */
   _createCellElement(row, column, index, config) {
     const td = createElement("td", {
-      class: "et-cell",
+      class: "dg-cell",
       "data-column": column.data,
     })
 
     // Fixed first column
     if (index === 0 && config.fixedFirstColumn) {
-      addClass(td, "et-cell-fixed")
+      addClass(td, "dg-cell-fixed")
     }
 
     // Row total column
     if (column._isRowTotal) {
-      addClass(td, "et-cell-row-total")
+      addClass(td, "dg-cell-row-total")
     }
 
     // Cell type classes
     if (column.type) {
-      addClass(td, `et-cell-${column.type}`)
+      addClass(td, `dg-cell-${column.type}`)
     }
 
     // Alignment
@@ -519,7 +519,7 @@ export class TableRenderer {
     let input
 
     if (type === "select" && column.options) {
-      input = createElement("select", { class: "et-cell-input et-cell-select" })
+      input = createElement("select", { class: "dg-cell-input dg-cell-select" })
       column.options.forEach((opt) => {
         const option = createElement("option", { value: opt.value || opt })
         option.textContent = opt.label || opt
@@ -530,13 +530,13 @@ export class TableRenderer {
       })
     } else if (type === "textarea") {
       input = createElement("textarea", {
-        class: "et-cell-input et-cell-textarea",
+        class: "dg-cell-input dg-cell-textarea",
         value: value || "",
       })
       input.textContent = value || ""
     } else {
       input = createElement("input", {
-        class: "et-cell-input",
+        class: "dg-cell-input",
         type: type === "number" ? "number" : "text",
         value: value ?? "",
       })
@@ -639,7 +639,7 @@ export class TableRenderer {
     const visibleColumns = columns.filter((c) => c.visible !== false)
 
     const tr = createElement("tr", {
-      class: "et-row et-row-group-header",
+      class: "dg-row dg-row-group-header",
       "data-group": groupId,
     })
 
@@ -648,37 +648,37 @@ export class TableRenderer {
 
     visibleColumns.forEach((column, index) => {
       const td = createElement("td", {
-        class: "et-cell et-cell-group-header",
+        class: "dg-cell dg-cell-group-header",
         "data-column": column.data,
       })
 
       // Fixed first column
       if (index === 0 && config.fixedFirstColumn) {
-        addClass(td, "et-cell-fixed")
+        addClass(td, "dg-cell-fixed")
       }
 
       // Row total column
       if (column._isRowTotal) {
-        addClass(td, "et-cell-row-total")
+        addClass(td, "dg-cell-row-total")
       }
 
       // First column: show toggle + group label
       if (index === 0) {
         const toggleContent = createElement("div", {
-          class: "et-group-header-content",
+          class: "dg-group-header-content",
         })
 
         const toggleIcon = createElement("span", {
-          class: `et-group-toggle-icon ${
-            isCollapsed ? "et-collapsed" : "et-expanded"
+          class: `dg-group-toggle-icon ${
+            isCollapsed ? "dg-collapsed" : "dg-expanded"
           }`,
         })
         toggleIcon.innerHTML = isCollapsed ? "▶" : "▼"
 
-        const groupLabel = createElement("span", { class: "et-group-label" })
+        const groupLabel = createElement("span", { class: "dg-group-label" })
         groupLabel.textContent = group.label || groupId
 
-        const groupCount = createElement("span", { class: "et-group-count" })
+        const groupCount = createElement("span", { class: "dg-group-count" })
         groupCount.textContent = `(${group.rows.length})`
 
         toggleContent.appendChild(toggleIcon)
@@ -692,7 +692,7 @@ export class TableRenderer {
           column,
           {}
         )
-        addClass(td, "et-cell-aggregate")
+        addClass(td, "dg-cell-aggregate")
       }
 
       // Alignment
@@ -719,7 +719,7 @@ export class TableRenderer {
     const config = this._state.getConfig()
 
     const tr = createElement("tr", {
-      class: "et-row et-row-totals",
+      class: "dg-row dg-row-totals",
       "data-group": groupId,
     })
 
@@ -727,12 +727,12 @@ export class TableRenderer {
       if (column.visible === false) return
 
       const td = createElement("td", {
-        class: "et-cell et-cell-total",
+        class: "dg-cell dg-cell-total",
         "data-column": column.data,
       })
 
       if (index === 0 && config.fixedFirstColumn) {
-        addClass(td, "et-cell-fixed")
+        addClass(td, "dg-cell-fixed")
       }
 
       if (totals[column.data] !== undefined) {
@@ -755,31 +755,31 @@ export class TableRenderer {
    */
   _toggleGroupVisibility(groupId, collapsed) {
     const rows = this._tbody.querySelectorAll(
-      `[data-group="${groupId}"]:not(.et-row-group-header)`
+      `[data-group="${groupId}"]:not(.dg-row-group-header)`
     )
     const header = this._tbody.querySelector(
-      `.et-row-group-header[data-group="${groupId}"]`
+      `.dg-row-group-header[data-group="${groupId}"]`
     )
 
     rows.forEach((row) => {
       if (collapsed) {
-        addClass(row, "et-row-hidden")
+        addClass(row, "dg-row-hidden")
       } else {
-        removeClass(row, "et-row-hidden")
+        removeClass(row, "dg-row-hidden")
       }
     })
 
     // Update toggle icon
     if (header) {
-      const icon = header.querySelector(".et-group-toggle-icon")
+      const icon = header.querySelector(".dg-group-toggle-icon")
       if (icon) {
         icon.innerHTML = collapsed ? "▶" : "▼"
         if (collapsed) {
-          removeClass(icon, "et-expanded")
-          addClass(icon, "et-collapsed")
+          removeClass(icon, "dg-expanded")
+          addClass(icon, "dg-collapsed")
         } else {
-          removeClass(icon, "et-collapsed")
-          addClass(icon, "et-expanded")
+          removeClass(icon, "dg-collapsed")
+          addClass(icon, "dg-expanded")
         }
       }
     }
@@ -818,7 +818,7 @@ export class TableRenderer {
       if (!group) return
 
       const headerRow = this._tbody.querySelector(
-        `.et-row-group-header[data-group="${gId}"]`
+        `.dg-row-group-header[data-group="${gId}"]`
       )
       if (!headerRow) return
 
@@ -826,7 +826,7 @@ export class TableRenderer {
       columns.forEach((column) => {
         if (column.aggregate && group.totals[column.data] !== undefined) {
           const cell = headerRow.querySelector(`[data-column="${column.data}"]`)
-          if (cell && !cell.querySelector(".et-group-header-content")) {
+          if (cell && !cell.querySelector(".dg-group-header-content")) {
             cell.textContent = this._formatDisplayValue(
               group.totals[column.data],
               column,

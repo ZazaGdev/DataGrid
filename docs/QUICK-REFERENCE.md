@@ -1,4 +1,4 @@
-# EditableTable - Quick Reference
+# DataGrid - Quick Reference
 
 ## Installation
 
@@ -156,12 +156,12 @@ const table = new Table({
 
 ```css
 :root {
-  --et-color-primary: #3b82f6;
-  --et-color-bg: #ffffff;
-  --et-color-border: #e5e7eb;
-  --et-color-text: #111827;
-  --et-cell-padding-x: 0.75rem;
-  --et-row-height: 2.5rem;
+  --dg-color-primary: #3b82f6;
+  --dg-color-bg: #ffffff;
+  --dg-color-border: #e5e7eb;
+  --dg-color-text: #111827;
+  --dg-cell-padding-x: 0.75rem;
+  --dg-row-height: 2.5rem;
 }
 ```
 
@@ -216,11 +216,11 @@ table.resetTheme();
 ## Theme Classes
 
 ```html
-<div class="et-theme-dark"></div>
+<div class="dg-theme-dark"></div>
 <!-- Dark theme -->
-<div class="et-compact"></div>
+<div class="dg-compact"></div>
 <!-- Compact spacing -->
-<div class="et-comfortable"></div>
+<div class="dg-comfortable"></div>
 <!-- Larger spacing -->
 ```
 

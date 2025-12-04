@@ -377,7 +377,7 @@ export class Table {
 
     // Clear container
     this._container.innerHTML = ""
-    removeClass(this._container, "et-container")
+    removeClass(this._container, "dg-container")
   }
 
   // ============================================

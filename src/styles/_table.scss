@@ -8,15 +8,15 @@
 // Container
 // ============================================
 
-.et-container {
+.dg-container {
   position: relative;
   width: 100%;
-  font-family: var(--et-font-family);
-  font-size: var(--et-font-size-base);
-  color: var(--et-color-text);
-  background-color: var(--et-color-bg);
-  border: var(--et-border-width) solid var(--et-color-border);
-  border-radius: var(--et-border-radius);
+  font-family: var(--dg-font-family);
+  font-size: var(--dg-font-size-base);
+  color: var(--dg-color-text);
+  background-color: var(--dg-color-bg);
+  border: var(--dg-border-width) solid var(--dg-color-border);
+  border-radius: var(--dg-border-radius);
   overflow: hidden;
 }
 
@@ -24,19 +24,19 @@
 // Table Wrapper (for scroll handling)
 // ============================================
 
-.et-table-wrapper {
+.dg-table-wrapper {
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
   max-height: 100%;
-  @include et-scrollbar;
+  @include dg-scrollbar;
 }
 
 // ============================================
 // Table
 // ============================================
 
-.et-table {
+.dg-table {
   width: max-content;
   min-width: 100%;
   border-collapse: collapse;
@@ -48,27 +48,27 @@
 // Header
 // ============================================
 
-.et-thead {
+.dg-thead {
   position: sticky;
   top: 0;
-  z-index: var(--et-z-header);
-  background-color: var(--et-color-bg);
+  z-index: var(--dg-z-header);
+  background-color: var(--dg-color-bg);
 }
 
-.et-header-row {
-  background-color: var(--et-color-bg-alt);
-  border-bottom: var(--et-border-width) solid var(--et-color-border-strong);
+.dg-header-row {
+  background-color: var(--dg-color-bg-alt);
+  border-bottom: var(--dg-border-width) solid var(--dg-color-border-strong);
 }
 
-.et-header-cell {
+.dg-header-cell {
   position: relative;
-  height: var(--et-header-height);
-  padding: var(--et-cell-padding-y) var(--et-cell-padding-x);
-  font-weight: var(--et-font-weight-medium);
+  height: var(--dg-header-height);
+  padding: var(--dg-cell-padding-y) var(--dg-cell-padding-x);
+  font-weight: var(--dg-font-weight-medium);
   text-align: left;
   vertical-align: middle;
-  background-color: var(--et-color-bg-alt);
-  border-right: var(--et-border-width) solid var(--et-color-border);
+  background-color: var(--dg-color-bg-alt);
+  border-right: var(--dg-border-width) solid var(--dg-color-border);
   user-select: none;
 
   &:last-child {
@@ -76,11 +76,11 @@
   }
 
   // Fixed column header
-  &.et-cell-fixed {
+  &.dg-cell-fixed {
     position: sticky;
     left: 0;
-    z-index: var(--et-z-fixed-header);
-    background-color: var(--et-color-bg-alt);
+    z-index: var(--dg-z-fixed-header);
+    background-color: var(--dg-color-bg-alt);
 
     // Use pseudo-element for border (stays with sticky element)
     &::after {
@@ -89,65 +89,65 @@
       top: 0;
       right: 0;
       bottom: 0;
-      width: var(--et-fixed-border-width);
-      background-color: var(--et-fixed-border-color);
+      width: var(--dg-fixed-border-width);
+      background-color: var(--dg-fixed-border-color);
     }
   }
 
   // Row total column header
-  &.et-header-row-total {
-    background-color: var(--et-row-total-header-bg);
-    color: var(--et-row-total-text);
-    border-left: 2px solid var(--et-row-total-border-color);
+  &.dg-header-row-total {
+    background-color: var(--dg-row-total-header-bg);
+    color: var(--dg-row-total-text);
+    border-left: 2px solid var(--dg-row-total-border-color);
   }
 }
 
-.et-header-content {
+.dg-header-content {
   display: flex;
   align-items: center;
-  gap: var(--et-spacing-sm);
-  @include et-truncate;
+  gap: var(--dg-spacing-sm);
+  @include dg-truncate;
 }
 
 // ============================================
 // Body
 // ============================================
 
-.et-tbody {
-  background-color: var(--et-color-bg);
+.dg-tbody {
+  background-color: var(--dg-color-bg);
 }
 
 // ============================================
 // Rows
 // ============================================
 
-.et-row {
-  @include et-transition(background-color);
+.dg-row {
+  @include dg-transition(background-color);
 
   &:hover {
-    background-color: var(--et-color-bg-hover);
+    background-color: var(--dg-color-bg-hover);
   }
 
   // Data row
-  &.et-row-data {
+  &.dg-row-data {
     cursor: default;
 
     &:nth-child(even) {
-      background-color: var(--et-color-bg-alt);
+      background-color: var(--dg-color-bg-alt);
 
       &:hover {
-        background-color: var(--et-color-bg-hover);
+        background-color: var(--dg-color-bg-hover);
       }
     }
   }
 
   // Selected row
-  &.et-row-selected {
-    background-color: var(--et-color-bg-selected) !important;
+  &.dg-row-selected {
+    background-color: var(--dg-color-bg-selected) !important;
   }
 
   // Dirty (modified) row
-  &.et-row-dirty {
+  &.dg-row-dirty {
     position: relative;
 
     &::before {
@@ -157,12 +157,12 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      background-color: var(--et-color-warning);
+      background-color: var(--dg-color-warning);
     }
   }
 
   // Hidden row (for collapsed groups)
-  &.et-row-hidden {
+  &.dg-row-hidden {
     display: none;
   }
 }
@@ -171,13 +171,13 @@
 // Cells
 // ============================================
 
-.et-cell {
-  height: var(--et-row-height);
+.dg-cell {
+  height: var(--dg-row-height);
   vertical-align: middle;
-  border-right: var(--et-border-width) solid var(--et-color-border);
-  border-bottom: var(--et-border-width) solid var(--et-color-border);
-  @include et-truncate;
-  @include et-transition(background-color, box-shadow);
+  border-right: var(--dg-border-width) solid var(--dg-color-border);
+  border-bottom: var(--dg-border-width) solid var(--dg-color-border);
+  @include dg-truncate;
+  @include dg-transition(background-color, box-shadow);
   padding: 5px;
 
   &:last-child {
@@ -185,11 +185,11 @@
   }
 
   // Fixed column cell
-  &.et-cell-fixed {
+  &.dg-cell-fixed {
     position: sticky;
     left: 0;
-    z-index: var(--et-z-fixed);
-    background-color: var(--et-color-bg); // Explicit background for odd rows
+    z-index: var(--dg-z-fixed);
+    background-color: var(--dg-color-bg); // Explicit background for odd rows
 
     // Use pseudo-element for border (stays with sticky element)
     &::after {
@@ -198,65 +198,65 @@
       top: 0;
       right: 0;
       bottom: 0;
-      width: var(--et-fixed-border-width);
-      background-color: var(--et-fixed-border-color);
+      width: var(--dg-fixed-border-width);
+      background-color: var(--dg-fixed-border-color);
     }
 
     // Even rows
-    .et-row-data:nth-child(even) & {
-      background-color: var(--et-color-bg-alt);
+    .dg-row-data:nth-child(even) & {
+      background-color: var(--dg-color-bg-alt);
     }
 
     // Odd rows (explicit)
-    .et-row-data:nth-child(odd) & {
-      background-color: var(--et-color-bg);
+    .dg-row-data:nth-child(odd) & {
+      background-color: var(--dg-color-bg);
     }
 
-    .et-row:hover & {
-      background-color: var(--et-color-bg-hover);
+    .dg-row:hover & {
+      background-color: var(--dg-color-bg-hover);
     }
 
-    .et-row-selected & {
-      background-color: var(--et-color-bg-selected);
+    .dg-row-selected & {
+      background-color: var(--dg-color-bg-selected);
     }
   }
 
   // Row total column cell
-  &.et-cell-row-total {
-    background-color: var(--et-row-total-bg);
-    color: var(--et-row-total-text);
-    font-weight: var(--et-font-weight-medium);
-    border-left: 2px solid var(--et-row-total-border-color);
+  &.dg-cell-row-total {
+    background-color: var(--dg-row-total-bg);
+    color: var(--dg-row-total-text);
+    font-weight: var(--dg-font-weight-medium);
+    border-left: 2px solid var(--dg-row-total-border-color);
 
     // Even rows
-    .et-row-data:nth-child(even) & {
-      background-color: var(--et-row-total-bg-alt);
+    .dg-row-data:nth-child(even) & {
+      background-color: var(--dg-row-total-bg-alt);
     }
 
     // Hover state
-    .et-row:hover & {
-      background-color: var(--et-row-total-bg-alt);
+    .dg-row:hover & {
+      background-color: var(--dg-row-total-bg-alt);
     }
   }
 
   // Cell type alignments
-  &.et-cell-number {
+  &.dg-cell-number {
     font-variant-numeric: tabular-nums;
   }
 
-  &.et-cell-currency {
+  &.dg-cell-currency {
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
-  &.et-cell-date {
+  &.dg-cell-date {
     text-align: center;
   }
 
   // Cell in edit mode
-  &.et-cell-editing {
+  &.dg-cell-editing {
     padding: 0;
-    box-shadow: inset 0 0 0 2px var(--et-color-primary);
+    box-shadow: inset 0 0 0 2px var(--dg-color-primary);
   }
 }
 
@@ -264,9 +264,9 @@
 // Fixed Column Shadow
 // ============================================
 
-.et-container.et-scrolled {
-  .et-cell-fixed,
-  .et-header-cell.et-cell-fixed {
-    box-shadow: var(--et-shadow-fixed);
+.dg-container.dg-scrolled {
+  .dg-cell-fixed,
+  .dg-header-cell.dg-cell-fixed {
+    box-shadow: var(--dg-shadow-fixed);
   }
 }

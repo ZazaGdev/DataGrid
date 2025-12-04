@@ -1,5 +1,5 @@
 /**
- * EditableTable - A modular, high-performance inline editing table library
+ * DataGrid - A modular, high-performance inline editing table library
  * @version 1.0.0
  * @license MIT
  */

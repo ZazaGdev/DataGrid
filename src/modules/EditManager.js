@@ -78,7 +78,7 @@ export class EditManager {
     if (this._state.isEditMode()) {
       const cell = this._renderer.getCellElement(rowId, columnName)
       if (cell) {
-        const input = cell.querySelector(".et-cell-input")
+        const input = cell.querySelector(".dg-cell-input")
         if (input) {
           input.focus()
           if (input.select) {
@@ -171,7 +171,7 @@ export class EditManager {
 
     const cell = this._renderer.getCellElement(rowId, columnName)
     if (cell) {
-      addClass(cell, "et-cell-editing")
+      addClass(cell, "dg-cell-editing")
     }
   }
 
@@ -186,7 +186,7 @@ export class EditManager {
 
     const cell = this._renderer.getCellElement(rowId, columnName)
     if (cell) {
-      removeClass(cell, "et-cell-editing")
+      removeClass(cell, "dg-cell-editing")
     }
   }
 
@@ -225,7 +225,7 @@ export class EditManager {
     const cell = this._renderer.getCellElement(rowId, columnName)
 
     if (cell) {
-      const input = cell.querySelector(".et-cell-input")
+      const input = cell.querySelector(".dg-cell-input")
       if (input) {
         // Trigger change event
         input.dispatchEvent(new Event("change", { bubbles: true }))

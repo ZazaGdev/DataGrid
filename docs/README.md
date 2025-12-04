@@ -1,4 +1,4 @@
-# EditableTable - Developer Documentation
+# DataGrid - Developer Documentation
 
 A modular, high-performance inline editing table library built with Vanilla JS and SCSS.
 
@@ -554,20 +554,20 @@ Override these variables to customize the theme:
 ```css
 :root {
   /* Colors */
-  --et-color-primary: #3b82f6;
-  --et-color-bg: #ffffff;
-  --et-color-bg-alt: #f9fafb;
-  --et-color-border: #e5e7eb;
-  --et-color-text: #111827;
+  --dg-color-primary: #3b82f6;
+  --dg-color-bg: #ffffff;
+  --dg-color-bg-alt: #f9fafb;
+  --dg-color-border: #e5e7eb;
+  --dg-color-text: #111827;
 
   /* Spacing */
-  --et-cell-padding-x: 0.75rem;
-  --et-cell-padding-y: 0.5rem;
-  --et-row-height: 2.5rem;
+  --dg-cell-padding-x: 0.75rem;
+  --dg-cell-padding-y: 0.5rem;
+  --dg-row-height: 2.5rem;
 
   /* Typography */
-  --et-font-family: -apple-system, sans-serif;
-  --et-font-size-base: 0.875rem;
+  --dg-font-family: -apple-system, sans-serif;
+  --dg-font-size-base: 0.875rem;
 }
 ```
 
@@ -575,13 +575,13 @@ Override these variables to customize the theme:
 
 ```html
 <!-- Dark theme -->
-<div id="table" class="et-theme-dark"></div>
+<div id="table" class="dg-theme-dark"></div>
 
 <!-- Compact mode -->
-<div id="table" class="et-compact"></div>
+<div id="table" class="dg-compact"></div>
 
 <!-- Comfortable mode -->
-<div id="table" class="et-comfortable"></div>
+<div id="table" class="dg-comfortable"></div>
 ```
 
 ### Custom Cell Styling
@@ -591,7 +591,7 @@ Override these variables to customize the theme:
   data: 'status',
   render: (value, row) => {
     const color = value === 'active' ? 'success' : 'error';
-    return `<span class="et-text-${color}">${value}</span>`;
+    return `<span class="dg-text-${color}">${value}</span>`;
   }
 }
 ```
@@ -652,7 +652,7 @@ eventBus.endBatch() // Single consolidated update
 
 ```javascript
 const budgetTable = new Table({
-  container: "#budget-table",
+  container: "#budgdg-table",
   fixedFirstColumn: true,
   enableGrouping: true,
   groupBy: "department",
