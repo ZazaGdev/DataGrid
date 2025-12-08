@@ -3232,6 +3232,12 @@ class ThemeManager {
       rowTotalText: null, // Falls back to --dg-row-total-text
       rowTotalHeaderBackground: null, // Falls back to --dg-row-total-header-bg
       rowTotalBorderColor: null, // Falls back to --dg-row-total-border-color
+
+      // Ungrouped rows colors
+      ungroupedRowBackground: null, // Falls back to --dg-ungrouped-row-bg
+      ungroupedRowBackgroundAlt: null, // Falls back to --dg-ungrouped-row-bg-alt
+      ungroupedRowBackgroundHover: null, // Falls back to --dg-ungrouped-row-bg-hover
+      ungroupedRowText: null, // Falls back to --dg-ungrouped-row-text
     };
 
     this._theme = { ...this._defaultTheme, ...theme };
@@ -3338,6 +3344,29 @@ class ThemeManager {
         this._theme.rowTotalBorderColor
       );
     }
+
+    // Ungrouped rows
+    if (this._theme.ungroupedRowBackground) {
+      style.setProperty(
+        "--dg-ungrouped-row-bg",
+        this._theme.ungroupedRowBackground
+      );
+    }
+    if (this._theme.ungroupedRowBackgroundAlt) {
+      style.setProperty(
+        "--dg-ungrouped-row-bg-alt",
+        this._theme.ungroupedRowBackgroundAlt
+      );
+    }
+    if (this._theme.ungroupedRowBackgroundHover) {
+      style.setProperty(
+        "--dg-ungrouped-row-bg-hover",
+        this._theme.ungroupedRowBackgroundHover
+      );
+    }
+    if (this._theme.ungroupedRowText) {
+      style.setProperty("--dg-ungrouped-row-text", this._theme.ungroupedRowText);
+    }
   }
 
   /**
@@ -3380,6 +3409,10 @@ class ThemeManager {
       style.removeProperty("--dg-row-total-text");
       style.removeProperty("--dg-row-total-header-bg");
       style.removeProperty("--dg-row-total-border-color");
+      style.removeProperty("--dg-ungrouped-row-bg");
+      style.removeProperty("--dg-ungrouped-row-bg-alt");
+      style.removeProperty("--dg-ungrouped-row-bg-hover");
+      style.removeProperty("--dg-ungrouped-row-text");
     });
 
     this._theme = { ...this._defaultTheme };

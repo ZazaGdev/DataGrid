@@ -184,14 +184,6 @@
       background-color: transparent;
     }
   }
-
-  // Alternating group colors (optional)
-  .dg-row-group-header:nth-of-type(odd)
-    ~ .dg-row-data:not(
-      .dg-row-group-header ~ .dg-row-group-header ~ .dg-row-data
-    ) {
-    // Can add subtle background differentiation here
-  }
 }
 
 // ============================================
@@ -200,12 +192,28 @@
 
 .dg-row-ungrouped {
   // Ungrouped rows appear without indentation
+  td {
+    background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg)) !important;
+    color: var(--dg-ungrouped-row-text, var(--dg-color-text));
+  }
+
+  &:nth-child(odd) td {
+    background-color: var(
+      --dg-ungrouped-row-bg-alt,
+      var(--dg-color-bg-alt)
+    ) !important;
+  }
+
+  &:hover td {
+    background-color: var(
+      --dg-ungrouped-row-bg-hover,
+      var(--dg-color-bg-hover)
+    );
+  }
+
   td:first-child {
     padding-left: var(--dg-cell-padding-x);
   }
-
-  // Optional: subtle visual indicator for ungrouped rows
-  border-left: 3px solid var(--dg-color-text-light);
 }
 
 // ============================================

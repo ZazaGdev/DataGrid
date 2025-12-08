@@ -455,11 +455,19 @@
   width: 2px;
   background-color: transparent;
 }
+
+.dg-row-ungrouped td {
+  background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg)) !important;
+  color: var(--dg-ungrouped-row-text, var(--dg-color-text));
+}
+.dg-row-ungrouped:nth-child(odd) td {
+  background-color: var(--dg-ungrouped-row-bg-alt, var(--dg-color-bg-alt)) !important;
+}
+.dg-row-ungrouped:hover td {
+  background-color: var(--dg-ungrouped-row-bg-hover, var(--dg-color-bg-hover));
+}
 .dg-row-ungrouped td:first-child {
   padding-left: var(--dg-cell-padding-x);
-}
-.dg-row-ungrouped {
-  border-left: 3px solid var(--dg-color-text-light);
 }
 
 .dg-row.dg-row-collapsing {

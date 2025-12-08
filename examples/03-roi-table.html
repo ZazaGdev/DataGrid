@@ -183,7 +183,7 @@
                 : "$0.00",
           })
         }
-
+        console.log(columns)
         return columns
       }
 
@@ -310,6 +310,7 @@
           period6: 0,
         })
 
+        console.log(data)
         return data
       }
 
@@ -433,7 +434,7 @@
           fixedFirstColumn: true,
           mode: "edit",
           theme: {
-            // Customize colors for ROI table
+            ungroupedRowBackground: "#F5492733", // Light red for ungrouped metric rows EXAMPLE
           },
         })
 
