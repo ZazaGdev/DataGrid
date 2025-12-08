@@ -8,7 +8,6 @@
 // ============================================
 // Base Input
 // ============================================
-
 .dg-cell-input {
   width: 100%;
   height: 100%;
@@ -132,11 +131,6 @@
 // ============================================
 
 .dg-container.dg-mode-edit {
-  // Highlight editable cells
-  tr:not(.dg-row-group-header) td.dg-cell:not(.dg-cell-fixed) {
-    cursor: text;
-  }
-
   // Non-editable cells in edit mode
   .dg-cell[data-editable="false"] {
     cursor: default;

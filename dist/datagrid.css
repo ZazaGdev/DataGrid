@@ -605,9 +605,6 @@
   opacity: 1;
 }
 
-.dg-container.dg-mode-edit tr:not(.dg-row-group-header) td.dg-cell:not(.dg-cell-fixed) {
-  cursor: text;
-}
 .dg-container.dg-mode-edit .dg-cell[data-editable=false] {
   cursor: default;
   background-color: var(--dg-color-bg-alt);
