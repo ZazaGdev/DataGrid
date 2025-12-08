@@ -24,7 +24,7 @@ A modular, high-performance inline editing table library built with Vanilla JS a
 
 ```bash
 # Clone or copy the library
-cp -r editable-table /your-project/lib/
+cp -r datagrid /your-project/lib/
 
 # Install SCSS compiler if needed
 npm install sass --save-dev
@@ -36,13 +36,13 @@ npm install sass --save-dev
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="path/to/editable-table.css" />
+    <link rel="stylesheet" href="path/to/datagrid.css" />
   </head>
   <body>
     <div id="my-table"></div>
 
     <script type="module">
-      import Table from "./editable-table/src/index.js"
+      import Table from "./datagrid/src/index.js"
 
       const table = new Table({
         container: "#my-table",
@@ -493,7 +493,7 @@ table.destroy() // Cleanup
 ### Available Events
 
 ```javascript
-import { TableEvents } from "./editable-table/src/core/EventBus.js"
+import { TableEvents } from "./datagrid/src/core/EventBus.js"
 
 // Subscribe to events
 table.on(
@@ -547,27 +547,159 @@ table.on(TableEvents.AFTER_RENDER, ({ rowCount, columnCount }) => {
 
 ## Styling & Theming
 
+### Runtime Theme Configuration
+
+You can customize the table appearance at initialization using the `theme` option:
+
+```javascript
+const table = new Table({
+  container: '#table',
+  columns: [...],
+  data: [...],
+  theme: {
+    // Row colors
+    rowEven: '#f9fafb',              // Even row background
+    rowOdd: '#ffffff',               // Odd row background
+    rowHover: '#f3f4f6',             // Row hover background
+    rowSelected: '#eff6ff',          // Selected row background
+
+    // Border colors
+    borderLight: '#e5e7eb',          // Light borders
+    borderStrong: '#d1d5db',         // Strong borders (headers, groups)
+
+    // Header colors
+    headerBackground: '#f9fafb',     // Header row background
+    headerText: '#111827',           // Header text color
+
+    // Cell colors
+    cellBackground: '#ffffff',       // Cell background
+    cellText: '#111827',             // Cell text color
+
+    // Fixed/Sticky column
+    fixedShadow: '4px 0 8px -2px rgb(0 0 0 / 0.1)',  // Fixed column shadow
+    fixedBorderColor: '#d1d5db',     // Fixed column border color
+    fixedBorderWidth: '2px',         // Fixed column border width
+
+    // Interactive colors
+    primary: '#3b82f6',              // Primary accent color
+    primaryHover: '#2563eb',         // Primary hover state
+
+    // Status colors
+    success: '#10b981',              // Success/positive color
+    warning: '#f59e0b',              // Warning color
+    error: '#ef4444',                // Error/negative color
+
+    // Row totals column
+    rowTotalBackground: '#f8fafc',       // Row total background
+    rowTotalBackgroundAlt: '#f1f5f9',    // Row total alt background
+    rowTotalText: '#475569',             // Row total text color
+    rowTotalHeaderBackground: '#e2e8f0', // Row total header background
+    rowTotalBorderColor: '#cbd5e1',      // Row total border color
+
+    // Ungrouped rows (rows without a group)
+    ungroupedRowBackground: '#ffffff',       // Ungrouped even row background
+    ungroupedRowBackgroundAlt: '#f9fafb',    // Ungrouped odd row background
+    ungroupedRowBackgroundHover: '#f3f4f6',  // Ungrouped row hover
+    ungroupedRowText: '#111827',             // Ungrouped row text color
+  }
+});
+```
+
 ### CSS Custom Properties
 
-Override these variables to customize the theme:
+All styling is controlled via CSS custom properties. Override these in your stylesheet:
 
 ```css
 :root {
-  /* Colors */
+  /* Colors - Primary */
   --dg-color-primary: #3b82f6;
+  --dg-color-primary-hover: #2563eb;
+  --dg-color-primary-light: #eff6ff;
+
+  /* Colors - Status */
+  --dg-color-success: #10b981;
+  --dg-color-warning: #f59e0b;
+  --dg-color-error: #ef4444;
+
+  /* Colors - Background */
   --dg-color-bg: #ffffff;
   --dg-color-bg-alt: #f9fafb;
-  --dg-color-border: #e5e7eb;
-  --dg-color-text: #111827;
+  --dg-color-bg-hover: #f3f4f6;
+  --dg-color-bg-selected: #eff6ff;
 
-  /* Spacing */
-  --dg-cell-padding-x: 0.75rem;
-  --dg-cell-padding-y: 0.5rem;
-  --dg-row-height: 2.5rem;
+  /* Colors - Border */
+  --dg-color-border: #e5e7eb;
+  --dg-color-border-strong: #d1d5db;
+
+  /* Colors - Text */
+  --dg-color-text: #111827;
+  --dg-color-text-muted: #6b7280;
+  --dg-color-text-light: #9ca3af;
 
   /* Typography */
-  --dg-font-family: -apple-system, sans-serif;
+  --dg-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --dg-font-size-sm: 0.75rem;
   --dg-font-size-base: 0.875rem;
+  --dg-font-size-lg: 1rem;
+  --dg-font-weight-normal: 400;
+  --dg-font-weight-medium: 500;
+  --dg-font-weight-bold: 600;
+
+  /* Spacing */
+  --dg-spacing-xs: 0.25rem;
+  --dg-spacing-sm: 0.5rem;
+  --dg-spacing-md: 0.75rem;
+  --dg-spacing-lg: 1rem;
+  --dg-spacing-xl: 1.5rem;
+
+  /* Sizing */
+  --dg-cell-padding-x: 0.75rem;
+  --dg-cell-padding-y: 0.5rem;
+  --dg-cell-min-height: 2.5rem;
+  --dg-header-height: 2.75rem;
+  --dg-row-height: 2.5rem;
+
+  /* Borders */
+  --dg-border-radius: 0.375rem;
+  --dg-border-width: 1px;
+
+  /* Shadows */
+  --dg-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --dg-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 /
+          0.1);
+  --dg-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 /
+          0.1);
+  --dg-shadow-fixed: 4px 0 8px -2px rgb(0 0 0 / 0.1);
+
+  /* Fixed Column */
+  --dg-fixed-border-color: var(--dg-color-border-strong);
+  --dg-fixed-border-width: 2px;
+
+  /* Row Totals Column */
+  --dg-row-total-bg: #f8fafc;
+  --dg-row-total-bg-alt: #f1f5f9;
+  --dg-row-total-text: #475569;
+  --dg-row-total-header-bg: #e2e8f0;
+  --dg-row-total-border-color: #cbd5e1;
+
+  /* Ungrouped Rows */
+  --dg-ungrouped-row-bg: var(--dg-color-bg);
+  --dg-ungrouped-row-bg-alt: var(--dg-color-bg-alt);
+  --dg-ungrouped-row-bg-hover: var(--dg-color-bg-hover);
+  --dg-ungrouped-row-text: var(--dg-color-text);
+
+  /* Transitions */
+  --dg-transition-fast: 150ms ease;
+  --dg-transition-base: 200ms ease;
+  --dg-transition-slow: 300ms ease;
+
+  /* Z-index Layers */
+  --dg-z-base: 1;
+  --dg-z-fixed: 10;
+  --dg-z-header: 20;
+  --dg-z-fixed-header: 30;
+  --dg-z-dropdown: 100;
 }
 ```
 
@@ -584,6 +716,22 @@ Override these variables to customize the theme:
 <div id="table" class="dg-comfortable"></div>
 ```
 
+### Updating Theme at Runtime
+
+```javascript
+// Update specific theme properties
+table.updateTheme({
+  primary: "#8b5cf6",
+  rowHover: "#f5f3ff",
+})
+
+// Reset to default theme
+table.resetTheme()
+
+// Get current theme
+const currentTheme = table.getTheme()
+```
+
 ### Custom Cell Styling
 
 ```javascript
@@ -593,6 +741,57 @@ Override these variables to customize the theme:
     const color = value === 'active' ? 'success' : 'error';
     return `<span class="dg-text-${color}">${value}</span>`;
   }
+}
+```
+
+### Utility Classes
+
+```css
+/* Text alignment */
+.dg-text-left {
+  text-align: left;
+}
+.dg-text-center {
+  text-align: center;
+}
+.dg-text-right {
+  text-align: right;
+}
+
+/* Font weight */
+.dg-font-normal {
+  font-weight: 400;
+}
+.dg-font-medium {
+  font-weight: 500;
+}
+.dg-font-bold {
+  font-weight: 600;
+}
+
+/* Text colors */
+.dg-text-muted {
+  color: var(--dg-color-text-muted);
+}
+.dg-text-success {
+  color: var(--dg-color-success);
+}
+.dg-text-warning {
+  color: var(--dg-color-warning);
+}
+.dg-text-error {
+  color: var(--dg-color-error);
+}
+
+/* Background colors */
+.dg-bg-success {
+  background-color: #d1fae5;
+}
+.dg-bg-warning {
+  background-color: #fef3c7;
+}
+.dg-bg-error {
+  background-color: #fee2e2;
 }
 ```
 
@@ -720,7 +919,14 @@ const formTable = new Table({
 ## File Structure
 
 ```
-editable-table/
+datagrid/
+├── dist/
+│   ├── datagrid.esm.js       # ES Module bundle
+│   ├── datagrid.esm.min.js   # Minified ES Module
+│   ├── datagrid.umd.js       # UMD bundle
+│   ├── datagrid.umd.min.js   # Minified UMD
+│   ├── datagrid.css          # Compiled CSS
+│   └── datagrid.min.css      # Minified CSS
 ├── src/
 │   ├── index.js              # Main entry
 │   ├── core/
