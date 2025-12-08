@@ -67,6 +67,22 @@ export class ThemeManager {
   }
 
   /**
+   * Resolve a theme value - if it starts with '--', wrap it in var()
+   * This allows passing CSS variable names like '--bc-c-primary-500'
+   * @private
+   * @param {string} value - The theme value
+   * @returns {string} - Resolved value (wrapped in var() if CSS variable)
+   */
+  _resolveValue(value) {
+    if (!value) return value
+    // If value starts with '--', it's a CSS variable reference
+    if (typeof value === "string" && value.startsWith("--")) {
+      return `var(${value})`
+    }
+    return value
+  }
+
+  /**
    * Apply theme to container
    * @private
    */
@@ -75,95 +91,152 @@ export class ThemeManager {
 
     // Row colors
     if (this._theme.rowEven) {
-      style.setProperty("--dg-color-bg-alt", this._theme.rowEven)
+      style.setProperty(
+        "--dg-color-bg-alt",
+        this._resolveValue(this._theme.rowEven)
+      )
     }
     if (this._theme.rowOdd) {
-      style.setProperty("--dg-color-bg", this._theme.rowOdd)
+      style.setProperty("--dg-color-bg", this._resolveValue(this._theme.rowOdd))
     }
     if (this._theme.rowHover) {
-      style.setProperty("--dg-color-bg-hover", this._theme.rowHover)
+      style.setProperty(
+        "--dg-color-bg-hover",
+        this._resolveValue(this._theme.rowHover)
+      )
     }
     if (this._theme.rowSelected) {
-      style.setProperty("--dg-color-bg-selected", this._theme.rowSelected)
+      style.setProperty(
+        "--dg-color-bg-selected",
+        this._resolveValue(this._theme.rowSelected)
+      )
     }
 
     // Border colors
     if (this._theme.borderLight) {
-      style.setProperty("--dg-color-border", this._theme.borderLight)
+      style.setProperty(
+        "--dg-color-border",
+        this._resolveValue(this._theme.borderLight)
+      )
     }
     if (this._theme.borderStrong) {
-      style.setProperty("--dg-color-border-strong", this._theme.borderStrong)
+      style.setProperty(
+        "--dg-color-border-strong",
+        this._resolveValue(this._theme.borderStrong)
+      )
     }
 
     // Header colors
     if (this._theme.headerBackground) {
-      style.setProperty("--dg-color-header-bg", this._theme.headerBackground)
+      style.setProperty(
+        "--dg-color-header-bg",
+        this._resolveValue(this._theme.headerBackground)
+      )
     }
     if (this._theme.headerText) {
-      style.setProperty("--dg-color-header-text", this._theme.headerText)
+      style.setProperty(
+        "--dg-color-header-text",
+        this._resolveValue(this._theme.headerText)
+      )
     }
 
     // Cell colors
     if (this._theme.cellBackground) {
-      style.setProperty("--dg-color-cell-bg", this._theme.cellBackground)
+      style.setProperty(
+        "--dg-color-cell-bg",
+        this._resolveValue(this._theme.cellBackground)
+      )
     }
     if (this._theme.cellText) {
-      style.setProperty("--dg-color-text", this._theme.cellText)
+      style.setProperty(
+        "--dg-color-text",
+        this._resolveValue(this._theme.cellText)
+      )
     }
 
     // Fixed column
     if (this._theme.fixedShadow) {
-      style.setProperty("--dg-shadow-fixed", this._theme.fixedShadow)
+      style.setProperty(
+        "--dg-shadow-fixed",
+        this._resolveValue(this._theme.fixedShadow)
+      )
     }
     if (this._theme.fixedBorderColor) {
-      style.setProperty("--dg-fixed-border-color", this._theme.fixedBorderColor)
+      style.setProperty(
+        "--dg-fixed-border-color",
+        this._resolveValue(this._theme.fixedBorderColor)
+      )
     }
     if (this._theme.fixedBorderWidth) {
-      style.setProperty("--dg-fixed-border-width", this._theme.fixedBorderWidth)
+      style.setProperty(
+        "--dg-fixed-border-width",
+        this._resolveValue(this._theme.fixedBorderWidth)
+      )
     }
 
     // Interactive colors
     if (this._theme.primary) {
-      style.setProperty("--dg-color-primary", this._theme.primary)
+      style.setProperty(
+        "--dg-color-primary",
+        this._resolveValue(this._theme.primary)
+      )
     }
     if (this._theme.primaryHover) {
-      style.setProperty("--dg-color-primary-hover", this._theme.primaryHover)
+      style.setProperty(
+        "--dg-color-primary-hover",
+        this._resolveValue(this._theme.primaryHover)
+      )
     }
 
     // Status colors
     if (this._theme.success) {
-      style.setProperty("--dg-color-success", this._theme.success)
+      style.setProperty(
+        "--dg-color-success",
+        this._resolveValue(this._theme.success)
+      )
     }
     if (this._theme.warning) {
-      style.setProperty("--dg-color-warning", this._theme.warning)
+      style.setProperty(
+        "--dg-color-warning",
+        this._resolveValue(this._theme.warning)
+      )
     }
     if (this._theme.error) {
-      style.setProperty("--dg-color-error", this._theme.error)
+      style.setProperty(
+        "--dg-color-error",
+        this._resolveValue(this._theme.error)
+      )
     }
 
     // Row totals column
     if (this._theme.rowTotalBackground) {
-      style.setProperty("--dg-row-total-bg", this._theme.rowTotalBackground)
+      style.setProperty(
+        "--dg-row-total-bg",
+        this._resolveValue(this._theme.rowTotalBackground)
+      )
     }
     if (this._theme.rowTotalBackgroundAlt) {
       style.setProperty(
         "--dg-row-total-bg-alt",
-        this._theme.rowTotalBackgroundAlt
+        this._resolveValue(this._theme.rowTotalBackgroundAlt)
       )
     }
     if (this._theme.rowTotalText) {
-      style.setProperty("--dg-row-total-text", this._theme.rowTotalText)
+      style.setProperty(
+        "--dg-row-total-text",
+        this._resolveValue(this._theme.rowTotalText)
+      )
     }
     if (this._theme.rowTotalHeaderBackground) {
       style.setProperty(
         "--dg-row-total-header-bg",
-        this._theme.rowTotalHeaderBackground
+        this._resolveValue(this._theme.rowTotalHeaderBackground)
       )
     }
     if (this._theme.rowTotalBorderColor) {
       style.setProperty(
         "--dg-row-total-border-color",
-        this._theme.rowTotalBorderColor
+        this._resolveValue(this._theme.rowTotalBorderColor)
       )
     }
 
@@ -171,23 +244,26 @@ export class ThemeManager {
     if (this._theme.ungroupedRowBackground) {
       style.setProperty(
         "--dg-ungrouped-row-bg",
-        this._theme.ungroupedRowBackground
+        this._resolveValue(this._theme.ungroupedRowBackground)
       )
     }
     if (this._theme.ungroupedRowBackgroundAlt) {
       style.setProperty(
         "--dg-ungrouped-row-bg-alt",
-        this._theme.ungroupedRowBackgroundAlt
+        this._resolveValue(this._theme.ungroupedRowBackgroundAlt)
       )
     }
     if (this._theme.ungroupedRowBackgroundHover) {
       style.setProperty(
         "--dg-ungrouped-row-bg-hover",
-        this._theme.ungroupedRowBackgroundHover
+        this._resolveValue(this._theme.ungroupedRowBackgroundHover)
       )
     }
     if (this._theme.ungroupedRowText) {
-      style.setProperty("--dg-ungrouped-row-text", this._theme.ungroupedRowText)
+      style.setProperty(
+        "--dg-ungrouped-row-text",
+        this._resolveValue(this._theme.ungroupedRowText)
+      )
     }
   }
 
