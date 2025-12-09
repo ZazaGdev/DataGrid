@@ -226,16 +226,58 @@ table.resetTheme();
 
 ## Events List
 
-| Event                   | Data                                      |
-| ----------------------- | ----------------------------------------- |
-| `state:change`          | `{property, value}`                       |
-| `data:change`           | `{data, source}`                          |
-| `row:click`             | `{rowId, row, event}`                     |
-| `row:change`            | `{rowId, columnName, row}`                |
-| `cell:change`           | `{rowId, columnName, oldValue, newValue}` |
-| `group:toggle`          | `{groupId, collapsed}`                    |
-| `mode:change`           | `{oldMode, newMode}`                      |
-| `lifecycle:afterRender` | `{rowCount, columnCount}`                 |
+| Event                   | Data                                        |
+| ----------------------- | ------------------------------------------- |
+| `state:change`          | `{property, value}`                         |
+| `data:change`           | `{data, source}`                            |
+| `row:click`             | `{rowId, row, event}`                       |
+| `row:change`            | `{rowId, columnName, row}`                  |
+| `cell:change`           | `{rowId, columnName, oldValue, newValue}`   |
+| `group:toggle`          | `{groupId, collapsed}`                      |
+| `mode:change`           | `{oldMode, newMode}`                        |
+| `action:click`          | `{actionIndex, action, rowId, row, event}`  |
+| `lifecycle:afterRender` | `{rowCount, columnCount}`                   |
+
+## Row Actions
+
+Add action buttons to each row:
+
+```javascript
+const table = new Table({
+  container: "#my-table",
+  columns: [...],
+  data: [...],
+  actions: [
+    {
+      icon: `<svg>...</svg>`,  // HTML/SVG icon
+      tooltip: "View",         // Hover text
+      onClick: (row) => {      // Click handler
+        console.log(row)
+      }
+    },
+    {
+      icon: `<svg>...</svg>`,
+      tooltip: "Delete",
+      onClick: (row) => {
+        table.deleteRow(row._id)
+      }
+    }
+  ]
+})
+
+// Listen via events
+table.on(Table.Events.ACTION_CLICK, ({ rowId, row, actionIndex }) => {
+  console.log("Action clicked:", actionIndex)
+})
+```
+
+### Action CSS Classes
+
+| Class                 | Description                    |
+| --------------------- | ------------------------------ |
+| `.dg-row-actions`     | Container for action icons     |
+| `.dg-row-action`      | Individual action icon         |
+| `.dg-cell-has-actions`| Cell containing actions        |
 
 ## File Structure
 

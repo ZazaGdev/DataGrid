@@ -128,6 +128,9 @@ const table = new Table({
   groupBy: 'category',            // Column name or function
   enableInfoRows: false,          // Enable info rows
 
+  // Optional - Row Actions
+  actions: [],                    // Row action buttons (see Row Actions section)
+
   // Optional - Mode
   mode: 'view',                   // 'view' | 'edit'
 
@@ -413,6 +416,94 @@ table.download("csv", "my-table")
 table.download("excel", "my-table")
 ```
 
+### 6. Row Actions
+
+Add interactive action buttons (icons) to each row. Actions appear in the first column and trigger callbacks when clicked.
+
+```javascript
+const table = new Table({
+  container: "#table",
+  columns: [...],
+  data: [...],
+  actions: [
+    {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+      </svg>`,
+      tooltip: "View Details",
+      onClick: (row) => {
+        console.log("View row:", row)
+      }
+    },
+    {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>`,
+      tooltip: "Delete Row",
+      onClick: (row) => {
+        if (confirm(`Delete "${row.name}"?`)) {
+          table.deleteRow(row._id)
+        }
+      }
+    }
+  ]
+})
+```
+
+#### Action Configuration
+
+| Property  | Type       | Description                              |
+| --------- | ---------- | ---------------------------------------- |
+| `icon`    | `string`   | HTML string for the icon (SVG recommended) |
+| `tooltip` | `string`   | Hover tooltip text                       |
+| `onClick` | `function` | Callback function, receives row data     |
+
+#### Action Events
+
+```javascript
+// Listen to action clicks via events
+table.on(Table.Events.ACTION_CLICK, ({ actionIndex, action, rowId, row, event }) => {
+  console.log(`Action ${actionIndex} clicked on row ${rowId}`)
+})
+```
+
+#### Disable Actions for Specific Columns
+
+You can disable actions for specific columns:
+
+```javascript
+const columns = [
+  {
+    data: "name",
+    title: "Name",
+    actions: false  // No action icons in this column
+  }
+]
+```
+
+#### Styling Actions
+
+Actions are styled with CSS classes:
+
+- `.dg-row-actions` - Container for all action icons
+- `.dg-row-action` - Individual action icon
+- `.dg-cell-has-actions` - Cell containing actions
+
+```css
+/* Custom action icon sizing */
+.dg-row-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Custom action hover color */
+.dg-row-action:hover {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+```
+
 ---
 
 ## API Reference
@@ -539,6 +630,7 @@ table.on(TableEvents.AFTER_RENDER, ({ rowCount, columnCount }) => {
 | `CELL_BLUR`     | `{ rowId, columnName }`                     | Cell blurred           |
 | `GROUP_TOGGLE`  | `{ groupId, collapsed }`                    | Group toggled          |
 | `MODE_CHANGE`   | `{ oldMode, newMode }`                      | Mode changed           |
+| `ACTION_CLICK`  | `{ actionIndex, action, rowId, row, event }`| Row action clicked     |
 | `BEFORE_RENDER` | `{}`                                        | Before render          |
 | `RENDER`        | `{}`                                        | During render          |
 | `AFTER_RENDER`  | `{ rowCount, columnCount }`                 | After render           |
