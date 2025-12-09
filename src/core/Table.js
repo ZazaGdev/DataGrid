@@ -26,6 +26,7 @@ import { addClass, removeClass } from "../utils/dom.js"
  * @property {boolean} [enableInfoRows=false] - Enable info rows
  * @property {boolean} [enableRowTotals=false] - Enable row totals column
  * @property {Function} [rowTotalsFormat] - Format function for row totals column
+ * @property {Array<Object>} [actions] - Row actions configuration
  * @property {'view'|'edit'} [mode='view'] - Initial mode
  * @property {Function} [onRowClick] - Row click callback
  * @property {Function} [onRender] - Render complete callback
@@ -74,6 +75,7 @@ export class Table {
         enableInfoRows: config.enableInfoRows,
         enableRowTotals: config.enableRowTotals,
         rowTotalsFormat: config.rowTotalsFormat,
+        actions: config.actions || [],
       },
     })
 

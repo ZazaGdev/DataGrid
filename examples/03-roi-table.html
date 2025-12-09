@@ -80,6 +80,11 @@
         color: #374151;
         margin-right: 0.5rem;
       }
+      /* Row action icon sizing */
+      .dg-row-action svg {
+        width: 16px;
+        height: 16px;
+      }
     </style>
   </head>
   <body>
@@ -107,12 +112,11 @@
         </select>
         <button
           class="btn btn-primary"
-          id="recalculate"
+          id="expandAll"
           style="margin-left: 1rem"
         >
-          Recalculate Metrics
+          Expand All
         </button>
-        <button class="btn btn-primary" id="expandAll">Expand All</button>
         <button class="btn btn-primary" id="collapseAll">Collapse All</button>
       </div>
 
@@ -436,6 +440,35 @@
           theme: {
             ungroupedRowBackground: "#F5492733", // Light red for ungrouped metric rows EXAMPLE
           },
+          // Row actions configuration
+          actions: [
+            {
+              icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+              </svg>`,
+              tooltip: "View Details",
+              onClick: (row) => {
+                console.log("View row:", row)
+                alert(
+                  `Viewing: ${row.name}\nGroup: ${row.group || "Ungrouped"}`
+                )
+              },
+            },
+            {
+              icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>`,
+              tooltip: "Delete Row",
+              onClick: (row) => {
+                if (confirm(`Delete "${row.name}"?`)) {
+                  console.log("Delete row:", row._id)
+                  table.deleteRow(row._id)
+                  recalculateMetrics()
+                }
+              },
+            },
+          ],
         })
 
         // Store globally for debugging
@@ -491,10 +524,6 @@
       document.getElementById("periodCount").addEventListener("change", (e) => {
         periodCount = parseInt(e.target.value)
         createTable()
-      })
-
-      document.getElementById("recalculate").addEventListener("click", () => {
-        recalculateMetrics()
       })
 
       document.getElementById("expandAll").addEventListener("click", () => {

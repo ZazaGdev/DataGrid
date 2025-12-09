@@ -51,6 +51,7 @@ export class TableState {
         groupBy: null,
         enableInfoRows: false,
         enableRowTotals: false,
+        actions: [],
         ...initialState.config,
       },
     }

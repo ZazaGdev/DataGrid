@@ -47,7 +47,7 @@
     &.dg-cell-row-total {
       background-color: var(--dg-row-total-header-bg);
       color: var(--dg-row-total-text);
-      border-left: 2px solid var(--dg-row-total-border-color);
+      border-left: 2px solid var(--dg-row-total-border-color) !important;
     }
   }
 

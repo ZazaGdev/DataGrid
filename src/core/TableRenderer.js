@@ -467,10 +467,80 @@ export class TableRenderer {
       td.style.textAlign = column.align
     }
 
-    // Render content
+    // Render content first (this clears innerHTML)
     this._renderCellContent(td, row[column.data], column, row)
 
+    // Render actions for first column (if enabled for this column)
+    // Must be after _renderCellContent since it clears innerHTML
+    const actions = config.actions || []
+    const columnHasActions = column.actions !== false // Default true, can be disabled per column
+    if (
+      index === 0 &&
+      actions.length > 0 &&
+      columnHasActions &&
+      row._type !== "infoRow"
+    ) {
+      const actionsWrapper = this._createRowActions(actions, row)
+      // Insert actions at the beginning of the cell
+      td.insertBefore(actionsWrapper, td.firstChild)
+      addClass(td, "dg-cell-has-actions")
+    }
+
     return td
+  }
+
+  /**
+   * Create row actions container with action icons
+   * @private
+   * @param {Array} actions - Array of action configurations
+   * @param {Object} row - Row data
+   * @returns {HTMLElement} Actions wrapper element
+   */
+  _createRowActions(actions, row) {
+    const wrapper = createElement("span", { class: "dg-row-actions" })
+
+    actions.forEach((action, index) => {
+      const actionBtn = createElement("span", {
+        class: "dg-row-action",
+        title: action.tooltip || "",
+        "data-action-index": index,
+      })
+
+      // Set the icon HTML
+      if (action.icon) {
+        if (typeof action.icon === "string") {
+          actionBtn.innerHTML = action.icon
+        } else if (action.icon instanceof HTMLElement) {
+          actionBtn.appendChild(action.icon.cloneNode(true))
+        }
+      }
+
+      // Click handler
+      actionBtn.addEventListener("click", (e) => {
+        e.stopPropagation() // Prevent row click
+
+        // Get fresh row data
+        const rowData = this._state.getRow(row._id)
+
+        // Call the onClick handler if provided
+        if (typeof action.onClick === "function") {
+          action.onClick(rowData, e)
+        }
+
+        // Emit event for external listeners
+        this._eventBus.emit(TableEvents.ACTION_CLICK, {
+          actionIndex: index,
+          action,
+          rowId: row._id,
+          row: rowData,
+          event: e,
+        })
+      })
+
+      wrapper.appendChild(actionBtn)
+    })
+
+    return wrapper
   }
 
   /**
