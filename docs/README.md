@@ -453,19 +453,22 @@ const table = new Table({
 
 #### Action Configuration
 
-| Property  | Type       | Description                              |
-| --------- | ---------- | ---------------------------------------- |
+| Property  | Type       | Description                                |
+| --------- | ---------- | ------------------------------------------ |
 | `icon`    | `string`   | HTML string for the icon (SVG recommended) |
-| `tooltip` | `string`   | Hover tooltip text                       |
-| `onClick` | `function` | Callback function, receives row data     |
+| `tooltip` | `string`   | Hover tooltip text                         |
+| `onClick` | `function` | Callback function, receives row data       |
 
 #### Action Events
 
 ```javascript
 // Listen to action clicks via events
-table.on(Table.Events.ACTION_CLICK, ({ actionIndex, action, rowId, row, event }) => {
-  console.log(`Action ${actionIndex} clicked on row ${rowId}`)
-})
+table.on(
+  Table.Events.ACTION_CLICK,
+  ({ actionIndex, action, rowId, row, event }) => {
+    console.log(`Action ${actionIndex} clicked on row ${rowId}`)
+  }
+)
 ```
 
 #### Disable Actions for Specific Columns
@@ -477,8 +480,8 @@ const columns = [
   {
     data: "name",
     title: "Name",
-    actions: false  // No action icons in this column
-  }
+    actions: false, // No action icons in this column
+  },
 ]
 ```
 
@@ -617,23 +620,23 @@ table.on(TableEvents.AFTER_RENDER, ({ rowCount, columnCount }) => {
 
 ### Event Types
 
-| Event           | Data                                        | Description            |
-| --------------- | ------------------------------------------- | ---------------------- |
-| `STATE_CHANGE`  | `{ property, value }`                       | State property changed |
-| `DATA_CHANGE`   | `{ data, source }`                          | Data array changed     |
-| `ROW_CLICK`     | `{ rowId, row, event }`                     | Row clicked            |
-| `ROW_CHANGE`    | `{ rowId, columnName, row }`                | Row data changed       |
-| `ROW_ADD`       | `{ row, index }`                            | Row added              |
-| `ROW_DELETE`    | `{ rowId, row }`                            | Row deleted            |
-| `CELL_CHANGE`   | `{ rowId, columnName, oldValue, newValue }` | Cell changed           |
-| `CELL_FOCUS`    | `{ rowId, columnName }`                     | Cell focused           |
-| `CELL_BLUR`     | `{ rowId, columnName }`                     | Cell blurred           |
-| `GROUP_TOGGLE`  | `{ groupId, collapsed }`                    | Group toggled          |
-| `MODE_CHANGE`   | `{ oldMode, newMode }`                      | Mode changed           |
-| `ACTION_CLICK`  | `{ actionIndex, action, rowId, row, event }`| Row action clicked     |
-| `BEFORE_RENDER` | `{}`                                        | Before render          |
-| `RENDER`        | `{}`                                        | During render          |
-| `AFTER_RENDER`  | `{ rowCount, columnCount }`                 | After render           |
+| Event           | Data                                         | Description            |
+| --------------- | -------------------------------------------- | ---------------------- |
+| `STATE_CHANGE`  | `{ property, value }`                        | State property changed |
+| `DATA_CHANGE`   | `{ data, source }`                           | Data array changed     |
+| `ROW_CLICK`     | `{ rowId, row, event }`                      | Row clicked            |
+| `ROW_CHANGE`    | `{ rowId, columnName, row }`                 | Row data changed       |
+| `ROW_ADD`       | `{ row, index }`                             | Row added              |
+| `ROW_DELETE`    | `{ rowId, row }`                             | Row deleted            |
+| `CELL_CHANGE`   | `{ rowId, columnName, oldValue, newValue }`  | Cell changed           |
+| `CELL_FOCUS`    | `{ rowId, columnName }`                      | Cell focused           |
+| `CELL_BLUR`     | `{ rowId, columnName }`                      | Cell blurred           |
+| `GROUP_TOGGLE`  | `{ groupId, collapsed }`                     | Group toggled          |
+| `MODE_CHANGE`   | `{ oldMode, newMode }`                       | Mode changed           |
+| `ACTION_CLICK`  | `{ actionIndex, action, rowId, row, event }` | Row action clicked     |
+| `BEFORE_RENDER` | `{}`                                         | Before render          |
+| `RENDER`        | `{}`                                         | During render          |
+| `AFTER_RENDER`  | `{ rowCount, columnCount }`                  | After render           |
 
 ---
 

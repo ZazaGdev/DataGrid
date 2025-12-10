@@ -98,7 +98,7 @@
   &.dg-header-row-total {
     background-color: var(--dg-row-total-header-bg);
     color: var(--dg-row-total-text);
-    border-left: 2px solid var(--dg-row-total-border-color);
+    border-left: 2px solid var(--dg-row-total-border-color) !important;
   }
 }
 
@@ -226,7 +226,7 @@
     background-color: var(--dg-row-total-bg);
     color: var(--dg-row-total-text);
     font-weight: var(--dg-font-weight-medium);
-    border-left: 2px solid var(--dg-row-total-border-color);
+    border-left: 2px solid var(--dg-row-total-border-color) !important;
 
     // Even rows
     .dg-row-data:nth-child(even) & {

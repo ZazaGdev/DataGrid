@@ -226,17 +226,17 @@ table.resetTheme();
 
 ## Events List
 
-| Event                   | Data                                        |
-| ----------------------- | ------------------------------------------- |
-| `state:change`          | `{property, value}`                         |
-| `data:change`           | `{data, source}`                            |
-| `row:click`             | `{rowId, row, event}`                       |
-| `row:change`            | `{rowId, columnName, row}`                  |
-| `cell:change`           | `{rowId, columnName, oldValue, newValue}`   |
-| `group:toggle`          | `{groupId, collapsed}`                      |
-| `mode:change`           | `{oldMode, newMode}`                        |
-| `action:click`          | `{actionIndex, action, rowId, row, event}`  |
-| `lifecycle:afterRender` | `{rowCount, columnCount}`                   |
+| Event                   | Data                                       |
+| ----------------------- | ------------------------------------------ |
+| `state:change`          | `{property, value}`                        |
+| `data:change`           | `{data, source}`                           |
+| `row:click`             | `{rowId, row, event}`                      |
+| `row:change`            | `{rowId, columnName, row}`                 |
+| `cell:change`           | `{rowId, columnName, oldValue, newValue}`  |
+| `group:toggle`          | `{groupId, collapsed}`                     |
+| `mode:change`           | `{oldMode, newMode}`                       |
+| `action:click`          | `{actionIndex, action, rowId, row, event}` |
+| `lifecycle:afterRender` | `{rowCount, columnCount}`                  |
 
 ## Row Actions
 
@@ -273,11 +273,11 @@ table.on(Table.Events.ACTION_CLICK, ({ rowId, row, actionIndex }) => {
 
 ### Action CSS Classes
 
-| Class                 | Description                    |
-| --------------------- | ------------------------------ |
-| `.dg-row-actions`     | Container for action icons     |
-| `.dg-row-action`      | Individual action icon         |
-| `.dg-cell-has-actions`| Cell containing actions        |
+| Class                  | Description                |
+| ---------------------- | -------------------------- |
+| `.dg-row-actions`      | Container for action icons |
+| `.dg-row-action`       | Individual action icon     |
+| `.dg-cell-has-actions` | Cell containing actions    |
 
 ## File Structure
 
