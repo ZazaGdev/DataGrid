@@ -72,10 +72,12 @@ export class Table {
         fixedFirstColumn: config.fixedFirstColumn,
         enableGrouping: config.enableGrouping,
         groupBy: config.groupBy,
+        groups: config.groups || {},
         enableInfoRows: config.enableInfoRows,
         enableRowTotals: config.enableRowTotals,
         rowTotalsFormat: config.rowTotalsFormat,
         actions: config.actions || [],
+        actionsShowIf: config.actionsShowIf,
       },
     })
 
@@ -130,6 +132,15 @@ export class Table {
    */
   updateCell(rowId, columnName, value) {
     this._state.updateCell(rowId, columnName, value)
+  }
+
+  /**
+   * Update badge for a specific row
+   * @param {string|number} rowId - Row identifier
+   * @param {string|HTMLElement|null} badgeContent - Badge HTML content (null to remove)
+   */
+  updateRowBadge(rowId, badgeContent) {
+    this._renderer.updateRowBadge(rowId, badgeContent)
   }
 
   /**

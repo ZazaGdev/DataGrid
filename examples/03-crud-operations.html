@@ -137,9 +137,6 @@
         <button class="btn btn-danger" id="deleteFirst">
           🗑️ Delete First Row
         </button>
-        <button class="btn btn-primary" id="batchUpdate">
-          ⚡ Batch Update
-        </button>
         <button class="btn" id="updateCell">✏️ Update Single Cell</button>
         <button class="btn" id="getDirtyRows">📝 Get Modified Rows</button>
       </div>
@@ -159,10 +156,6 @@
         <p>
           • <strong>Update Cell:</strong> Click "Update Single Cell" to modify a
           specific cell value.
-        </p>
-        <p>
-          • <strong>Batch Update:</strong> Update multiple cells at once for
-          better performance.
         </p>
         <p>
           • <strong>Dirty Tracking:</strong> Modified rows are tracked. Click
@@ -368,7 +361,7 @@
         }
 
         const firstRow = data[0]
-        table.deleteRow(firstRow.id)
+        table.deleteRow(firstRow._id)
         showStatus(`Deleted employee: ${firstRow.name}`)
       })
 
@@ -383,29 +376,12 @@
         const firstRow = data[0]
         const newSalary = firstRow.salary + 5000
 
-        table.updateCell(firstRow.id, "salary", newSalary)
+        table.updateCell(firstRow._id, "salary", newSalary)
 
         showStatus(
           `Updated ${
             firstRow.name
           }'s salary from $${firstRow.salary.toLocaleString()} to $${newSalary.toLocaleString()}`
-        )
-      })
-
-      document.getElementById("batchUpdate").addEventListener("click", () => {
-        const data = table.getData()
-
-        // Give everyone a 10% raise
-        const updates = data.map((row) => ({
-          rowId: row.id,
-          columnName: "salary",
-          value: Math.round(row.salary * 1.1),
-        }))
-
-        table.batchUpdate(updates)
-
-        showStatus(
-          `Batch updated ${updates.length} rows - 10% salary increase for everyone!`
         )
       })
 

@@ -41,6 +41,7 @@ const table = new Table({
 | `setData(data)`                             | Replace all data   |
 | `getRow(rowId)`                             | Get single row     |
 | `updateCell(rowId, col, val)`               | Update cell        |
+| `updateRowBadge(rowId, html)`               | Update row badge   |
 | `batchUpdate([{rowId, columnName, value}])` | Batch update       |
 | `addRow(data, options?)`                    | Add row            |
 | `deleteRow(rowId)`                          | Delete row         |
@@ -278,6 +279,58 @@ table.on(Table.Events.ACTION_CLICK, ({ rowId, row, actionIndex }) => {
 | `.dg-row-actions`      | Container for action icons |
 | `.dg-row-action`       | Individual action icon     |
 | `.dg-cell-has-actions` | Cell containing actions    |
+
+## Group Labels with HTML
+
+Group headers support HTML content for icons and custom formatting:
+
+```javascript
+const table = new Table({
+  enableGrouping: true,
+  groupBy: "category",
+  groups: {
+    labels: {
+      benefits: '<i class="bi bi-star-fill"></i> Benefits',
+      costs: "Costs", // Plain text also works
+    },
+  },
+})
+```
+
+---
+
+## Row Badges
+
+Add badge indicators to rows (displays in first column, persists through edits):
+
+```javascript
+// Plain text = default styling applied
+const data = [{ name: "Item 1", _badge: "New" }]
+
+// Custom HTML = your own styling
+const data = [
+  { name: "Item 1", _badge: '<span class="my-badge">Custom</span>' },
+]
+
+// Update dynamically
+table.updateRowBadge(rowId, "Updated") // Plain text
+table.updateRowBadge(rowId, '<span class="custom">HTML</span>') // Custom
+
+// Remove badge
+table.updateRowBadge(rowId, null)
+```
+
+### Badge CSS Classes
+
+| Class                    | Description                    |
+| ------------------------ | ------------------------------ |
+| `.dg-cell-badge`         | Default badge (plain text)     |
+| `.dg-cell-badge-wrapper` | Wrapper for custom HTML badges |
+| `.dg-badge-sm`           | Small badge                    |
+| `.dg-badge-dot`          | Dot indicator                  |
+| `.dg-badge-success`      | Green (success)                |
+| `.dg-badge-warning`      | Yellow (warning)               |
+| `.dg-badge-error`        | Red (error)                    |
 
 ## File Structure
 

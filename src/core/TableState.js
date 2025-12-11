@@ -44,11 +44,15 @@ export class TableState {
       dirtyRows: new Set(),
       dirtyColumns: new Map(),
 
+      // Batch operation tracking
+      isBatchOperation: false,
+
       // Configuration
       config: {
         fixedFirstColumn: false,
         enableGrouping: false,
         groupBy: null,
+        groups: {},
         enableInfoRows: false,
         enableRowTotals: false,
         actions: [],
@@ -108,6 +112,14 @@ export class TableState {
   }
 
   /**
+   * Check if currently in a batch operation
+   * @returns {boolean}
+   */
+  isBatchOperation() {
+    return this._state.isBatchOperation
+  }
+
+  /**
    * Update a specific cell value
    * @param {string|number} rowId - Row identifier
    * @param {string} columnName - Column name
@@ -137,24 +149,28 @@ export class TableState {
     // Invalidate affected cache
     this._invalidateCacheForRow(rowId, columnName)
 
-    // Emit cell change event
-    this._eventBus.emit(TableEvents.CELL_CHANGE, {
-      rowId,
-      rowIndex,
-      columnName,
-      oldValue,
-      newValue: value,
-      row: deepClone(row),
-    })
+    // Skip emitting individual cell/row change events during batch operations
+    // The full render will happen after the batch completes via DATA_CHANGE
+    if (!this._state.isBatchOperation) {
+      // Emit cell change event
+      this._eventBus.emit(TableEvents.CELL_CHANGE, {
+        rowId,
+        rowIndex,
+        columnName,
+        oldValue,
+        newValue: value,
+        row: deepClone(row),
+      })
 
-    // Emit row change event
-    this._eventBus.emit(TableEvents.ROW_CHANGE, {
-      rowId,
-      rowIndex,
-      columnName,
-      row: deepClone(row),
-      dirtyColumns: Array.from(this._state.dirtyColumns.get(rowId) || []),
-    })
+      // Emit row change event
+      this._eventBus.emit(TableEvents.ROW_CHANGE, {
+        rowId,
+        rowIndex,
+        columnName,
+        row: deepClone(row),
+        dirtyColumns: Array.from(this._state.dirtyColumns.get(rowId) || []),
+      })
+    }
 
     // Trigger cascade updates if needed
     if (!options.skipCascade) {
@@ -167,6 +183,9 @@ export class TableState {
    * @param {Array<{rowId, columnName, value}>} updates - Array of updates
    */
   batchUpdate(updates) {
+    // Mark that we're in a batch operation
+    this._state.isBatchOperation = true
+
     this._eventBus.startBatch()
 
     updates.forEach(({ rowId, columnName, value }) => {
@@ -177,6 +196,9 @@ export class TableState {
     this._computeAllCascades()
 
     this._eventBus.endBatch()
+
+    // Mark batch operation as complete before emitting DATA_CHANGE
+    this._state.isBatchOperation = false
 
     this._eventBus.emit(TableEvents.DATA_CHANGE, {
       data: this._state.data,
@@ -501,9 +523,13 @@ export class TableState {
       }
 
       if (!groups[groupKey]) {
+        // Check if there's a custom label in config.groups.labels
+        const customLabels = this._state.config.groups?.labels || {}
+        const customLabel = customLabels[groupKey]
+
         groups[groupKey] = {
           id: groupKey,
-          label: groupKey,
+          label: customLabel || groupKey,
           rows: [],
           totals: {},
         }

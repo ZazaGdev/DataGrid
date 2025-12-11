@@ -360,11 +360,15 @@
         dirtyRows: new Set(),
         dirtyColumns: new Map(),
 
+        // Batch operation tracking
+        isBatchOperation: false,
+
         // Configuration
         config: {
           fixedFirstColumn: false,
           enableGrouping: false,
           groupBy: null,
+          groups: {},
           enableInfoRows: false,
           enableRowTotals: false,
           actions: [],
@@ -424,6 +428,14 @@
     }
 
     /**
+     * Check if currently in a batch operation
+     * @returns {boolean}
+     */
+    isBatchOperation() {
+      return this._state.isBatchOperation
+    }
+
+    /**
      * Update a specific cell value
      * @param {string|number} rowId - Row identifier
      * @param {string} columnName - Column name
@@ -453,24 +465,28 @@
       // Invalidate affected cache
       this._invalidateCacheForRow(rowId, columnName);
 
-      // Emit cell change event
-      this._eventBus.emit(TableEvents.CELL_CHANGE, {
-        rowId,
-        rowIndex,
-        columnName,
-        oldValue,
-        newValue: value,
-        row: deepClone(row),
-      });
+      // Skip emitting individual cell/row change events during batch operations
+      // The full render will happen after the batch completes via DATA_CHANGE
+      if (!this._state.isBatchOperation) {
+        // Emit cell change event
+        this._eventBus.emit(TableEvents.CELL_CHANGE, {
+          rowId,
+          rowIndex,
+          columnName,
+          oldValue,
+          newValue: value,
+          row: deepClone(row),
+        });
 
-      // Emit row change event
-      this._eventBus.emit(TableEvents.ROW_CHANGE, {
-        rowId,
-        rowIndex,
-        columnName,
-        row: deepClone(row),
-        dirtyColumns: Array.from(this._state.dirtyColumns.get(rowId) || []),
-      });
+        // Emit row change event
+        this._eventBus.emit(TableEvents.ROW_CHANGE, {
+          rowId,
+          rowIndex,
+          columnName,
+          row: deepClone(row),
+          dirtyColumns: Array.from(this._state.dirtyColumns.get(rowId) || []),
+        });
+      }
 
       // Trigger cascade updates if needed
       if (!options.skipCascade) {
@@ -483,6 +499,9 @@
      * @param {Array<{rowId, columnName, value}>} updates - Array of updates
      */
     batchUpdate(updates) {
+      // Mark that we're in a batch operation
+      this._state.isBatchOperation = true;
+
       this._eventBus.startBatch();
 
       updates.forEach(({ rowId, columnName, value }) => {
@@ -493,6 +512,9 @@
       this._computeAllCascades();
 
       this._eventBus.endBatch();
+
+      // Mark batch operation as complete before emitting DATA_CHANGE
+      this._state.isBatchOperation = false;
 
       this._eventBus.emit(TableEvents.DATA_CHANGE, {
         data: this._state.data,
@@ -817,9 +839,13 @@
         }
 
         if (!groups[groupKey]) {
+          // Check if there's a custom label in config.groups.labels
+          const customLabels = this._state.config.groups?.labels || {};
+          const customLabel = customLabels[groupKey];
+
           groups[groupKey] = {
             id: groupKey,
-            label: groupKey,
+            label: customLabel || groupKey,
             rows: [],
             totals: {},
           };
@@ -1048,9 +1074,12 @@
       const cellKey = `${rowId}:${columnName}`;
       const cell = this._cellElements.get(cellKey);
 
-      if (cell) {
+      if (cell && cell.isConnected) {
         const column = this._state.getColumn(columnName);
-        this._renderCellContent(cell, value, column, this._state.getRow(rowId));
+        const row = this._state.getRow(rowId);
+        if (column && row) {
+          this._renderCellContent(cell, value, column, row);
+        }
       }
     }
 
@@ -1124,6 +1153,11 @@
         this._eventBus.on(
           TableEvents.CELL_CHANGE,
           ({ rowId, columnName, newValue }) => {
+            // Skip individual cell updates during batch operations
+            // The full render will happen after the batch completes
+            if (this._state.isBatchOperation && this._state.isBatchOperation()) {
+              return
+            }
             this.updateCell(rowId, columnName, newValue);
           }
         )
@@ -1431,26 +1465,105 @@
         td.style.textAlign = column.align;
       }
 
-      // Render content first (this clears innerHTML)
-      this._renderCellContent(td, row[column.data], column, row);
-
-      // Render actions for first column (if enabled for this column)
-      // Must be after _renderCellContent since it clears innerHTML
+      // Render actions for first column FIRST (before content)
+      // This ensures actions are at the beginning of the cell
       const actions = config.actions || [];
       const columnHasActions = column.actions !== false; // Default true, can be disabled per column
+      // Check if row should have actions (skip infoRows and check showIf callback if provided)
+      const rowHasActions =
+        row._type !== "infoRow" &&
+        (!config.actionsShowIf || config.actionsShowIf(row));
       if (
         index === 0 &&
         actions.length > 0 &&
         columnHasActions &&
-        row._type !== "infoRow"
+        rowHasActions
       ) {
         const actionsWrapper = this._createRowActions(actions, row);
-        // Insert actions at the beginning of the cell
-        td.insertBefore(actionsWrapper, td.firstChild);
+        td.appendChild(actionsWrapper);
         addClass(td, "dg-cell-has-actions");
       }
 
+      // Render content (pass flag to skip action handling since we did it above)
+      this._renderCellContent(td, row[column.data], column, row, true);
+
+      // Render badge for first column if row has _badge property
+      if (index === 0 && row._badge && row._type !== "infoRow") {
+        const badge = this._createBadgeElement(row._badge);
+        td.appendChild(badge);
+        addClass(td, "dg-cell-has-badge");
+      }
+
       return td
+    }
+
+    /**
+     * Create badge element for a cell
+     * @private
+     * @param {string|HTMLElement} badgeContent - Badge HTML string or element
+     * @returns {HTMLElement} Badge element
+     */
+    _createBadgeElement(badgeContent) {
+      // Check if content contains HTML tags (custom styled element)
+      const containsHtml =
+        typeof badgeContent === "string" && /<[^>]+>/.test(badgeContent);
+
+      if (containsHtml) {
+        // Custom HTML provided - create wrapper without default badge styling
+        const wrapper = createElement("span", { class: "dg-cell-badge-wrapper" });
+        wrapper.innerHTML = badgeContent;
+        return wrapper
+      } else if (badgeContent instanceof HTMLElement) {
+        // HTMLElement provided - wrap without default styling
+        const wrapper = createElement("span", { class: "dg-cell-badge-wrapper" });
+        wrapper.appendChild(badgeContent.cloneNode(true));
+        return wrapper
+      } else {
+        // Plain text - apply default badge styling
+        const badge = createElement("span", { class: "dg-cell-badge" });
+        badge.textContent = badgeContent;
+        return badge
+      }
+    }
+
+    /**
+     * Update badge for a specific row
+     * @param {string} rowId - Row identifier
+     * @param {string|HTMLElement|null} badgeContent - New badge content (null to remove)
+     */
+    updateRowBadge(rowId, badgeContent) {
+      // Update the badge in the actual state data (not a clone)
+      const data = this._state._state.data;
+      const row = data.find((r) => r._id === rowId);
+      if (!row) return
+
+      // Update the data
+      row._badge = badgeContent;
+
+      // Find the first cell of the row
+      const columns = this._state.getColumns();
+      const firstVisibleColumn = columns.find((col) => col.visible !== false);
+      if (!firstVisibleColumn) return
+
+      const cellKey = `${rowId}:${firstVisibleColumn.data}`;
+      const td = this._cellElements.get(cellKey);
+      if (!td) return
+
+      // Remove existing badge (could be either class)
+      const existingBadge = td.querySelector(
+        ".dg-cell-badge, .dg-cell-badge-wrapper"
+      );
+      if (existingBadge) {
+        existingBadge.remove();
+        removeClass(td, "dg-cell-has-badge");
+      }
+
+      // Add new badge if content provided
+      if (badgeContent) {
+        const badge = this._createBadgeElement(badgeContent);
+        td.appendChild(badge);
+        addClass(td, "dg-cell-has-badge");
+      }
     }
 
     /**
@@ -1510,8 +1623,13 @@
     /**
      * Render cell content based on mode and column config
      * @private
+     * @param {HTMLElement} cell - Cell element
+     * @param {any} value - Cell value
+     * @param {Object} column - Column configuration
+     * @param {Object} row - Row data
+     * @param {boolean} skipSpecialElements - Skip handling of actions/badges (used during initial creation)
      */
-    _renderCellContent(cell, value, column, row) {
+    _renderCellContent(cell, value, column, row, skipSpecialElements = false) {
       const isEditMode = this._state.isEditMode();
       // Check column, row type, and row-level editable override
       const isEditable =
@@ -1519,26 +1637,84 @@
         row._type !== "infoRow" &&
         row._editable !== false;
 
-      cell.innerHTML = "";
-
-      if (isEditMode && isEditable) {
-        // Edit mode - render input
-        const input = this._createInputElement(value, column, row);
-        cell.appendChild(input);
-      } else {
-        // View mode - render display value
-        const displayValue = this._formatDisplayValue(value, column, row);
-
-        if (column.render) {
-          // Custom render function
-          const rendered = column.render(value, row, column);
-          if (typeof rendered === "string") {
-            cell.innerHTML = rendered;
-          } else if (rendered instanceof HTMLElement) {
-            cell.appendChild(rendered);
-          }
+      if (skipSpecialElements) {
+        // During initial creation, just render the content
+        // Actions and badges are handled by _createCellElement
+        if (isEditMode && isEditable) {
+          // Edit mode - render input
+          const input = this._createInputElement(value, column, row);
+          cell.appendChild(input);
         } else {
-          cell.textContent = displayValue;
+          // View mode - render display value
+          const displayValue = this._formatDisplayValue(value, column, row);
+
+          if (column.render) {
+            // Custom render function
+            const rendered = column.render(value, row, column);
+            if (typeof rendered === "string") {
+              // Create a text node or span for the content
+              const content = document.createElement("span");
+              content.innerHTML = rendered;
+              cell.appendChild(content);
+            } else if (rendered instanceof HTMLElement) {
+              cell.appendChild(rendered);
+            }
+          } else {
+            // Create text content
+            const textNode = document.createTextNode(displayValue);
+            cell.appendChild(textNode);
+          }
+        }
+      } else {
+        // During updates, we need to preserve actions and badges
+        // Find and temporarily remove special elements
+        const existingBadge = cell.querySelector(
+          ".dg-cell-badge, .dg-cell-badge-wrapper"
+        );
+        const existingActions = cell.querySelector(".dg-row-actions");
+
+        // Remove special elements temporarily (they keep their references and event listeners)
+        if (existingBadge) existingBadge.remove();
+        if (existingActions) existingActions.remove();
+
+        // Clear remaining content (text nodes, inputs, spans)
+        cell.innerHTML = "";
+
+        // Re-add actions at the beginning (with their original event listeners intact)
+        if (existingActions) {
+          cell.appendChild(existingActions);
+        }
+
+        // Render content
+        if (isEditMode && isEditable) {
+          // Edit mode - render input
+          const input = this._createInputElement(value, column, row);
+          cell.appendChild(input);
+        } else {
+          // View mode - render display value
+          const displayValue = this._formatDisplayValue(value, column, row);
+
+          if (column.render) {
+            // Custom render function
+            const rendered = column.render(value, row, column);
+            if (typeof rendered === "string") {
+              // Create a text node or span for the content
+              const content = document.createElement("span");
+              content.innerHTML = rendered;
+              cell.appendChild(content);
+            } else if (rendered instanceof HTMLElement) {
+              cell.appendChild(rendered);
+            }
+          } else {
+            // Create text content
+            const textNode = document.createTextNode(displayValue);
+            cell.appendChild(textNode);
+          }
+        }
+
+        // Re-add badge at the end (with its original structure intact)
+        if (existingBadge) {
+          cell.appendChild(existingBadge);
         }
       }
     }
@@ -1710,7 +1886,13 @@
           toggleIcon.innerHTML = isCollapsed ? "▶" : "▼";
 
           const groupLabel = createElement("span", { class: "dg-group-label" });
-          groupLabel.textContent = group.label || groupId;
+          const labelContent = group.label || groupId;
+          // Check if label contains HTML (starts with < or contains < followed by a letter)
+          if (typeof labelContent === "string" && labelContent.includes("<")) {
+            groupLabel.innerHTML = labelContent;
+          } else {
+            groupLabel.textContent = labelContent;
+          }
 
           const groupCount = createElement("span", { class: "dg-group-count" });
           groupCount.textContent = `(${group.rows.length})`;
@@ -3648,10 +3830,12 @@
           fixedFirstColumn: config.fixedFirstColumn,
           enableGrouping: config.enableGrouping,
           groupBy: config.groupBy,
+          groups: config.groups || {},
           enableInfoRows: config.enableInfoRows,
           enableRowTotals: config.enableRowTotals,
           rowTotalsFormat: config.rowTotalsFormat,
           actions: config.actions || [],
+          actionsShowIf: config.actionsShowIf,
         },
       });
 
@@ -3706,6 +3890,15 @@
      */
     updateCell(rowId, columnName, value) {
       this._state.updateCell(rowId, columnName, value);
+    }
+
+    /**
+     * Update badge for a specific row
+     * @param {string|number} rowId - Row identifier
+     * @param {string|HTMLElement|null} badgeContent - Badge HTML content (null to remove)
+     */
+    updateRowBadge(rowId, badgeContent) {
+      this._renderer.updateRowBadge(rowId, badgeContent);
     }
 
     /**

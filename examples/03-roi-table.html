@@ -118,6 +118,9 @@
           Expand All
         </button>
         <button class="btn btn-primary" id="collapseAll">Collapse All</button>
+        <button class="btn" id="toggleBadges" style="margin-left: 1rem">
+          Toggle Badges
+        </button>
       </div>
 
       <div id="tableContainer"></div>
@@ -162,7 +165,7 @@
           {
             title: "Name",
             data: "name",
-            width: "180px",
+            width: "350px",
           },
         ]
 
@@ -212,6 +215,7 @@
           period4: 5000,
           period5: 5000,
           period6: 5000,
+          _badge: '<span class="dg-badge-success">New</span>',
         })
 
         data.push({
@@ -223,6 +227,7 @@
           period4: 6000,
           period5: 6000,
           period6: 6000,
+          _badge: '<span class="dg-badge-warning">Pending</span>',
         })
 
         data.push({
@@ -234,6 +239,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-success">Active</span>',
         })
 
         data.push({
@@ -245,6 +251,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-success">Active</span>',
         })
 
         data.push({
@@ -256,6 +263,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-warning">Pending</span>',
         })
 
         // Costs Group - no info row header for this group
@@ -268,6 +276,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-error">Required</span>',
         })
 
         data.push({
@@ -279,6 +288,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-error">Required</span>',
         })
 
         data.push({
@@ -290,6 +300,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-warning">Review</span>',
         })
 
         data.push({
@@ -301,6 +312,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-warning">Review</span>',
         })
 
         data.push({
@@ -312,6 +324,7 @@
           period4: 0,
           period5: 0,
           period6: 0,
+          _badge: '<span class="dg-badge-success">Approved</span>',
         })
 
         console.log(data)
@@ -364,6 +377,7 @@
           group: null,
           _editable: false,
         }
+
         let cumulative = 0
         let cumulativeTotal = 0
         for (let i = 1; i <= periodCount; i++) {
@@ -427,6 +441,14 @@
           data: allData,
           enableGrouping: true,
           groupBy: "group",
+          groups: {
+            labels: {
+              Benefits:
+                'Benefits <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#10b981" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg> ',
+              Costs:
+                'Costs <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#ef4444" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"/></svg> ',
+            },
+          },
           enableRowTotals: true,
           rowTotalsFormat: (value) =>
             value !== null && value !== undefined
@@ -440,6 +462,8 @@
           theme: {
             ungroupedRowBackground: "#F5492733", // Light red for ungrouped metric rows EXAMPLE
           },
+          // Only show actions on grouped rows (Benefits/Costs), not on metrics rows
+          actionsShowIf: (row) => !!row.group,
           // Row actions configuration
           actions: [
             {
@@ -532,6 +556,42 @@
 
       document.getElementById("collapseAll").addEventListener("click", () => {
         table.collapseAllGroups()
+      })
+
+      // Badge toggle demo - cycles through different badge states for ALL rows
+      let badgeState = 0
+      const badgeStates = [
+        { label: "New", class: "dg-badge-success" },
+        { label: "Updated", class: "dg-badge-warning" },
+        { label: "Review", class: "dg-badge-error" },
+        { label: null, class: null }, // No badge
+      ]
+
+      document.getElementById("toggleBadges").addEventListener("click", () => {
+        const rows = table.getData()
+        badgeState = (badgeState + 1) % badgeStates.length
+        const currentBadge = badgeStates[badgeState]
+
+        // Update badges on ALL grouped rows (Benefits and Costs)
+        rows.forEach((row) => {
+          // Skip info rows and ungrouped rows (metrics)
+          if (row._type === "infoRow" || !row.group) return
+
+          if (currentBadge.label) {
+            table.updateRowBadge(
+              row._id,
+              `<span class="${currentBadge.class}">${currentBadge.label}</span>`
+            )
+          } else {
+            table.updateRowBadge(row._id, null)
+          }
+        })
+
+        // Update button text to show current state
+        const btn = document.getElementById("toggleBadges")
+        btn.textContent = currentBadge.label
+          ? `Badge: ${currentBadge.label}`
+          : "Badge: Off"
       })
 
       console.log("✅ ROI Calculator loaded successfully!")

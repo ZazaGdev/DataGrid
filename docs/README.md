@@ -361,6 +361,34 @@ table.expandAllGroups()
 table.collapseAllGroups()
 ```
 
+#### Custom Group Labels with HTML
+
+Group labels support HTML content, allowing you to add icons or custom formatting:
+
+```javascript
+const table = new Table({
+  container: "#table",
+  enableGrouping: true,
+  groupBy: "category",
+  groups: {
+    order: ["benefits", "costs"],
+    labels: {
+      // Plain text label
+      costs: "Costs",
+      // HTML label with Bootstrap icon
+      benefits: '<i class="bi bi-star-fill text-warning"></i> Benefits',
+    },
+  },
+  // ... columns and data
+})
+```
+
+The renderer automatically detects HTML content (presence of `<` character) and renders it appropriately. This allows you to:
+
+- Add icons from icon libraries (Bootstrap Icons, Font Awesome, etc.)
+- Apply custom styling with inline classes
+- Include any valid HTML elements
+
 ### 3. View/Edit Mode
 
 ```javascript
@@ -507,6 +535,86 @@ Actions are styled with CSS classes:
 }
 ```
 
+### 7. Row Badges
+
+Add badge indicators to rows. Badges appear in the top-right corner of the first column cell and persist through cell edits.
+
+**Badge Types:**
+
+- **Plain text**: Pass a plain string to get default badge styling
+- **Custom HTML**: Pass HTML string with your own classes for full control over styling
+
+```javascript
+// Add badge via row data
+const data = [
+  {
+    name: "Item 1",
+    amount: 100,
+    _badge: "New",  // Plain text = default badge styling applied
+  },
+  {
+    name: "Item 2",
+    amount: 200,
+    _badge: '<span class="my-custom-badge">Custom</span>',  // Custom HTML = no default styling
+  },
+  {
+    name: "Item 3",
+    amount: 300,
+    // No badge
+  },
+]
+
+const table = new Table({
+  container: "#table",
+  columns: [...],
+  data: data,
+})
+
+// Update badge dynamically
+table.updateRowBadge(rowId, "Updated")  // Plain text badge
+
+// Custom styled badge
+table.updateRowBadge(rowId, '<span class="my-badge">Custom</span>')
+
+// Remove badge
+table.updateRowBadge(rowId, null)
+```
+
+#### Badge CSS Classes (for plain text badges)
+
+| Class               | Description             |
+| ------------------- | ----------------------- |
+| `.dg-cell-badge`    | Default badge styling   |
+| `.dg-badge-sm`      | Smaller badge size      |
+| `.dg-badge-dot`     | Dot indicator (no text) |
+| `.dg-badge-success` | Green success color     |
+| `.dg-badge-warning` | Yellow warning color    |
+| `.dg-badge-error`   | Red error color         |
+
+#### Custom Badge Styling
+
+When passing custom HTML, the content is wrapped in `.dg-cell-badge-wrapper` which only provides positioning:
+
+```css
+/* Position wrapper (auto-applied to custom HTML badges) */
+.dg-cell-badge-wrapper {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 1;
+}
+
+/* Your custom badge styling */
+.my-custom-badge {
+  display: inline-flex;
+  padding: 2px 6px;
+  background-color: #8b5cf6;
+  color: white;
+  border-radius: 4px;
+  font-size: 10px;
+}
+```
+
 ---
 
 ## API Reference
@@ -532,6 +640,10 @@ table.batchUpdate([
 table.addRow({ name: "New", amount: 0 })
 table.addRow(data, { afterRowId: "row_1" })
 table.deleteRow(rowId)
+
+// Row badges
+table.updateRowBadge(rowId, '<span class="dg-badge-success">New</span>')
+table.updateRowBadge(rowId, null) // Remove badge
 
 // Dirty state
 table.getDirtyRows() // Get modified rows
