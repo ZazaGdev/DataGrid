@@ -356,6 +356,11 @@
 .dg-cell-has-badge {
   position: relative;
 }
+.dg-cell-has-badge input {
+  width: 70% !important;
+  max-width: 70% !important;
+  flex: 0 0 70% !important;
+}
 
 .dg-cell-badge-wrapper {
   position: absolute;

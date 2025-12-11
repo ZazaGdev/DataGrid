@@ -341,6 +341,12 @@
 
 .dg-cell-has-badge {
   position: relative;
+
+  input {
+    width: 70% !important;
+    max-width: 70% !important;
+    flex: 0 0 70% !important;
+  }
 }
 
 // Wrapper for custom-styled badges (no default styling applied)
