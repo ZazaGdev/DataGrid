@@ -166,6 +166,20 @@
             title: "Name",
             data: "name",
             width: "350px",
+            render: (value, row) => {
+              // Add icons to ungrouped metric rows
+              if (!row.group && row._type !== "infoRow" && value) {
+                const icons = {
+                  "CASH FLOW": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#3b82f6" style="width:16px;height:16px;vertical-align:middle;margin-left:8px"><path fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z" clip-rule="evenodd"/></svg>`,
+                  "CUMULATIVE CASH FLOW": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#8b5cf6" style="width:16px;height:16px;vertical-align:middle;margin-left:8px"><path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h16.5a.75.75 0 010 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h16.5a.75.75 0 010 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H1.75z" clip-rule="evenodd"/></svg>`,
+                  "DISCOUNTED CASH FLOW": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#f59e0b" style="width:16px;height:16px;vertical-align:middle;margin-left:8px"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.732 6.232a2.5 2.5 0 013.536 0 .75.75 0 101.06-1.06A4 4 0 006.5 8v.165c0 .364.034.728.1 1.085h-.35a.75.75 0 000 1.5h.737a5.25 5.25 0 01-.367 3.072l-.055.123a.75.75 0 00.848 1.037l1.272-.283a3.493 3.493 0 011.604.021 4.992 4.992 0 002.422 0l.97-.242a.75.75 0 00-.363-1.456l-.971.243a3.491 3.491 0 01-1.694 0 4.992 4.992 0 00-2.258-.038c.19-.811.227-1.651.111-2.477H9.75a.75.75 0 000-1.5H8.136A4.397 4.397 0 018 8.165V8c0-.641.244-1.22.732-1.768z" clip-rule="evenodd"/></svg>`,
+                  "CUMULATIVE DISCOUNTED CASH FLOW": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#10b981" style="width:16px;height:16px;vertical-align:middle;margin-left:8px"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>`,
+                }
+                const icon = icons[value] || ""
+                return `${value}${icon}`
+              }
+              return value
+            },
           },
         ]
 
