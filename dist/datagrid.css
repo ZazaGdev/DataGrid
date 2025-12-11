@@ -415,6 +415,48 @@
   height: 0.75rem;
 }
 
+.dg-badge-top-end {
+  top: 3px;
+  right: 3px;
+  bottom: auto;
+  left: auto;
+}
+
+.dg-badge-center-end {
+  top: calc(50% - 0.5rem);
+  right: 3px;
+  bottom: auto;
+  left: auto;
+}
+
+.dg-badge-bottom-end {
+  top: auto;
+  right: 3px;
+  bottom: 3px;
+  left: auto;
+}
+
+.dg-badge-top-start {
+  top: 3px;
+  right: auto;
+  bottom: auto;
+  left: 3px;
+}
+
+.dg-badge-center-start {
+  top: calc(50% - 0.5rem);
+  right: auto;
+  bottom: auto;
+  left: 3px;
+}
+
+.dg-badge-bottom-start {
+  top: auto;
+  right: auto;
+  bottom: 3px;
+  left: 3px;
+}
+
 /**
  * DataGrid - Main Stylesheet
  * 

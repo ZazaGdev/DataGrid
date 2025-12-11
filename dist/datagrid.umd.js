@@ -1500,30 +1500,54 @@
     /**
      * Create badge element for a cell
      * @private
-     * @param {string|HTMLElement} badgeContent - Badge HTML string or element
+     * @param {string|HTMLElement|Object} badgeConfig - Badge content or config object
+     *   - string: Plain text or HTML string
+     *   - HTMLElement: Custom element
+     *   - Object: { content: string|HTMLElement, position: string }
+     *     position values: 'top-end' (default), 'center-end', 'bottom-end',
+     *                      'top-start', 'center-start', 'bottom-start'
      * @returns {HTMLElement} Badge element
      */
-    _createBadgeElement(badgeContent) {
-      // Check if content contains HTML tags (custom styled element)
-      const containsHtml =
-        typeof badgeContent === "string" && /<[^>]+>/.test(badgeContent);
+    _createBadgeElement(badgeConfig) {
+      // Extract content and position from config object or use direct value
+      let content = badgeConfig;
+      let position = null;
 
+      if (
+        badgeConfig &&
+        typeof badgeConfig === "object" &&
+        !(badgeConfig instanceof HTMLElement) &&
+        "content" in badgeConfig
+      ) {
+        content = badgeConfig.content;
+        position = badgeConfig.position || null;
+      }
+
+      // Check if content contains HTML tags (custom styled element)
+      const containsHtml = typeof content === "string" && /<[^>]+>/.test(content);
+
+      let badge;
       if (containsHtml) {
         // Custom HTML provided - create wrapper without default badge styling
-        const wrapper = createElement("span", { class: "dg-cell-badge-wrapper" });
-        wrapper.innerHTML = badgeContent;
-        return wrapper
-      } else if (badgeContent instanceof HTMLElement) {
+        badge = createElement("span", { class: "dg-cell-badge-wrapper" });
+        badge.innerHTML = content;
+      } else if (content instanceof HTMLElement) {
         // HTMLElement provided - wrap without default styling
-        const wrapper = createElement("span", { class: "dg-cell-badge-wrapper" });
-        wrapper.appendChild(badgeContent.cloneNode(true));
-        return wrapper
+        badge = createElement("span", { class: "dg-cell-badge-wrapper" });
+        badge.appendChild(content.cloneNode(true));
       } else {
         // Plain text - apply default badge styling
-        const badge = createElement("span", { class: "dg-cell-badge" });
-        badge.textContent = badgeContent;
-        return badge
+        badge = createElement("span", { class: "dg-cell-badge" });
+        badge.textContent = content;
       }
+
+      // Apply position class if specified
+      if (position) {
+        const positionClass = `dg-badge-${position}`;
+        addClass(badge, positionClass);
+      }
+
+      return badge
     }
 
     /**
