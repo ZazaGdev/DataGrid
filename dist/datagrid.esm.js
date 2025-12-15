@@ -3078,6 +3078,9 @@ class EditManager {
       const input = e.target;
       if (!input.classList.contains("dg-cell-input")) return
 
+      // Mark as editing when input is focused
+      this._isEditing = true;
+
       // Check if this is a fresh focus (input wasn't focused before)
       if (this._currentlyFocusedInput !== input) {
         this._currentlyFocusedInput = input;
@@ -3087,6 +3090,8 @@ class EditManager {
           if (input.setSelectionRange && typeof input.value === "string") {
             const length = input.value.length;
             input.setSelectionRange(length, length);
+            // Scroll input to make cursor visible at the end
+            input.scrollLeft = input.scrollWidth;
           }
         }, 0);
       }
@@ -3110,6 +3115,10 @@ class EditManager {
     document.addEventListener("keydown", (e) => {
       if (!this._state.isEditMode()) return
 
+      // Check if currently focused on an input element
+      const activeElement = document.activeElement;
+      const isInInput = activeElement && activeElement.classList.contains("dg-cell-input");
+
       switch (e.key) {
         case "Tab":
           e.preventDefault();
@@ -3132,28 +3141,32 @@ class EditManager {
           break
 
         case "ArrowUp":
-          if (!this._isEditing || e.ctrlKey) {
+          // Allow cell navigation when not in input, or with Ctrl key
+          if (!isInInput || e.ctrlKey) {
             e.preventDefault();
             this.moveFocus("up");
           }
           break
 
         case "ArrowDown":
-          if (!this._isEditing || e.ctrlKey) {
+          // Allow cell navigation when not in input, or with Ctrl key
+          if (!isInInput || e.ctrlKey) {
             e.preventDefault();
             this.moveFocus("down");
           }
           break
 
         case "ArrowLeft":
-          if (!this._isEditing || e.ctrlKey) {
+          // Allow text navigation inside input, only move cells with Ctrl or when not in input
+          if (!isInInput || e.ctrlKey) {
             e.preventDefault();
             this.moveFocus("left");
           }
           break
 
         case "ArrowRight":
-          if (!this._isEditing || e.ctrlKey) {
+          // Allow text navigation inside input, only move cells with Ctrl or when not in input
+          if (!isInInput || e.ctrlKey) {
             e.preventDefault();
             this.moveFocus("right");
           }
