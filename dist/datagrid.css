@@ -423,7 +423,7 @@
 }
 
 .dg-badge-center-end {
-  top: calc(50% - 0.5rem);
+  top: calc(50% - 0.6rem);
   right: 5px;
   bottom: auto;
   left: auto;

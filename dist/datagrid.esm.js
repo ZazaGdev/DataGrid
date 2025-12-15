@@ -2858,6 +2858,9 @@ class EditManager {
     /** @type {Array<Function>} - Unsubscribe functions for cleanup */
     this._unsubscribers = [];
 
+    /** @type {HTMLElement|null} - Currently focused input element */
+    this._currentlyFocusedInput = null;
+
     // Setup event listeners
     this._setupListeners();
   }
@@ -3070,6 +3073,39 @@ class EditManager {
    * @private
    */
   _setupListeners() {
+    // Handle input focus - move cursor to end on initial focus only
+    this._handleInputFocus = (e) => {
+      const input = e.target;
+      if (!input.classList.contains("dg-cell-input")) return
+
+      // Check if this is a fresh focus (input wasn't focused before)
+      if (this._currentlyFocusedInput !== input) {
+        this._currentlyFocusedInput = input;
+
+        // Use setTimeout to allow the click to complete, then move cursor to end
+        setTimeout(() => {
+          if (input.setSelectionRange && typeof input.value === "string") {
+            const length = input.value.length;
+            input.setSelectionRange(length, length);
+          }
+        }, 0);
+      }
+    };
+
+    // Handle input blur - clear the currently focused input reference
+    this._handleInputBlur = (e) => {
+      const input = e.target;
+      if (!input.classList.contains("dg-cell-input")) return
+
+      if (this._currentlyFocusedInput === input) {
+        this._currentlyFocusedInput = null;
+      }
+    };
+
+    // Add focus/blur listeners with capture to catch events early
+    document.addEventListener("focus", this._handleInputFocus, true);
+    document.addEventListener("blur", this._handleInputBlur, true);
+
     // Handle keyboard navigation
     document.addEventListener("keydown", (e) => {
       if (!this._state.isEditMode()) return
@@ -3154,12 +3190,17 @@ class EditManager {
    * Cleanup
    */
   destroy() {
+    // Remove focus/blur listeners
+    document.removeEventListener("focus", this._handleInputFocus, true);
+    document.removeEventListener("blur", this._handleInputBlur, true);
+
     // Unsubscribe from all event listeners
     this._unsubscribers.forEach((unsubscribe) => unsubscribe());
     this._unsubscribers = [];
 
     this._focusedCell = null;
     this._isEditing = false;
+    this._currentlyFocusedInput = null;
   }
 }
 
