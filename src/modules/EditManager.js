@@ -256,8 +256,9 @@ export class EditManager {
         this._currentlyFocusedInput = input
 
         // Use setTimeout to allow the click to complete, then move cursor to end
+        // Note: setSelectionRange doesn't work on number inputs
         setTimeout(() => {
-          if (input.setSelectionRange && typeof input.value === "string") {
+          if (input.type !== "number" && input.setSelectionRange && typeof input.value === "string") {
             const length = input.value.length
             input.setSelectionRange(length, length)
             // Scroll input to make cursor visible at the end

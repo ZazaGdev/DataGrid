@@ -814,7 +814,13 @@ export class TableRenderer {
 
       // Type coercion
       if (type === "number") {
-        newValue = newValue === "" ? null : parseFloat(newValue)
+        newValue = newValue === "" ? 0 : parseFloat(newValue)
+        // Also handle NaN from invalid input
+        if (isNaN(newValue)) {
+          newValue = 0
+        }
+        // Update the input value to reflect the normalized value
+        e.target.value = newValue
       }
 
       this._state.updateCell(row._id, column.data, newValue)

@@ -1804,7 +1804,13 @@
 
         // Type coercion
         if (type === "number") {
-          newValue = newValue === "" ? null : parseFloat(newValue);
+          newValue = newValue === "" ? 0 : parseFloat(newValue);
+          // Also handle NaN from invalid input
+          if (isNaN(newValue)) {
+            newValue = 0;
+          }
+          // Update the input value to reflect the normalized value
+          e.target.value = newValue;
         }
 
         this._state.updateCell(row._id, column.data, newValue);
@@ -3092,8 +3098,9 @@
           this._currentlyFocusedInput = input;
 
           // Use setTimeout to allow the click to complete, then move cursor to end
+          // Note: setSelectionRange doesn't work on number inputs
           setTimeout(() => {
-            if (input.setSelectionRange && typeof input.value === "string") {
+            if (input.type !== "number" && input.setSelectionRange && typeof input.value === "string") {
               const length = input.value.length;
               input.setSelectionRange(length, length);
               // Scroll input to make cursor visible at the end
@@ -3123,7 +3130,8 @@
 
         // Check if currently focused on an input element
         const activeElement = document.activeElement;
-        const isInInput = activeElement && activeElement.classList.contains("dg-cell-input");
+        const isInInput =
+          activeElement && activeElement.classList.contains("dg-cell-input");
 
         switch (e.key) {
           case "Tab":
@@ -3143,22 +3151,6 @@
             if (this._isEditing) {
               e.preventDefault();
               this.cancelEdit();
-            }
-            break
-
-          case "ArrowUp":
-            // Allow cell navigation when not in input, or with Ctrl key
-            if (!isInInput || e.ctrlKey) {
-              e.preventDefault();
-              this.moveFocus("up");
-            }
-            break
-
-          case "ArrowDown":
-            // Allow cell navigation when not in input, or with Ctrl key
-            if (!isInInput || e.ctrlKey) {
-              e.preventDefault();
-              this.moveFocus("down");
             }
             break
 
