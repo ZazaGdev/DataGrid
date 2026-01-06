@@ -198,10 +198,7 @@
   }
 
   &:nth-child(odd) td {
-    background-color: var(
-      --dg-ungrouped-row-bg-alt,
-      var(--dg-color-bg-alt)
-    ) !important;
+    background-color: var(--dg-ungrouped-row-bg-alt, var(--dg-color-bg-alt));
   }
 
   &:hover td {
