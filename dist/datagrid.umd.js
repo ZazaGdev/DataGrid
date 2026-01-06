@@ -1,7 +1,7 @@
 /*!
  * DataGrid v1.0.0
  * A modular, high-performance inline editing table library
- * (c) 2025
+ * (c) 2026
  * Released under the MIT License
  */
 (function (global, factory) {
@@ -1079,6 +1079,8 @@
         const row = this._state.getRow(rowId);
         if (column && row) {
           this._renderCellContent(cell, value, column, row);
+          // Update color coding classes
+          this._applyColorCoding(cell, value, row);
         }
       }
     }
@@ -1487,6 +1489,9 @@
       // Render content (pass flag to skip action handling since we did it above)
       this._renderCellContent(td, row[column.data], column, row, true);
 
+      // Apply color coding if enabled for this row
+      this._applyColorCoding(td, row[column.data], row);
+
       // Render badge for first column if row has _badge property
       if (index === 0 && row._badge && row._type !== "infoRow") {
         const badge = this._createBadgeElement(row._badge);
@@ -1642,6 +1647,32 @@
       });
 
       return wrapper
+    }
+
+    /**
+     * Apply color coding classes to a cell based on value
+     * Only applies when row._colorCoding is true
+     * @private
+     * @param {HTMLElement} cell - Cell element
+     * @param {any} value - Cell value
+     * @param {Object} row - Row data
+     */
+    _applyColorCoding(cell, value, row) {
+      // Remove existing color coding classes
+      removeClass(cell, "dg-cell-negative", "dg-cell-positive");
+
+      // Only apply if row has color coding enabled
+      if (!row._colorCoding) return
+
+      // Only apply to numeric values
+      const numValue = Number(value);
+      if (isNaN(numValue)) return
+      console.log(numValue);
+      if (numValue < 0) {
+        addClass(cell, "dg-cell-negative");
+      } else if (numValue > 0) {
+        addClass(cell, "dg-cell-positive");
+      }
     }
 
     /**
@@ -3100,7 +3131,11 @@
           // Use setTimeout to allow the click to complete, then move cursor to end
           // Note: setSelectionRange doesn't work on number inputs
           setTimeout(() => {
-            if (input.type !== "number" && input.setSelectionRange && typeof input.value === "string") {
+            if (
+              input.type !== "number" &&
+              input.setSelectionRange &&
+              typeof input.value === "string"
+            ) {
               const length = input.value.length;
               input.setSelectionRange(length, length);
               // Scroll input to make cursor visible at the end

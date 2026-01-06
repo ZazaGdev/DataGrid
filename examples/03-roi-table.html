@@ -204,7 +204,7 @@
                 : "$0.00",
           })
         }
-        console.log(columns)
+
         return columns
       }
 
@@ -374,7 +374,13 @@
         )
 
         // Cash Flow = Total Benefits - Total Costs per period
-        const cashFlow = { name: "CASH FLOW", group: null, _editable: false }
+        const cashFlow = {
+          name: "CASH FLOW",
+          group: null,
+          _editable: false,
+          _colorCoding: true,
+        }
+
         let cashFlowTotal = 0
         for (let i = 1; i <= periodCount; i++) {
           const benefitSum = benefitsData.reduce(
