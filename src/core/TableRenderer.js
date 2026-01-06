@@ -677,7 +677,7 @@ export class TableRenderer {
     // Only apply to numeric values
     const numValue = Number(value)
     if (isNaN(numValue)) return
-    console.log(numValue)
+
     if (numValue < 0) {
       addClass(cell, "dg-cell-negative")
     } else if (numValue > 0) {

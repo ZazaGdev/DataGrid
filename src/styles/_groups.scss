@@ -193,7 +193,7 @@
 .dg-row-ungrouped {
   // Ungrouped rows appear without indentation
   td {
-    background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg)) !important;
+    background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg));
     color: var(--dg-ungrouped-row-text, var(--dg-color-text));
   }
 

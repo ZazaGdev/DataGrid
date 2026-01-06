@@ -74,6 +74,10 @@
   --dg-z-header: 20;
   --dg-z-fixed-header: 30;
   --dg-z-dropdown: 100;
+  --dg-cell-negative-bg: rgba(239, 68, 68, 0.15);
+  --dg-cell-negative-text: inherit;
+  --dg-cell-positive-bg: rgba(34, 197, 94, 0.15);
+  --dg-cell-positive-text: inherit;
 }
 
 /**
@@ -294,6 +298,17 @@
 .dg-cell.dg-cell-editing {
   padding: 0;
   box-shadow: inset 0 0 0 2px var(--dg-color-primary);
+}
+
+/* Color coding classes applied to cells */
+.dg-cell-negative {
+  background-color: var(--dg-cell-negative-bg) !important;
+  color: var(--dg-cell-negative-text) !important;
+}
+
+.dg-cell-positive {
+  background-color: var(--dg-cell-positive-bg) !important;
+  color: var(--dg-cell-positive-text) !important;
 }
 
 .dg-container.dg-scrolled .dg-cell-fixed,
@@ -609,7 +624,7 @@
 }
 
 .dg-row-ungrouped td {
-  background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg)) !important;
+  background-color: var(--dg-ungrouped-row-bg, var(--dg-color-bg));
   color: var(--dg-ungrouped-row-text, var(--dg-color-text));
 }
 .dg-row-ungrouped:nth-child(odd) td {

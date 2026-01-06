@@ -260,6 +260,17 @@
   }
 }
 
+/* Color coding classes applied to cells */
+.dg-cell-negative {
+  background-color: var(--dg-cell-negative-bg) !important;
+  color: var(--dg-cell-negative-text) !important;
+}
+
+.dg-cell-positive {
+  background-color: var(--dg-cell-positive-bg) !important;
+  color: var(--dg-cell-positive-text) !important;
+}
+
 // ============================================
 // Fixed Column Shadow
 // ============================================

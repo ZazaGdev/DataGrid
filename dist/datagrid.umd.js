@@ -1667,7 +1667,7 @@
       // Only apply to numeric values
       const numValue = Number(value);
       if (isNaN(numValue)) return
-      console.log(numValue);
+
       if (numValue < 0) {
         addClass(cell, "dg-cell-negative");
       } else if (numValue > 0) {
@@ -3578,6 +3578,12 @@
         cellBackground: null, // Falls back to --dg-color-bg
         cellText: null, // Falls back to --dg-color-text
 
+        // Cell color coding (for rows with _colorCoding: true)
+        cellNegativeBackground: null, // Falls back to --dg-cell-negative-bg
+        cellNegativeText: null, // Falls back to --dg-cell-negative-text
+        cellPositiveBackground: null, // Falls back to --dg-cell-positive-bg
+        cellPositiveText: null, // Falls back to --dg-cell-positive-text
+
         // Sticky/Fixed column colors
         fixedBackground: null, // Inherits from row
         fixedShadow: null, // Falls back to --dg-shadow-fixed
@@ -3696,6 +3702,32 @@
         style.setProperty(
           "--dg-color-text",
           this._resolveValue(this._theme.cellText)
+        );
+      }
+
+      // Cell color coding
+      if (this._theme.cellNegativeBackground) {
+        style.setProperty(
+          "--dg-cell-negative-bg",
+          this._resolveValue(this._theme.cellNegativeBackground)
+        );
+      }
+      if (this._theme.cellNegativeText) {
+        style.setProperty(
+          "--dg-cell-negative-text",
+          this._resolveValue(this._theme.cellNegativeText)
+        );
+      }
+      if (this._theme.cellPositiveBackground) {
+        style.setProperty(
+          "--dg-cell-positive-bg",
+          this._resolveValue(this._theme.cellPositiveBackground)
+        );
+      }
+      if (this._theme.cellPositiveText) {
+        style.setProperty(
+          "--dg-cell-positive-text",
+          this._resolveValue(this._theme.cellPositiveText)
         );
       }
 
@@ -3839,6 +3871,10 @@
         style.removeProperty("--dg-color-header-text");
         style.removeProperty("--dg-color-cell-bg");
         style.removeProperty("--dg-color-text");
+        style.removeProperty("--dg-cell-negative-bg");
+        style.removeProperty("--dg-cell-negative-text");
+        style.removeProperty("--dg-cell-positive-bg");
+        style.removeProperty("--dg-cell-positive-text");
         style.removeProperty("--dg-shadow-fixed");
         style.removeProperty("--dg-fixed-border-color");
         style.removeProperty("--dg-fixed-border-width");
