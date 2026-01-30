@@ -1161,22 +1161,22 @@
               return
             }
             this.updateCell(rowId, columnName, newValue);
-          }
-        )
+          },
+        ),
       );
 
       // Listen for data changes (row add/delete) to re-render
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.DATA_CHANGE, () => {
           this.render();
-        })
+        }),
       );
 
       // Listen for row total changes (emitted by GroupManager after calculation)
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.ROW_TOTAL_CHANGE, ({ rowId, newValue }) => {
           this.updateCell(rowId, "_rowTotal", newValue);
-        })
+        }),
       );
 
       // Listen for group totals updates to re-render group headers
@@ -1186,31 +1186,31 @@
             // Re-render group headers to show updated aggregates
             this._updateGroupHeaders(groupId);
           }
-        })
+        }),
       );
 
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.MODE_CHANGE, () => {
           this.render();
-        })
+        }),
       );
 
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.GROUP_TOGGLE, ({ groupId, collapsed }) => {
           this._toggleGroupVisibility(groupId, collapsed);
-        })
+        }),
       );
 
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.GROUP_EXPAND_ALL, () => {
           this._setAllGroupsVisibility(false);
-        })
+        }),
       );
 
       this._unsubscribers.push(
         this._eventBus.on(TableEvents.GROUP_COLLAPSE_ALL, () => {
           this._setAllGroupsVisibility(true);
-        })
+        }),
       );
     }
 
@@ -1580,7 +1580,7 @@
 
       // Remove existing badge (could be either class)
       const existingBadge = td.querySelector(
-        ".dg-cell-badge, .dg-cell-badge-wrapper"
+        ".dg-cell-badge, .dg-cell-badge-wrapper",
       );
       if (existingBadge) {
         existingBadge.remove();
@@ -1724,7 +1724,7 @@
         // During updates, we need to preserve actions and badges
         // Find and temporarily remove special elements
         const existingBadge = cell.querySelector(
-          ".dg-cell-badge, .dg-cell-badge-wrapper"
+          ".dg-cell-badge, .dg-cell-badge-wrapper",
         );
         const existingActions = cell.querySelector(".dg-row-actions");
 
@@ -1800,16 +1800,27 @@
         });
         input.textContent = value || "";
       } else {
+        // Apply decimals formatting for number type
+        let displayValue = value;
+        if (type === "number" && typeof value === "number" && column.decimals !== undefined) {
+          displayValue = value.toFixed(column.decimals);
+        }
+
         input = createElement("input", {
           class: "dg-cell-input",
           type: type === "number" ? "number" : "text",
-          value: value ?? "",
+          value: displayValue ?? "",
         });
 
         if (type === "number") {
           if (column.min !== undefined) input.min = column.min;
           if (column.max !== undefined) input.max = column.max;
-          if (column.step !== undefined) input.step = column.step;
+          // Set step based on decimals if not explicitly provided
+          if (column.step !== undefined) {
+            input.step = column.step;
+          } else if (column.decimals !== undefined) {
+            input.step = Math.pow(10, -column.decimals);
+          }
         }
       }
 
@@ -1865,6 +1876,8 @@
      * @private
      */
     _formatDisplayValue(value, column, row) {
+      console.log(column);
+
       if (value === null || value === undefined) {
         return column.defaultValue ?? ""
       }
@@ -1873,15 +1886,28 @@
       if (row._type === "infoRow") {
         return String(value)
       }
-
-      if (column.format) {
-        return column.format(value, row, column)
+      // Apply decimals rounding for number types before any formatting
+      let processedValue = value;
+      console.log(column.type, value, column.decimals);
+      if (
+        column.type === "number" &&
+        typeof value === "number" &&
+        column.decimals !== undefined
+      ) {
+        // Round to specified decimals
+        const multiplier = Math.pow(10, column.decimals);
+        processedValue = Math.round(value * multiplier) / multiplier;
+        console.log(processedValue);
       }
 
-      if (column.type === "number" && typeof value === "number") {
+      if (column.format) {
+        return column.format(processedValue, row, column)
+      }
+
+      if (column.type === "number" && typeof processedValue === "number") {
         return column.decimals !== undefined
-          ? value.toFixed(column.decimals)
-          : value.toString()
+          ? processedValue.toFixed(column.decimals)
+          : processedValue.toString()
       }
 
       if (column.type === "currency") {
@@ -1967,7 +1993,7 @@
           td.textContent = this._formatDisplayValue(
             aggregates[column.data],
             column,
-            {}
+            {},
           );
           addClass(td, "dg-cell-aggregate");
         }
@@ -2016,7 +2042,7 @@
           td.textContent = this._formatDisplayValue(
             totals[column.data],
             column,
-            {}
+            {},
           );
         }
 
@@ -2032,10 +2058,10 @@
      */
     _toggleGroupVisibility(groupId, collapsed) {
       const rows = this._tbody.querySelectorAll(
-        `[data-group="${groupId}"]:not(.dg-row-group-header)`
+        `[data-group="${groupId}"]:not(.dg-row-group-header)`,
       );
       const header = this._tbody.querySelector(
-        `.dg-row-group-header[data-group="${groupId}"]`
+        `.dg-row-group-header[data-group="${groupId}"]`,
       );
 
       rows.forEach((row) => {
@@ -2095,7 +2121,7 @@
         if (!group) return
 
         const headerRow = this._tbody.querySelector(
-          `.dg-row-group-header[data-group="${gId}"]`
+          `.dg-row-group-header[data-group="${gId}"]`,
         );
         if (!headerRow) return
 
@@ -2107,7 +2133,7 @@
               cell.textContent = this._formatDisplayValue(
                 group.totals[column.data],
                 column,
-                {}
+                {},
               );
             }
           }
