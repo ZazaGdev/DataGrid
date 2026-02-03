@@ -1802,7 +1802,11 @@
       } else {
         // Apply decimals formatting for number type
         let displayValue = value;
-        if (type === "number" && typeof value === "number" && column.decimals !== undefined) {
+        if (
+          type === "number" &&
+          typeof value === "number" &&
+          column.decimals !== undefined
+        ) {
           displayValue = value.toFixed(column.decimals);
         }
 
@@ -1876,8 +1880,6 @@
      * @private
      */
     _formatDisplayValue(value, column, row) {
-      console.log(column);
-
       if (value === null || value === undefined) {
         return column.defaultValue ?? ""
       }
@@ -1888,7 +1890,7 @@
       }
       // Apply decimals rounding for number types before any formatting
       let processedValue = value;
-      console.log(column.type, value, column.decimals);
+
       if (
         column.type === "number" &&
         typeof value === "number" &&
@@ -1897,7 +1899,6 @@
         // Round to specified decimals
         const multiplier = Math.pow(10, column.decimals);
         processedValue = Math.round(value * multiplier) / multiplier;
-        console.log(processedValue);
       }
 
       if (column.format) {
